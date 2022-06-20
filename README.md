@@ -10,7 +10,9 @@ Analyzes the contents of a Python package and warns about common issues, like:
 Get information about the files associated with the most recent release of a package to PyPI.
 
 ```shell
-bin/get-release-info.sh pandas
+bin/get-release-info.sh \
+    pandas \
+    pandas-release-info.json
 ```
 
 Download a specific release artifact.
@@ -25,7 +27,8 @@ Analyze the contents of a specific artifact.
 
 ```shell
 bin/summarize.sh \
-    ./pandas-1.4.2.tar.gz
+    ./pandas-1.4.2.tar.gz \
+    pandas-sizes.csv
 
 python ./summarize-sizes.py \
     ./tmp-dir/sizes.csv

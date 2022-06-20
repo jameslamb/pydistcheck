@@ -3,6 +3,7 @@
 set -e -u -o pipefail
 
 PACKAGE_NAME="${1}"
+RELEASE_INFO_FILE="${2}"
 PYPI_URL="https://pypi.org"
 
 if [ -f ./out.json ]; then
@@ -12,11 +13,11 @@ else
     echo "downloading PyPI details for package '${PACKAGE_NAME}'"
     curl \
         "${PYPI_URL}/pypi/${PACKAGE_NAME}/json" \
-        -o ./out.json
+        -o "${RELEASE_INFO_FILE}"
 fi
 
 LATEST_VERSION=$(
-    jq -r '."info"."version"' ./out.json
+    jq -r '."info"."version"' "${RELEASE_INFO_FILE}"
 )
 
 echo "latest version of '${PACKAGE_NAME}': ${LATEST_VERSION}"
@@ -30,7 +31,7 @@ for file_info in $(
             -r \
             --arg version "${LATEST_VERSION}" \
             '."releases"[$version] | keys[] as $k | "\(.[$k])"' \
-            ./out.json
+            "${RELEASE_INFO_FILE}"
     );
 do
     echo "----"

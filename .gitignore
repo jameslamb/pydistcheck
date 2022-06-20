@@ -1,4 +1,7 @@
 *.csv
 *.json
 *.tar.gz
+tmp-dir/
+*.xls
+*.xlsx
 *.zip

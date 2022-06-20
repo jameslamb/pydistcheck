@@ -11,17 +11,18 @@
 set -e -u -o pipefail
 
 ARTIFACT_NAME="${1}"
+CSV_FILE="${2}"
 TEMP_PATH="$(pwd)/tmp-dir"
 
 FILE_EXTENSION=$(
-    echo "${PACKAGE_TARBALL}" \
+    echo "${ARTIFACT_NAME}" \
     | egrep -o "\.*[tar]*\.[a-zA-Z0-9]+$"
 )
 TEMP_FILE_NAME="package${FILE_EXTENSION}"
 
 rm -rf ./tmp-dir
 mkdir -p "${TEMP_PATH}"
-cp "${PACKAGE_TARBALL}" "${TEMP_PATH}/${TEMP_FILE_NAME}"
+cp "${ARTIFACT_NAME}" "${TEMP_PATH}/${TEMP_FILE_NAME}"
 
 pushd "${TEMP_PATH}"
 
@@ -57,7 +58,6 @@ ALL_FILE_EXTENSIONS=$(
 echo "Found the following file extensions"
 
 echo "Summarizing file sizes by extension"
-CSV_FILE="sizes.csv"
 echo "extension,size" > "${CSV_FILE}"
 for extension in ${ALL_FILE_EXTENSIONS}; do
     echo "  * ${extension}"
