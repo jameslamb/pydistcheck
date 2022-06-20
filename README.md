@@ -1,19 +1,31 @@
-# scipy-talk
+# py-artifact-linter
+
+Analyzes the contents of a Python package and warns about common issues, like:
+
+* inclusion of unnecessary files
+* use of multiple file extensions with the same meaning
 
 ## Minimal Example
 
-Get information about the files associated with the most recent release of a package.
+Get information about the files associated with the most recent release of a package to PyPI.
 
 ```shell
-./download-package.sh pandas
+bin/get-release-info.sh pandas
+```
+
+Download a specific release artifact.
+
+```shell
+bin/download-package.sh \
+    ./pandas.csv \
+    pandas-1.4.2.tar.gz
 ```
 
 Analyze the contents of a specific artifact.
 
 ```shell
-./summarize.sh \
-    pandas.csv \
-    pandas-1.4.2.tar.gz
+bin/summarize.sh \
+    ./pandas-1.4.2.tar.gz
 
 python ./summarize-sizes.py \
     ./tmp-dir/sizes.csv
