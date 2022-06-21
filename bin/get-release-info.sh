@@ -4,6 +4,7 @@ set -e -u -o pipefail
 
 PACKAGE_NAME="${1}"
 RELEASE_INFO_FILE="${2}"
+CSV_FILE="${3}"
 PYPI_URL="https://pypi.org"
 
 if [ -f ./out.json ]; then
@@ -22,29 +23,29 @@ LATEST_VERSION=$(
 
 echo "latest version of '${PACKAGE_NAME}': ${LATEST_VERSION}"
 echo "this release contains the following files:"
-
-CSV_FILE="./${PACKAGE_NAME}.csv"
 echo "file_name,size_bytes,download_url" > "${CSV_FILE}"
 
+# NOTE: subsetting to specific fields in the jq expression below is important
+#       to minimize parsing issues caused by characters like '<', '>', and newlines
 for file_info in $(
         jq \
             -r \
             --arg version "${LATEST_VERSION}" \
-            '."releases"[$version] | keys[] as $k | "\(.[$k])"' \
+            '."releases"[$version] | keys[] as $k | "\(.[$k] | {filename, size, url})"' \
             "${RELEASE_INFO_FILE}"
     );
 do
     echo "----"
     file_name=$(
-        echo ${file_info} \
+        echo -n "${file_info}" \
         | jq -r '."filename"'
     )
     file_size_bytes=$(
-        echo ${file_info} \
+        echo "${file_info}" \
         | jq -r '."size"'
     )
     download_url=$(
-        echo ${file_info} \
+        echo "${file_info}" \
         | jq -r '."url"'
     )
     echo "  * (${file_size_bytes}) ${file_name}"

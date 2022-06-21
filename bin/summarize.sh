@@ -32,7 +32,7 @@ du --si ./${TEMP_FILE_NAME}
 echo "decompressing..."
 if [[ "${FILE_EXTENSION}" == ".tar.gz" ]]; then
     tar -xzf ./${TEMP_FILE_NAME}
-elif [[ "${FILE_EXTENSION}" == ".zip" ]]; then
+elif [[ "${FILE_EXTENSION}" == ".zip" || "${FILE_EXTENSION}" == ".whl" ]]; then
     unzip -q ./${TEMP_FILE_NAME}
 else
     echo "did not recognize extension '${FILE_EXTENSION}'"

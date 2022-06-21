@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e -u -o pipefail
+
 INFO_CSV="${1}"
 ARTIFACT_NAME="${2}"
 
