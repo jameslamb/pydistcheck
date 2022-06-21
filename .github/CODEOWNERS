@@ -1,0 +1,6 @@
+# This CODEOWNERS file denotes who should review changes to files
+# using file/directory pattern matching.  For more information on
+# how this works, read the official Github documentation:
+# https://help.github.com/articles/about-codeowners/
+
+* @jameslamb
