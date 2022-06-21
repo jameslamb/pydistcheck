@@ -1,9 +1,63 @@
 ## end-to-end
 
 ```shell
+# both source distro and wheels contain lots of website stuff
+# - images (.gif, .png)
+# - website (.js, .css, .rst, .html)
+#
+# source distro contains even more stuff
+# - CI configs (.stylelintignore, .stylelintrc, .eslintignore, .eslintrc)
+#
+bin/full-run.sh \
+    apache-airflow \
+    $(pwd)/apache-airflow
+
+# FAILS after "searching for source artifact"
+# wheel-only distribution?
+bin/full-run.sh \
+    catboost \
+    $(pwd)/catboost
+
+# very nice, just a .so mostly
+bin/full-run.sh \
+    datatable \
+    $(pwd)/datatable
+
+# - images (.png. svg)
+# - website (.rst, .html)
+bin/full-run.sh \
+    distributed \
+    $(pwd)/distributed
+
+# most of the wheel is the website (maybe?)
+# - .rst, .png, .svg, .html, .css
+bin/full-run.sh \
+    flask \
+    $(pwd)/flask
+
+# super tight
+# FAILS: "searching for a manylinux wheel"
+bin/full-run.sh \
+    kafka-python \
+    $(pwd)/kafka-python
+
 bin/full-run.sh \
     s3transfer \
     $(pwd)/s3transfer
+
+# tons of stuff in source distro, including:
+# - images (.png, .jpg, .jpeg, .svg, .bmp)
+# - a website (.rst, .css, .html, .js)
+# - testing-only files (.coveragerc)
+# - source-control files (.gitignore)
+bin/full-run.sh \
+    scikit-learn \
+    $(pwd)/scikit-learn
+
+# nothing obviously out of place
+bin/full-run.sh \
+    xgboost \
+    $(pwd)/xgboost
 ```
 
 ## numpy

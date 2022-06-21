@@ -38,6 +38,7 @@ __pycache__/
 *.tgz
 *.tmp
 tmp-dir/
+*.whl
 *.xls
 *.xlsx
 *.xlsm

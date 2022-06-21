@@ -44,6 +44,8 @@ Ideas for a file content linter:
 
 * mixes of extensions for the same file type (e.g. `.yaml` and `.yml`)
 * file types not expected to be found in a Python package
+* executable files
+* a directory called "tests/"
 
 ## References
 
