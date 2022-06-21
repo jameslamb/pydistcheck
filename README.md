@@ -12,7 +12,7 @@ Get information about the files associated with the most recent release of a pac
 ```shell
 bin/get-release-info.sh \
     pandas \
-    pandas-release-info.json
+    $(pwd)/pandas-release-info.json
 ```
 
 Download a specific release artifact.
@@ -28,10 +28,10 @@ Analyze the contents of a specific artifact.
 ```shell
 bin/summarize.sh \
     ./pandas-1.4.2.tar.gz \
-    pandas-sizes.csv
+    $(pwd)/pandas-sizes.csv
 
-python ./summarize-sizes.py \
-    ./tmp-dir/sizes.csv
+python bin/summarize-sizes.py \
+    $(pwd)/pandas-sizes.csv
 ```
 
 Questions to be answered?
