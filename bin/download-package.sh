@@ -18,4 +18,4 @@ fi
 
 curl \
     -o "${ARTIFACT_NAME}" \
-    ${DOWNLOAD_URL}
+    "${DOWNLOAD_URL}"

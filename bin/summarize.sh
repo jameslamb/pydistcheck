@@ -16,7 +16,9 @@ TEMP_PATH="$(pwd)/tmp-dir"
 
 FILE_EXTENSION=$(
     echo "${ARTIFACT_NAME}" \
-    | egrep -o "\.*[tar]*\.[a-zA-Z0-9]+$"
+    | grep \
+        -o \
+        -E "\.*[tar]*\.[a-zA-Z0-9]+$"
 )
 TEMP_FILE_NAME="package${FILE_EXTENSION}"
 
@@ -27,19 +29,19 @@ cp "${ARTIFACT_NAME}" "${TEMP_PATH}/${TEMP_FILE_NAME}"
 pushd "${TEMP_PATH}"
 
 echo "checking compressed size..."
-du --si ./${TEMP_FILE_NAME}
+du --si ./"${TEMP_FILE_NAME}"
 
 echo "decompressing..."
 if [[ "${FILE_EXTENSION}" == ".tar.gz" ]]; then
-    tar -xzf ./${TEMP_FILE_NAME}
+    tar -xzf ./"${TEMP_FILE_NAME}"
 elif [[ "${FILE_EXTENSION}" == ".zip" || "${FILE_EXTENSION}" == ".whl" ]]; then
-    unzip -q ./${TEMP_FILE_NAME}
+    unzip -q ./"${TEMP_FILE_NAME}"
 else
     echo "did not recognize extension '${FILE_EXTENSION}'"
     exit 1
 fi
 
-rm ./${TEMP_FILE_NAME}
+rm ./"${TEMP_FILE_NAME}"
 
 echo "checking decompressed size..."
 du -sh .
@@ -51,8 +53,9 @@ ALL_FILE_EXTENSIONS=$(
     find \
         "${TEMP_PATH}" \
         -type f \
-    | egrep \
-        -o "\.[a-zA-Z0-9]+$" \
+    | grep \
+        -o \
+        -E "\.[a-zA-Z0-9]+$" \
     | sort -u
 )
 echo "Found the following file extensions"
@@ -68,7 +71,9 @@ for extension in ${ALL_FILE_EXTENSIONS}; do
             -name "*${extension}" \
             -exec du -ch {} + \
         | grep total$ \
-        | egrep -o '[0-9.]+[A-Z]+'
+        | grep \
+            -o \
+            -E '[0-9.]+[A-Z]+'
     )
     echo "${extension},${SIZE}" >> "${CSV_FILE}"
 done
@@ -81,7 +86,9 @@ SIZE=$(
         ! -name '*.*' \
         -exec du -ch {} + \
     | grep total$ \
-    | egrep -o '[0-9.]+[A-Z]+'
+    | grep \
+        -o \
+        -E '[0-9.]+[A-Z]+'
 )
 echo "no-extension,${SIZE}" >> "${CSV_FILE}"
 

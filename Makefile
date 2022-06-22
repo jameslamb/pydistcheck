@@ -6,7 +6,7 @@ format:
 lint:
 	shellcheck \
 		--exclude=SC2002 \
-		bin/*.sh && \
+		bin/*.sh
 	black \
 		--check \
 		.
