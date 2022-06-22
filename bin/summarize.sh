@@ -10,34 +10,19 @@
 
 set -e -u -o pipefail
 
-INFO_CSV="${1}"
-ARTIFACT_NAME="${2}"
-
-DOWNLOAD_URL=$(
-    cat "${INFO_CSV}" \
-    | grep "^${ARTIFACT_NAME}," \
-    | awk -F"," '{print $3}'
-)
-
-if [ -f "${ARTIFACT_NAME}" ]; then
-    echo "file '${ARTIFACT_NAME}' exists, not re-downloading it"
-else
-    curl \
-        -o "${ARTIFACT_NAME}" \
-        ${DOWNLOAD_URL}
-fi
-PACKAGE_TARBALL="${ARTIFACT_NAME}"
+ARTIFACT_NAME="${1}"
+CSV_FILE="${2}"
 TEMP_PATH="$(pwd)/tmp-dir"
 
 FILE_EXTENSION=$(
-    echo "${PACKAGE_TARBALL}" \
+    echo "${ARTIFACT_NAME}" \
     | egrep -o "\.*[tar]*\.[a-zA-Z0-9]+$"
 )
 TEMP_FILE_NAME="package${FILE_EXTENSION}"
 
 rm -rf ./tmp-dir
 mkdir -p "${TEMP_PATH}"
-cp "${PACKAGE_TARBALL}" "${TEMP_PATH}/${TEMP_FILE_NAME}"
+cp "${ARTIFACT_NAME}" "${TEMP_PATH}/${TEMP_FILE_NAME}"
 
 pushd "${TEMP_PATH}"
 
@@ -47,7 +32,7 @@ du --si ./${TEMP_FILE_NAME}
 echo "decompressing..."
 if [[ "${FILE_EXTENSION}" == ".tar.gz" ]]; then
     tar -xzf ./${TEMP_FILE_NAME}
-elif [[ "${FILE_EXTENSION}" == ".zip" ]]; then
+elif [[ "${FILE_EXTENSION}" == ".zip" || "${FILE_EXTENSION}" == ".whl" ]]; then
     unzip -q ./${TEMP_FILE_NAME}
 else
     echo "did not recognize extension '${FILE_EXTENSION}'"
@@ -73,7 +58,6 @@ ALL_FILE_EXTENSIONS=$(
 echo "Found the following file extensions"
 
 echo "Summarizing file sizes by extension"
-CSV_FILE="sizes.csv"
 echo "extension,size" > "${CSV_FILE}"
 for extension in ${ALL_FILE_EXTENSIONS}; do
     echo "  * ${extension}"
