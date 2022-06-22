@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 1
       - name: run linting
         run: |
-          export PATH="/usr/share/miniconda:${PATH}"
+          export PATH="/usr/share/miniconda/bin:${PATH}"
           conda install \
             --yes \
             -c conda-forge \
