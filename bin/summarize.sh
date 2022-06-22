@@ -12,7 +12,8 @@ set -e -u -o pipefail
 
 ARTIFACT_NAME="${1}"
 CSV_FILE="${2}"
-TEMP_PATH="$(pwd)/tmp-dir"
+OUTPUT_DIR="${3}"
+TEMP_PATH="${OUTPUT_DIR}/tmp-dir"
 
 FILE_EXTENSION=$(
     echo "${ARTIFACT_NAME}" \
@@ -22,7 +23,6 @@ FILE_EXTENSION=$(
 )
 TEMP_FILE_NAME="package${FILE_EXTENSION}"
 
-rm -rf ./tmp-dir
 mkdir -p "${TEMP_PATH}"
 cp "${ARTIFACT_NAME}" "${TEMP_PATH}/${TEMP_FILE_NAME}"
 
