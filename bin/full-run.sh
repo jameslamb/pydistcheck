@@ -19,7 +19,7 @@ SOURCE_SIZES_CSV="${OUTPUT_DIR}/source-sizes.csv"
 WHEEL_SIZES_CSV="${OUTPUT_DIR}/wheel-sizes.csv"
 
 bin/get-release-info.sh \
-    ${PACKAGE_NAME} \
+    "${PACKAGE_NAME}" \
     "${RELEASE_JSON_FILE}" \
     "${ARTIFACTS_CSV}"
 
@@ -34,10 +34,10 @@ echo "source artifact: '${SOURCE_FILE}'"
 
 bin/download-package.sh \
     "${ARTIFACTS_CSV}" \
-    ${SOURCE_FILE}
+    "${SOURCE_FILE}"
 
 bin/summarize.sh \
-    ./${SOURCE_FILE} \
+    ./"${SOURCE_FILE}" \
     "${SOURCE_SIZES_CSV}"
 
 python bin/summarize-sizes.py \
@@ -54,10 +54,10 @@ echo "wheel: '${WHEEL_FILE}'"
 
 bin/download-package.sh \
     "${ARTIFACTS_CSV}" \
-    ${WHEEL_FILE}
+    "${WHEEL_FILE}"
 
 bin/summarize.sh \
-    ./${WHEEL_FILE} \
+    ./"${WHEEL_FILE}" \
     "${WHEEL_SIZES_CSV}"
 
 python bin/summarize-sizes.py \
