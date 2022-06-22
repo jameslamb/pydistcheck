@@ -34,19 +34,21 @@ echo "source artifact: '${SOURCE_FILE}'"
 
 bin/download-package.sh \
     "${ARTIFACTS_CSV}" \
-    "${SOURCE_FILE}"
+    "${SOURCE_FILE}" \
+    "${OUTPUT_DIR}"
 
 bin/summarize.sh \
-    ./"${SOURCE_FILE}" \
-    "${SOURCE_SIZES_CSV}"
+    "${OUTPUT_DIR}/${SOURCE_FILE}" \
+    "${SOURCE_SIZES_CSV}" \
+    "${OUTPUT_DIR}"
 
 python bin/summarize-sizes.py \
     "${SOURCE_SIZES_CSV}"
 
-echo "searching for a manylinux wheel"
+echo "searching for a wheel"
 WHEEL_FILE=$(
     cat "${ARTIFACTS_CSV}" \
-    | grep -E '.*manylinux.*\.whl,' \
+    | grep -E '.*any.*\.whl,' \
     | head -1 \
     | awk -F"," '{print $1}'
 )
@@ -54,11 +56,13 @@ echo "wheel: '${WHEEL_FILE}'"
 
 bin/download-package.sh \
     "${ARTIFACTS_CSV}" \
-    "${WHEEL_FILE}"
+    "${WHEEL_FILE}" \
+    "${OUTPUT_DIR}"
 
 bin/summarize.sh \
-    ./"${WHEEL_FILE}" \
-    "${WHEEL_SIZES_CSV}"
+    "${OUTPUT_DIR}/${WHEEL_FILE}" \
+    "${WHEEL_SIZES_CSV}" \
+    "${OUTPUT_DIR}"
 
 python bin/summarize-sizes.py \
     "${WHEEL_SIZES_CSV}"

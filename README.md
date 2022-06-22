@@ -10,28 +10,8 @@ Analyzes the contents of a Python package and warns about common issues, like:
 Get information about the files associated with the most recent release of a package to PyPI.
 
 ```shell
-bin/get-release-info.sh \
-    pandas \
-    $(pwd)/pandas-release-info.json
-```
-
-Download a specific release artifact.
-
-```shell
-bin/download-package.sh \
-    ./pandas.csv \
-    pandas-1.4.2.tar.gz
-```
-
-Analyze the contents of a specific artifact.
-
-```shell
-bin/summarize.sh \
-    ./pandas-1.4.2.tar.gz \
-    $(pwd)/pandas-sizes.csv
-
-python bin/summarize-sizes.py \
-    $(pwd)/pandas-sizes.csv
+make full-run \
+    -e PACKAGE_NAME=lightgbm
 ```
 
 Questions to be answered?
