@@ -13,6 +13,9 @@ def _size_string_to_bytes(size_str: str) -> float:
         "G": 1024**3,
         "T": 1024**4,
     }
+    # some flavors of `du` return "0" instead of "0B" for empty files
+    if size_str == "0":
+        return 0
     try:
         unit_str = size_str[-1:]
     except:
@@ -22,7 +25,6 @@ def _size_string_to_bytes(size_str: str) -> float:
 
 
 df = pd.read_csv(CSV_FILE)
-print(df)
 df["size_bytes"] = df["size"].apply(lambda x: _size_string_to_bytes(x))
 df["size_pct"] = df["size_bytes"] / df["size_bytes"].sum()
 

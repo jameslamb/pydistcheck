@@ -70,10 +70,10 @@ for extension in ${ALL_FILE_EXTENSIONS}; do
             -type f \
             -name "*${extension}" \
             -exec du -ch {} + \
-        | grep total$ \
+        | grep -E 'total$' \
         | grep \
             -o \
-            -E '[0-9.]+[A-Z]+'
+            -E '[0-9.]+[A-Z]*'
     )
     echo "${extension},${SIZE}" >> "${CSV_FILE}"
 done
@@ -85,7 +85,7 @@ SIZE=$(
         -type f \
         ! -name '*.*' \
         -exec du -ch {} + \
-    | grep total$ \
+    | grep -E 'total$' \
     | grep \
         -o \
         -E '[0-9.]+[A-Z]+'
