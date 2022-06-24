@@ -17,7 +17,9 @@ if [ -f "${ARTIFACT_NAME}" ]; then
     exit 0
 fi
 
+echo "Downloading '${ARTIFACT_NAME}'"
 curl \
     --silent \
     -o "${OUTPUT_DIR}/${ARTIFACT_NAME}" \
     "${DOWNLOAD_URL}"
+echo "Successfully downloaded '${ARTIFACT_NAME}'"

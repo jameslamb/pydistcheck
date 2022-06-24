@@ -54,6 +54,14 @@ make full-run \
 make full-run \
     -e PACKAGE_NAME=scikit-learn
 
+# haven't checked the output, but know this works
+make full-run \
+    -e PACKAGE_NAME=tensorflow
+
+# haven't checked the output, but know this works
+make full-run \
+    -e PACKAGE_NAME=torch
+
 # very small wheel
 # - 8.7% RST files
 make full-run \
@@ -66,7 +74,7 @@ make full-run \
 
 ### Currently broken
 
+None that I've found!
+
 ```text
-tensorflow (weird 15M in the data frame)
-torch
 ```
