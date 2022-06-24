@@ -16,10 +16,7 @@ def _size_string_to_bytes(size_str: str) -> float:
     # some flavors of `du` return "0" instead of "0B" for empty files
     if size_str == "0":
         return 0
-    try:
-        unit_str = size_str[-1:]
-    except:
-        return np.nan
+    unit_str = size_str[-1:]
     num = float(size_str[:-1])
     return num * _UNIT_TO_NUM_BYTES[unit_str]
 
