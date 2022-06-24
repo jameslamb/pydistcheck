@@ -28,41 +28,51 @@ SOURCE_FILE=$(
     cat "${ARTIFACTS_CSV}" \
     | grep -E '\.tar\.gz,|\.zip,' \
     | head -1 \
-    | awk -F"," '{print $1}'
+    | awk -F"," '{print $1}' \
+    || echo ""
 )
-echo "source artifact: '${SOURCE_FILE}'"
+if [[ "${SOURCE_FILE}" == "" ]]; then
+    echo "[WARNING] no source artifacts (.tar.gz or .zip) found"
+else
+    echo "source artifact: '${SOURCE_FILE}'"
 
-bin/download-package.sh \
-    "${ARTIFACTS_CSV}" \
-    "${SOURCE_FILE}" \
-    "${OUTPUT_DIR}"
+    bin/download-package.sh \
+        "${ARTIFACTS_CSV}" \
+        "${SOURCE_FILE}" \
+        "${OUTPUT_DIR}"
 
-bin/summarize.sh \
-    "${OUTPUT_DIR}/${SOURCE_FILE}" \
-    "${SOURCE_SIZES_CSV}" \
-    "${OUTPUT_DIR}"
+    bin/summarize.sh \
+        "${OUTPUT_DIR}/${SOURCE_FILE}" \
+        "${SOURCE_SIZES_CSV}" \
+        "${OUTPUT_DIR}"
 
-python bin/summarize-sizes.py \
-    "${SOURCE_SIZES_CSV}"
+    python bin/summarize-sizes.py \
+        "${SOURCE_SIZES_CSV}"
+fi
 
 echo "searching for a wheel"
 WHEEL_FILE=$(
     cat "${ARTIFACTS_CSV}" \
     | grep -E '.*any.*\.whl,' \
     | head -1 \
-    | awk -F"," '{print $1}'
+    | awk -F"," '{print $1}' \
+    || echo ""
 )
-echo "wheel: '${WHEEL_FILE}'"
+if [[ "${WHEEL_FILE}" == "" ]]; then
+    echo "[WARNING] no wheels (.whl) found"
+else
+    echo "wheel: '${WHEEL_FILE}'"
 
-bin/download-package.sh \
-    "${ARTIFACTS_CSV}" \
-    "${WHEEL_FILE}" \
-    "${OUTPUT_DIR}"
+    bin/download-package.sh \
+        "${ARTIFACTS_CSV}" \
+        "${WHEEL_FILE}" \
+        "${OUTPUT_DIR}"
 
-bin/summarize.sh \
-    "${OUTPUT_DIR}/${WHEEL_FILE}" \
-    "${WHEEL_SIZES_CSV}" \
-    "${OUTPUT_DIR}"
+    bin/summarize.sh \
+        "${OUTPUT_DIR}/${WHEEL_FILE}" \
+        "${WHEEL_SIZES_CSV}" \
+        "${OUTPUT_DIR}"
 
-python bin/summarize-sizes.py \
-    "${WHEEL_SIZES_CSV}"
+    python bin/summarize-sizes.py \
+        "${WHEEL_SIZES_CSV}"
+fi
