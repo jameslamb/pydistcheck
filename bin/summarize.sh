@@ -64,6 +64,29 @@ echo "Summarizing file sizes by extension"
 echo "extension,size" > "${CSV_FILE}"
 for extension in ${ALL_FILE_EXTENSIONS}; do
     echo "  * ${extension}"
+    echo "did this work"
+    find \
+            "${TEMP_PATH}" \
+            -type f \
+            -name "*${extension}" \
+            -exec du -ch {} +
+    echo "or this"
+    find \
+            "${TEMP_PATH}" \
+            -type f \
+            -name "*${extension}" \
+            -exec du -ch {} + \
+    | grep -E 'total$'
+    echo "or maybe this"
+    find \
+            "${TEMP_PATH}" \
+            -type f \
+            -name "*${extension}" \
+            -exec du -ch {} + \
+        | grep -E 'total$' \
+        | grep \
+            -o \
+            -E '[0-9.]+[A-Z]+'
     SIZE=$(
         find \
             "${TEMP_PATH}" \
