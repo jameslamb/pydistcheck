@@ -1,0 +1,32 @@
+name: manual-run
+
+on:
+  workflow_dispatch:
+    inputs:
+      username:
+        description: 'Name of a package on PyPI'
+        required: true
+        type: string
+
+jobs:
+  check-package:
+    name: check-package
+    runs-on: ubuntu-latest
+    steps:
+      - name: check out repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - name: check package
+        run: |
+          export PATH="/usr/share/miniconda/bin:${PATH}"
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            jq
+          conda install \
+            --yes \
+            -c conda-forge \
+              numpy \
+              pandas
+          make full-run \
+            -e PACKAGE_NAME=${{ inputs.package_name }}
