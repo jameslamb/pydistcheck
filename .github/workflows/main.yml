@@ -37,8 +37,8 @@ jobs:
       - name: run linting
         run: |
           export PATH="/usr/share/miniconda/bin:${PATH}"
-          apt-get update
-          apt-get install -y --no-install-recommends \
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
             jq
           conda install \
             --yes \
