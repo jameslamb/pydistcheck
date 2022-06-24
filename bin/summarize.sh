@@ -75,7 +75,10 @@ for extension in ${ALL_FILE_EXTENSIONS}; do
             -o \
             -E '[0-9.]+[A-Z]+'
     )
+    echo "done getting size"
+    echo "beep boop: ${extension},${SIZE}"
     echo "${extension},${SIZE}" >> "${CSV_FILE}"
+    echo "done writing to CSV"
 done
 
 echo "  * (no extension)"
