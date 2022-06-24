@@ -35,7 +35,6 @@ for file_info in $(
             "${RELEASE_INFO_FILE}"
     );
 do
-    echo "----"
     file_name=$(
         echo -n "${file_info}" \
         | jq -r '."filename"'
@@ -44,10 +43,13 @@ do
         echo "${file_info}" \
         | jq -r '."size"'
     )
+    file_size_megabytes=$(
+        python -c "print(round(${file_size_bytes} / float(1024**2), 1))"
+    )
     download_url=$(
         echo "${file_info}" \
         | jq -r '."url"'
     )
-    echo "  * (${file_size_bytes}) ${file_name}"
+    echo "  * (${file_size_megabytes}M) ${file_name}"
     echo "${file_name},${file_size_bytes},${download_url}" >> "${CSV_FILE}"
 done

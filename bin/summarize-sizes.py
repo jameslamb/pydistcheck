@@ -22,7 +22,6 @@ def _size_string_to_bytes(size_str: str) -> float:
 
 
 df = pd.read_csv(CSV_FILE)
-print(df)
 df["size_bytes"] = df["size"].apply(lambda x: _size_string_to_bytes(x))
 df["size_pct"] = df["size_bytes"] / df["size_bytes"].sum()
 

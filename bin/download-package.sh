@@ -18,5 +18,6 @@ if [ -f "${ARTIFACT_NAME}" ]; then
 fi
 
 curl \
+    --silent \
     -o "${OUTPUT_DIR}/${ARTIFACT_NAME}" \
     "${DOWNLOAD_URL}"
