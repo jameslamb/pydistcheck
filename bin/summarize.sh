@@ -88,6 +88,7 @@ SIZE=$(
         ! -name '*.*' \
         -exec du -ch {} + \
     | grep -E 'total$' \
+    | "${LINTER_BIN_DIR}"/sum-sizes.py \
     | grep \
         -o \
         -E '[0-9.]+[A-Z]+'
