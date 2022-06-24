@@ -11,8 +11,8 @@
 make full-run \
     -e PACKAGE_NAME=apache-airflow
 
-# FAILS after "searching for source artifact"
-# wheel-only distribution?
+# wheel-only distribution
+# 7.0MB of JavaScript
 make full-run \
     -e PACKAGE_NAME=catboost
 
@@ -64,10 +64,9 @@ make full-run \
     -e PACKAGE_NAME=xgboost
 ```
 
-### Cuurrently broken
+### Currently broken
 
 ```text
-catboost
 tensorflow (weird 15M in the data frame)
 torch
 ```
