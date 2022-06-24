@@ -1,5 +1,7 @@
 # py-artifact-linter
 
+[![GitHub Actions](https://github.com/jameslamb/py-artifact-linter/workflows/tests/badge.svg?branch=main)](https://github.com/jameslamb/py-artifact-linter/actions)
+
 Analyzes the contents of a Python package and warns about common issues, like:
 
 * inclusion of unnecessary files
