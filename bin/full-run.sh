@@ -4,6 +4,7 @@ set -e -u -o pipefail
 
 PACKAGE_NAME="${1}"
 OUTPUT_DIR="${2}"
+LINTER_BIN_DIR="$(pwd)/bin"
 
 if [ -d "${OUTPUT_DIR}" ]; then
     echo "ERROR: directory '${OUTPUT_DIR}' already exists"
@@ -44,7 +45,8 @@ else
     bin/summarize.sh \
         "${OUTPUT_DIR}/${SOURCE_FILE}" \
         "${SOURCE_SIZES_CSV}" \
-        "${OUTPUT_DIR}"
+        "${OUTPUT_DIR}" \
+        "${LINTER_BIN_DIR}"
 
     python bin/summarize-sizes.py \
         "${SOURCE_SIZES_CSV}"
@@ -71,7 +73,8 @@ else
     bin/summarize.sh \
         "${OUTPUT_DIR}/${WHEEL_FILE}" \
         "${WHEEL_SIZES_CSV}" \
-        "${OUTPUT_DIR}"
+        "${OUTPUT_DIR}" \
+        "${LINTER_BIN_DIR}"
 
     python bin/summarize-sizes.py \
         "${WHEEL_SIZES_CSV}"

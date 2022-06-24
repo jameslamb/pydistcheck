@@ -13,6 +13,7 @@ set -e -u -o pipefail
 ARTIFACT_NAME="${1}"
 CSV_FILE="${2}"
 OUTPUT_DIR="${3}"
+LINTER_BIN_DIR="${4}"
 TEMP_PATH="${OUTPUT_DIR}/tmp-dir"
 
 FILE_EXTENSION=$(
@@ -71,6 +72,7 @@ for extension in ${ALL_FILE_EXTENSIONS}; do
             -name "*${extension}" \
             -exec du -ch {} + \
         | grep -E 'total$' \
+        | "${LINTER_BIN_DIR}"/sum-sizes.py \
         | grep \
             -o \
             -E '[0-9.]+[A-Z]*'

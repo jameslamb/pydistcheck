@@ -37,4 +37,9 @@ smoke-tests:
 	bin/full-run.sh \
 		"numpy" \
 		"$(OUTPUT_DIR)/numpy"
+	# package with so many files that `find -exec du -ch` has to batch results
+	@echo "  - tensorflow" && \
+	bin/full-run.sh \
+		"tensorflow" \
+		"$(OUTPUT_DIR)/tensorflow"
 	@echo "done running smoke tests"
