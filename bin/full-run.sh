@@ -12,6 +12,8 @@ if [ -d "${OUTPUT_DIR}" ]; then
 else
     echo "creating directory '${OUTPUT_DIR}'"
     mkdir -p "${OUTPUT_DIR}"
+    mkdir -p "${OUTPUT_DIR}/source"
+    mkdir -p "${OUTPUT_DIR}/wheel"
 fi
 
 ARTIFACTS_CSV="${OUTPUT_DIR}/artifacts.csv"
@@ -40,12 +42,12 @@ else
     bin/download-package.sh \
         "${ARTIFACTS_CSV}" \
         "${SOURCE_FILE}" \
-        "${OUTPUT_DIR}"
+        "${OUTPUT_DIR}/source"
 
     bin/summarize.sh \
-        "${OUTPUT_DIR}/${SOURCE_FILE}" \
+        "${OUTPUT_DIR}/source/${SOURCE_FILE}" \
         "${SOURCE_SIZES_CSV}" \
-        "${OUTPUT_DIR}" \
+        "${OUTPUT_DIR}/source" \
         "${LINTER_BIN_DIR}"
 
     python bin/summarize-sizes.py \
@@ -68,12 +70,12 @@ else
     bin/download-package.sh \
         "${ARTIFACTS_CSV}" \
         "${WHEEL_FILE}" \
-        "${OUTPUT_DIR}"
+        "${OUTPUT_DIR}/wheel"
 
     bin/summarize.sh \
-        "${OUTPUT_DIR}/${WHEEL_FILE}" \
+        "${OUTPUT_DIR}/wheel/${WHEEL_FILE}" \
         "${WHEEL_SIZES_CSV}" \
-        "${OUTPUT_DIR}" \
+        "${OUTPUT_DIR}/wheel" \
         "${LINTER_BIN_DIR}"
 
     python bin/summarize-sizes.py \
