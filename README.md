@@ -3,8 +3,9 @@
 [![GitHub Actions](https://github.com/jameslamb/py-artifact-linter/workflows/tests/badge.svg?branch=main)](https://github.com/jameslamb/py-artifact-linter/actions)
 
 > **Warning**
+>
 > This project is very-very-very new and will change significantly.
-> The next time yoou look at this repo, this might not even be written in the same programming language.
+> The next time you look at this repo, this might not even be written in the same programming language.
 > If I was you, **I wouldn't use it**.
 
 Analyzes the contents of a Python package and warns about common issues, like:
