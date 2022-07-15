@@ -30,7 +30,7 @@ cp "${ARTIFACT_NAME}" "${TEMP_PATH}/${TEMP_FILE_NAME}"
 pushd "${TEMP_PATH}"
 
 echo "checking compressed size..."
-du ./"${TEMP_FILE_NAME}"
+du --si ./"${TEMP_FILE_NAME}"
 
 echo "decompressing..."
 if [[ "${FILE_EXTENSION}" == ".tar.gz" ]]; then
