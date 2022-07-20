@@ -1,5 +1,11 @@
 OUTPUT_DIR ?= $(PWD)/tmp-dir
 
+.PHONY: build
+build:
+	pipx install cibuildwheel
+	rm -r ./dist
+	pipx run build --sdist
+
 .PHONY: clean
 clean:
 	rm -r ./tmp-dir
@@ -13,6 +19,10 @@ full-run:
 	bin/full-run.sh \
 		"$(PACKAGE_NAME)" \
 		"$(OUTPUT_DIR)/$(PACKAGE_NAME)"
+
+.PHONY: install
+install:
+	pip install dist/*.tar.gz
 
 .PHONY: lint
 lint:
@@ -43,3 +53,7 @@ smoke-tests:
 		"tensorflow" \
 		"$(OUTPUT_DIR)/tensorflow"
 	@echo "done running smoke tests"
+
+.PHONY: test
+test:
+	python -c "import py_artifact_linter; print(py_artifact_linter.get_df())"

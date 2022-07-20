@@ -35,7 +35,16 @@ Ideas for a file content linter:
 * executable files
 * a directory called "tests/"
 
+## Related Projects
+
+* https://pypi.org/project/inspect4py/
+
 ## References
 
 * Python packaging guides: https://packaging.python.org/en/latest/guides/#
 * PyPI APIs: https://warehouse.pypa.io/api-reference/index.html
+* https://gitlab.com/n2vram/tarwalker/-/blob/master/tarwalker.py
+* https://cibuildwheel.readthedocs.io/en/stable/deliver-to-pypi/
+* https://github.com/pypa/cibuildwheel/blob/main/examples/github-deploy.yml
+* https://github.com/pypa/auditwheel
+* https://github.com/matthew-brett/delocate

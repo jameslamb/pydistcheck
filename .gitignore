@@ -13,6 +13,7 @@
 *.docx
 *.docm
 *.dylib
+*.egg-info/
 *.env
 *.exe
 *.feather
