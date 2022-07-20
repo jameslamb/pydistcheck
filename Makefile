@@ -3,7 +3,7 @@ OUTPUT_DIR ?= $(PWD)/tmp-dir
 .PHONY: build
 build:
 	pipx install cibuildwheel
-	rm -r ./dist
+	rm -r ./dist || true
 	pipx run build --sdist
 
 .PHONY: clean
@@ -22,7 +22,7 @@ full-run:
 
 .PHONY: install
 install:
-	pip install dist/*.tar.gz
+	pipx install --force dist/*.tar.gz
 
 .PHONY: lint
 lint:

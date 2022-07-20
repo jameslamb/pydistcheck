@@ -49,3 +49,4 @@ Ideas for a file content linter:
 * https://github.com/pypa/cibuildwheel/blob/main/examples/github-deploy.yml
 * https://github.com/pypa/auditwheel
 * https://github.com/matthew-brett/delocate
+* https://setuptools.pypa.io/en/latest/userguide/entry_point.html
