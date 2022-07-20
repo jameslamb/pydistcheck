@@ -45,6 +45,7 @@ Ideas for a file content linter:
 * PyPI APIs: https://warehouse.pypa.io/api-reference/index.html
 * https://gitlab.com/n2vram/tarwalker/-/blob/master/tarwalker.py
 * https://cibuildwheel.readthedocs.io/en/stable/deliver-to-pypi/
+    - https://cibuildwheel.readthedocs.io/en/stable/options/
 * https://github.com/pypa/cibuildwheel/blob/main/examples/github-deploy.yml
 * https://github.com/pypa/auditwheel
 * https://github.com/matthew-brett/delocate
