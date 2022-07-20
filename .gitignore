@@ -8,6 +8,7 @@
 *.csv
 *.dat
 *.db
+dist/
 *.dll
 *.doc
 *.docx
@@ -40,6 +41,7 @@ smoke-tests/
 *.tgz
 *.tmp
 tmp-dir/
+wheels/
 *.whl
 *.xls
 *.xlsx
