@@ -1,4 +1,5 @@
 import click
+from py_artifact_linter.distribution_summary import summarize_distribution_contents
 
 
 @click.group()
@@ -18,3 +19,12 @@ def check(file: str) -> None:
     """
     print("running py-artifact-linter")
     print(file)
+
+
+@cli.command()
+@click.option(
+    "--file", "-f", default=None, help="Comma-delimited list of doppel output files."
+)
+def summarize(file: str) -> None:
+    """Print a summary of a distribution's contents"""
+    summarize_distribution_contents(file=file)
