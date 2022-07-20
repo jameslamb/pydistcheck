@@ -1,6 +1,8 @@
 import click
 from py_artifact_linter.distribution_summary import summarize_distribution_contents
 
+from typing import Optional
+
 
 @click.group()
 def cli():
@@ -10,7 +12,7 @@ def cli():
 
 @cli.command()
 @click.option(
-    "--file", "-f", default=None, help="Comma-delimited list of doppel output files."
+    "--file", "-f", default=None, help="Source distribution (.tar.gz) to check"
 )
 def check(file: str) -> None:
     """
@@ -22,9 +24,10 @@ def check(file: str) -> None:
 
 
 @cli.command()
+@click.option("--file", "-f", help="Source distribution (.tar.gz) to check")
 @click.option(
-    "--file", "-f", default=None, help="Comma-delimited list of doppel output files."
+    "--output-file", default=None, help="Path to a CSV file to write results to."
 )
-def summarize(file: str) -> None:
+def summarize(file: str, output_file: Optional[str]) -> None:
     """Print a summary of a distribution's contents"""
-    summarize_distribution_contents(file=file)
+    summarize_distribution_contents(file=file, output_file=output_file)

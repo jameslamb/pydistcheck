@@ -1,9 +1,11 @@
+import csv
 import pathlib
 import tarfile
 from collections import defaultdict
+from typing import Optional
 
 
-def summarize_distribution_contents(file: str):
+def summarize_distribution_contents(file: str, output_file: Optional[str] = None):
     print(f"checking file '{file}'")
 
     size_by_file_extension = defaultdict(int)
@@ -38,3 +40,12 @@ def summarize_distribution_contents(file: str):
     print("sizes")
     for extension, size in size_by_file_extension.items():
         print(f"  * {extension} - {round(size / 1024.0, 1)}K")
+
+    if output_file is not None:
+        print(f"writing size-by-extension results to '{output_file}'")
+        with open(output_file, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=["extension", "size"])
+            writer.writeheader()
+            for extension, size in size_by_file_extension.items():
+                writer.writerow({"extension": extension, "size": size})
+        print("done writing CSV")
