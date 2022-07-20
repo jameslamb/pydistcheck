@@ -1,5 +1,13 @@
 OUTPUT_DIR ?= $(PWD)/tmp-dir
 
+.PHONY: build
+build:
+	pipx install cibuildwheel
+	pipx run build --sdist
+#pipx run cibuildwheel \
+#		--output-dir wheels \
+#		--platform macos
+
 .PHONY: clean
 clean:
 	rm -r ./tmp-dir
