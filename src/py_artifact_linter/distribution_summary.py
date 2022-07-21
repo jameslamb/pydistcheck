@@ -1,13 +1,20 @@
 import csv
 import pathlib
 import tarfile
+import zipfile
 from collections import defaultdict
+from dataclasses import dataclass
 from typing import Optional
 
 
-def summarize_distribution_contents(file: str, output_file: Optional[str] = None):
-    print(f"checking file '{file}'")
+@dataclass
+class _DistributionSummary:
+    num_files: int
+    num_directories: int
+    size_by_file_extension: defaultdict
 
+
+def _get_gzip_summary(file: str) -> _DistributionSummary:
     size_by_file_extension = defaultdict(int)
 
     with tarfile.open(file, mode="r:gz") as tf:
@@ -15,7 +22,6 @@ def summarize_distribution_contents(file: str, output_file: Optional[str] = None
 
         num_files = 0
         num_directories = 0
-        num_other_members = 0
         # top_level_dir: str = ""
         for i, member in enumerate(all_members):
             # if i == 0:
@@ -31,14 +37,27 @@ def summarize_distribution_contents(file: str, output_file: Optional[str] = None
             elif member.isdir():
                 num_directories += 1
             else:
-                num_other_members += 1
+                raise ValueError(f"member '{member.name}'' is not a file or directory")
+
+    return _DistributionSummary(
+        num_files=num_files,
+        num_directories=num_directories,
+        size_by_file_extension=size_by_file_extension,
+    )
+
+
+def summarize_distribution_contents(
+    file: str, output_file: Optional[str] = None
+) -> None:
+    print(f"checking file '{file}'")
+
+    summary = _get_gzip_summary(file=file)
 
     print("contents")
-    print(f"  * directories: {num_directories}")
-    print(f"  * files: {num_files}")
-    print(f"  * other: {num_other_members}")
+    print(f"  * directories: {summary.num_directories}")
+    print(f"  * files: {summary.num_files}")
     print("sizes")
-    for extension, size in size_by_file_extension.items():
+    for extension, size in summary.size_by_file_extension.items():
         print(f"  * {extension} - {round(size / 1024.0, 1)}K")
 
     if output_file is not None:
@@ -46,6 +65,6 @@ def summarize_distribution_contents(file: str, output_file: Optional[str] = None
         with open(output_file, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=["extension", "size"])
             writer.writeheader()
-            for extension, size in size_by_file_extension.items():
+            for extension, size in summary.size_by_file_extension.items():
                 writer.writerow({"extension": extension, "size": size})
         print("done writing CSV")
