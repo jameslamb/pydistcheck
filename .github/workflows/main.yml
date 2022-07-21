@@ -42,7 +42,7 @@ jobs:
             jq
           pip install --user \
               pipx
-          pipx ensurepaath
+          pipx ensurepath
           conda install \
             --yes \
             -c conda-forge \
