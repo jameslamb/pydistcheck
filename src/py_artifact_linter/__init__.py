@@ -1,5 +1,2 @@
-import pandas as pd
-
-
-def get_df():
-    return pd.DataFrame()
+# no one should be importing from this package
+__all__ = []
