@@ -22,6 +22,16 @@ make full-run \
     -e PACKAGE_NAME=lightgbm
 ```
 
+or, using the CLI
+
+```shell
+make build install
+
+py-artifact-linter summarize \
+  --file dist/py-artifact-linter*.tar.gz \
+  --output-file "$(pwd)/sizes.csv"
+```
+
 Questions to be answered?
 
 * what are the `n` largest files in this artifact?

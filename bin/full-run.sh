@@ -4,7 +4,6 @@ set -e -u -o pipefail
 
 PACKAGE_NAME="${1}"
 OUTPUT_DIR="${2}"
-LINTER_BIN_DIR="$(pwd)/bin"
 
 if [ -d "${OUTPUT_DIR}" ]; then
     echo "ERROR: directory '${OUTPUT_DIR}' already exists"
@@ -44,11 +43,9 @@ else
         "${SOURCE_FILE}" \
         "${OUTPUT_DIR}/source"
 
-    bin/summarize.sh \
-        "${OUTPUT_DIR}/source/${SOURCE_FILE}" \
-        "${SOURCE_SIZES_CSV}" \
-        "${OUTPUT_DIR}/source" \
-        "${LINTER_BIN_DIR}"
+    py-artifact-linter summarize \
+      --file "${OUTPUT_DIR}/source/${SOURCE_FILE}" \
+      --output-file "${SOURCE_SIZES_CSV}"
 
     python bin/summarize-sizes.py \
         "${SOURCE_SIZES_CSV}"
@@ -72,11 +69,9 @@ else
         "${WHEEL_FILE}" \
         "${OUTPUT_DIR}/wheel"
 
-    bin/summarize.sh \
-        "${OUTPUT_DIR}/wheel/${WHEEL_FILE}" \
-        "${WHEEL_SIZES_CSV}" \
-        "${OUTPUT_DIR}/wheel" \
-        "${LINTER_BIN_DIR}"
+    py-artifact-linter summarize \
+      --file "${OUTPUT_DIR}/wheel/${WHEEL_FILE}" \
+      --output-file "${WHEEL_SIZES_CSV}"
 
     python bin/summarize-sizes.py \
         "${WHEEL_SIZES_CSV}"

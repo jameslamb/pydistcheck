@@ -17,8 +17,7 @@ format:
 .PHONY: full-run
 full-run:
 	bin/full-run.sh \
-		"$(PACKAGE_NAME)" \
-		"$(OUTPUT_DIR)/$(PACKAGE_NAME)"
+		"$(PACKAGE_NAME)"
 
 .PHONY: install
 install:
@@ -34,7 +33,7 @@ lint:
 		.
 
 .PHONY: smoke-tests
-smoke-tests:
+smoke-tests: build install
 	@echo "running smoke tests" && \
 	mkdir -p ./smoke-tests
 	# wheel-only package
