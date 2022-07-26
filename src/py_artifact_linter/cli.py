@@ -19,19 +19,25 @@ def cli(ctx):
 
 
 @cli.command()
+@click.pass_obj
 @click.argument(
     "filename",
     type=click.Path(exists=True),
 )
-@click.pass_obj
-def check(tool_options: Dict[str, Any], filename: str) -> None:
+@click.option(
+    "--max-allow-files",
+    default=2000,
+    type=int,
+    help="maximum number of files allowed in the distribution",
+)
+def check(tool_options: Dict[str, Any], filename: str, max_allow_files: int) -> None:
     """
     Run the contents of a distribution through a set of checks, and raise
     errors if those are not met.
     :param file: A file path.
     """
     print("running py-artifact-linter")
-    print(file)
+    print(filename)
     print("pyproject options")
     print(tool_options)
     # surprising / disallowed file extensions
@@ -42,7 +48,7 @@ def check(tool_options: Dict[str, Any], filename: str) -> None:
     # total uncompressed size > {some_threshold}
     # found files with spaces in their names
     # found file paths longer than {} characters
-    # found files with names containiing control characters
+    # found files with names containing control characters
     # more than {n} total files
     # found files with compressed size > {some_threshold}
     #

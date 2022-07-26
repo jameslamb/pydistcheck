@@ -4,70 +4,73 @@ import tarfile
 import zipfile
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Optional
+from typing import List, Optional
+
+
+@dataclass
+class _FileInfo:
+    name: str
+    file_extension: str
+    is_file: bool
+    is_directory: bool
+    compressed_size_bytes: int
+
+    @classmethod
+    def from_tarfile_member(cls, tar_info: tarfile.TarInfo) -> "_FileInfo":
+        file_name = tar_info.name
+        return cls(
+            name=file_name,
+            file_extension=pathlib.Path(file_name).suffix or "no-extension",
+            is_file=tar_info.isfile(),
+            is_directory=tar_info.isdir(),
+            compressed_size_bytes=tar_info.size,
+        )
+
+    @classmethod
+    def from_zipfile_member(cls, zip_info: zipfile.ZipInfo) -> "_FileInfo":
+        file_name = zip_info.filename
+        is_directory = zip_info.is_dir()
+        return cls(
+            name=file_name,
+            file_extension=pathlib.Path(file_name).suffix or "no-extension",
+            is_file=not is_directory,
+            is_directory=is_directory,
+            compressed_size_bytes=zip_info.file_size,
+        )
 
 
 @dataclass
 class _DistributionSummary:
-    num_files: int
-    num_directories: int
-    size_by_file_extension: defaultdict
+    file_infos: List[_FileInfo]
+
+    @property
+    def num_directories(self) -> int:
+        return sum([1 for f in self.file_infos if f.is_directory])
+
+    @property
+    def num_files(self) -> int:
+        return sum([1 for f in self.file_infos if f.is_file])
+
+    @property
+    def size_by_file_extension(self) -> defaultdict:
+        out = defaultdict(int)
+        for f in self.file_infos:
+            if f.is_file:
+                out[f.file_extension] += f.compressed_size_bytes
+        return out
 
 
 def _get_gzip_summary(file: str) -> _DistributionSummary:
-    size_by_file_extension = defaultdict(int)
 
     with tarfile.open(file, mode="r:gz") as tf:
-        all_members = tf.getmembers()
-
-        num_files = 0
-        num_directories = 0
-        for i, member in enumerate(all_members):
-            if member.isfile():
-                num_files += 1
-                file_name = member.name
-                file_extension = pathlib.Path(file_name).suffix
-                compressed_size_in_bytes = member.size
-                if file_extension == "":
-                    file_extension = "no-extension"
-                size_by_file_extension[file_extension] += compressed_size_in_bytes
-            elif member.isdir():
-                num_directories += 1
-            else:
-                raise ValueError(f"member '{member.name}'' is not a file or directory")
-
-    return _DistributionSummary(
-        num_files=num_files,
-        num_directories=num_directories,
-        size_by_file_extension=size_by_file_extension,
-    )
-
+        file_infos = [_FileInfo.from_tarfile_member(m) for m in tf.getmembers()]
+    return _DistributionSummary(file_infos=file_infos)
 
 def _get_zipfile_summary(file: str) -> _DistributionSummary:
-    size_by_file_extension = defaultdict(int)
 
     with zipfile.ZipFile(file, mode="r") as f:
-        all_members = f.infolist()
-
-        num_files = 0
-        num_directories = 0
-        for i, member in enumerate(all_members):
-            if member.is_dir():
-                num_directories += 1
-            else:
-                num_files += 1
-                file_name = member.filename
-                file_extension = pathlib.Path(file_name).suffix
-                compressed_size_in_bytes = member.file_size
-                if file_extension == "":
-                    file_extension = "no-extension"
-                size_by_file_extension[file_extension] += compressed_size_in_bytes
-
-    return _DistributionSummary(
-        num_files=num_files,
-        num_directories=num_directories,
-        size_by_file_extension=size_by_file_extension,
-    )
+        file_infos = [_FileInfo.from_zipfile_member(m) for m in f.infolist()]
+    return _DistributionSummary(file_infos=file_infos)
 
 
 def summarize_distribution_contents(

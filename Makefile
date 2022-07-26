@@ -55,4 +55,8 @@ smoke-tests: build install
 
 .PHONY: test
 test:
-	python -c "import py_artifact_linter; print(py_artifact_linter.get_df())"
+	py-artifact-linter check --help
+	py-artifact-linter check \
+		$$(pwd)/dist/py-artifact-linter*.tar.gz
+	py-artifact-linter summarize \
+		--file $$(pwd)/dist/py-artifact-linter*.tar.gz
