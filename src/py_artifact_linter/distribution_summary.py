@@ -70,9 +70,7 @@ def _get_zipfile_summary(file: str) -> _DistributionSummary:
     )
 
 
-def summarize_distribution_contents(
-    file: str, output_file: Optional[str] = None
-) -> None:
+def summarize_distribution_contents(file: str, output_file: Optional[str] = None) -> None:
     print(f"checking file '{file}'")
 
     if file.endswith("gz"):
