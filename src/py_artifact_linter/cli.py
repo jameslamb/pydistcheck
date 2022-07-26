@@ -1,9 +1,14 @@
 import os
+import sys
 import click
 from py_artifact_linter._compat import tomllib
-from py_artifact_linter.distribution_summary import summarize_distribution_contents
+from py_artifact_linter.checks import _FileCountCheck
+from py_artifact_linter.distribution_summary import (
+    _DistributionSummary,
+    summarize_distribution_contents,
+)
 
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 
 @click.group()
@@ -25,12 +30,12 @@ def cli(ctx):
     type=click.Path(exists=True),
 )
 @click.option(
-    "--max-allow-files",
+    "--max-allowed-files",
     default=2000,
     type=int,
     help="maximum number of files allowed in the distribution",
 )
-def check(tool_options: Dict[str, Any], filename: str, max_allow_files: int) -> None:
+def check(tool_options: Dict[str, Any], filename: str, max_allowed_files: int) -> None:
     """
     Run the contents of a distribution through a set of checks, and raise
     errors if those are not met.
@@ -40,6 +45,20 @@ def check(tool_options: Dict[str, Any], filename: str, max_allow_files: int) -> 
     print(click.format_filename(filename))
     print("pyproject options")
     print(tool_options)
+
+    checks = [_FileCountCheck(max_allowed_files=max_allowed_files)]
+
+    summary = _DistributionSummary.from_file(filename=click.format_filename(filename))
+    errors: List[str] = []
+    for this_check in checks:
+        errors += this_check(distro_summary=summary)
+
+    for i, error_msg in enumerate(errors):
+        print(f"{i + 1}. {error_msg}")
+
+    print(f"errors found while checking: {len(errors)}")
+    sys.exit(len(errors))
+
     # surprising / disallowed file extensions
     # included test files
     # found executable files

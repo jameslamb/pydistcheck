@@ -57,6 +57,7 @@ smoke-tests: build install
 test:
 	py-artifact-linter check --help
 	py-artifact-linter check \
+		--max-allowed-files 4 \
 		$$(pwd)/dist/py-artifact-linter*.tar.gz
 	py-artifact-linter summarize \
 		$$(pwd)/dist/py-artifact-linter*.tar.gz
