@@ -43,6 +43,21 @@ class _FileInfo:
 class _DistributionSummary:
     file_infos: List[_FileInfo]
 
+    @classmethod
+    def from_file(self, filename: str) -> "_DistributionSummary":
+        if filename.endswith("gz"):
+            with tarfile.open(filename, mode="r:gz") as tf:
+                file_infos = [
+                    _FileInfo.from_tarfile_member(tar_info=m) for m in tf.getmembers()
+                ]
+        else:
+            # assume anything else can be opened with zipfile
+            with zipfile.ZipFile(filename, mode="r") as f:
+                file_infos = [
+                    _FileInfo.from_zipfile_member(zip_info=m) for m in f.infolist()
+                ]
+        return _DistributionSummary(file_infos=file_infos)
+
     @property
     def num_directories(self) -> int:
         return sum([1 for f in self.file_infos if f.is_directory])
@@ -60,28 +75,12 @@ class _DistributionSummary:
         return out
 
 
-def _get_gzip_summary(file: str) -> _DistributionSummary:
-
-    with tarfile.open(file, mode="r:gz") as tf:
-        file_infos = [_FileInfo.from_tarfile_member(m) for m in tf.getmembers()]
-    return _DistributionSummary(file_infos=file_infos)
-
-def _get_zipfile_summary(file: str) -> _DistributionSummary:
-
-    with zipfile.ZipFile(file, mode="r") as f:
-        file_infos = [_FileInfo.from_zipfile_member(m) for m in f.infolist()]
-    return _DistributionSummary(file_infos=file_infos)
-
-
 def summarize_distribution_contents(
     file: str, output_file: Optional[str] = None
 ) -> None:
     print(f"checking file '{file}'")
 
-    if file.endswith("gz"):
-        summary = _get_gzip_summary(file=file)
-    else:
-        summary = _get_zipfile_summary(file=file)
+    summary = _DistributionSummary.from_file(filename=file)
 
     print("contents")
     print(f"  * directories: {summary.num_directories}")

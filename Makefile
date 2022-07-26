@@ -59,4 +59,4 @@ test:
 	py-artifact-linter check \
 		$$(pwd)/dist/py-artifact-linter*.tar.gz
 	py-artifact-linter summarize \
-		--file $$(pwd)/dist/py-artifact-linter*.tar.gz
+		$$(pwd)/dist/py-artifact-linter*.tar.gz

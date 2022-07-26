@@ -37,7 +37,7 @@ def check(tool_options: Dict[str, Any], filename: str, max_allow_files: int) -> 
     :param file: A file path.
     """
     print("running py-artifact-linter")
-    print(filename)
+    print(click.format_filename(filename))
     print("pyproject options")
     print(tool_options)
     # surprising / disallowed file extensions
@@ -51,14 +51,18 @@ def check(tool_options: Dict[str, Any], filename: str, max_allow_files: int) -> 
     # found files with names containing control characters
     # more than {n} total files
     # found files with compressed size > {some_threshold}
-    #
 
 
 @cli.command()
-@click.option("--file", "-f", help="Source distribution (.tar.gz) to check")
+@click.argument(
+    "filename",
+    type=click.Path(exists=True),
+)
 @click.option(
     "--output-file", default=None, help="Path to a CSV file to write results to."
 )
-def summarize(file: str, output_file: Optional[str]) -> None:
+def summarize(filename: str, output_file: Optional[str]) -> None:
     """Print a summary of a distribution's contents"""
-    summarize_distribution_contents(file=file, output_file=output_file)
+    summarize_distribution_contents(
+        file=click.format_filename(filename), output_file=output_file
+    )
