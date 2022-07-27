@@ -19,9 +19,7 @@ def cli(ctx):
 
 
 @cli.command()
-@click.option(
-    "--file", "-f", default=None, help="Source distribution (.tar.gz) to check"
-)
+@click.option("--file", "-f", default=None, help="Source distribution (.tar.gz) to check")
 @click.pass_obj
 def check(tool_options: Dict[str, Any], file: str) -> None:
     """
@@ -36,9 +34,7 @@ def check(tool_options: Dict[str, Any], file: str) -> None:
 
 @cli.command()
 @click.option("--file", "-f", help="Source distribution (.tar.gz) to check")
-@click.option(
-    "--output-file", default=None, help="Path to a CSV file to write results to."
-)
+@click.option("--output-file", default=None, help="Path to a CSV file to write results to.")
 def summarize(file: str, output_file: Optional[str]) -> None:
     """Print a summary of a distribution's contents"""
     summarize_distribution_contents(file=file, output_file=output_file)
