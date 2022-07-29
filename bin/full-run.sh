@@ -43,7 +43,7 @@ else
         "${SOURCE_FILE}" \
         "${OUTPUT_DIR}/source"
 
-    py-artifact-linter summarize \
+    pydistcheck summarize \
       --file "${OUTPUT_DIR}/source/${SOURCE_FILE}" \
       --output-file "${SOURCE_SIZES_CSV}"
 
@@ -69,7 +69,7 @@ else
         "${WHEEL_FILE}" \
         "${OUTPUT_DIR}/wheel"
 
-    py-artifact-linter summarize \
+    pydistcheck summarize \
       --file "${OUTPUT_DIR}/wheel/${WHEEL_FILE}" \
       --output-file "${WHEEL_SIZES_CSV}"
 

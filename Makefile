@@ -55,4 +55,4 @@ smoke-tests: build install
 
 .PHONY: test
 test:
-	python -c "import py_artifact_linter; print(py_artifact_linter.get_df())"
+	python -c "import pydistcheck; print(py_artifact_linter.get_df())"
