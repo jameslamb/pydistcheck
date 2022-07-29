@@ -1,6 +1,6 @@
-# py-artifact-linter
+# pydistcheck
 
-[![GitHub Actions](https://github.com/jameslamb/py-artifact-linter/workflows/tests/badge.svg?branch=main)](https://github.com/jameslamb/py-artifact-linter/actions)
+[![GitHub Actions](https://github.com/jameslamb/pydistcheck/workflows/tests/badge.svg?branch=main)](https://github.com/jameslamb/pydistcheck/actions)
 
 > **Warning**
 >
@@ -27,8 +27,8 @@ or, using the CLI
 ```shell
 make build install
 
-py-artifact-linter summarize \
-  --file dist/py-artifact-linter*.tar.gz \
+pydistcheck summarize \
+  --file dist/pydistcheck*.tar.gz \
   --output-file "$(pwd)/sizes.csv"
 ```
 
