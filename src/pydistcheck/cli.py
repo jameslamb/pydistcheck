@@ -23,8 +23,7 @@ def cli(ctx):
     ctx.obj = options
 
 
-@cli.command()
-@click.pass_obj
+@click.command()
 @click.argument(
     "filename",
     type=click.Path(exists=True),
@@ -35,7 +34,7 @@ def cli(ctx):
     type=int,
     help="maximum number of files allowed in the distribution",
 )
-def check(tool_options: Dict[str, Any], filename: str, max_allowed_files: int) -> None:
+def check(filename: str, max_allowed_files: int) -> None:
     """
     Run the contents of a distribution through a set of checks, and raise
     errors if those are not met.
@@ -43,6 +42,13 @@ def check(tool_options: Dict[str, Any], filename: str, max_allowed_files: int) -
     """
     print("running pydistcheck")
     print(click.format_filename(filename))
+
+    tool_options: Dict[str, Union[int, str]] = {}
+    if os.path.exists("pyproject.toml"):
+        with open("pyproject.toml", "rb") as f:
+            config_dict = tomllib.load(f)
+            tool_options = config_dict.get("tool", {}).get("pydistcheck", {})
+
     print("pyproject options")
     print(tool_options)
 
@@ -72,7 +78,7 @@ def check(tool_options: Dict[str, Any], filename: str, max_allowed_files: int) -
     # found files with compressed size > {some_threshold}
 
 
-@cli.command()
+@click.command()
 @click.argument(
     "filename",
     type=click.Path(exists=True),

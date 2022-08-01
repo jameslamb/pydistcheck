@@ -55,9 +55,9 @@ smoke-tests: build install
 
 .PHONY: test
 test:
-	pydistcheck check --help
-	pydistcheck check \
+	pydistcheck --help
+	pydistcheck \
 		--max-allowed-files 20 \
 		$$(pwd)/dist/pydistcheck*.tar.gz
-	pydistcheck summarize \
+	pydistcheck \
 		$$(pwd)/dist/pydistcheck*.tar.gz

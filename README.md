@@ -27,7 +27,7 @@ or, using the CLI
 ```shell
 make build install
 
-pydistcheck summarize \
+pydistcheck-summarize \
   --file dist/pydistcheck*.tar.gz \
   --output-file "$(pwd)/sizes.csv"
 ```
