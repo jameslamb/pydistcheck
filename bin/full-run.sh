@@ -44,8 +44,8 @@ else
         "${OUTPUT_DIR}/source"
 
     pydistcheck-summarize \
-      --file "${OUTPUT_DIR}/source/${SOURCE_FILE}" \
-      --output-file "${SOURCE_SIZES_CSV}"
+      --output-file "${SOURCE_SIZES_CSV}" \
+      "${OUTPUT_DIR}/source/${SOURCE_FILE}"
 
     python bin/summarize-sizes.py \
         "${SOURCE_SIZES_CSV}"
@@ -70,8 +70,8 @@ else
         "${OUTPUT_DIR}/wheel"
 
     pydistcheck-summarize \
-      --file "${OUTPUT_DIR}/wheel/${WHEEL_FILE}" \
-      --output-file "${WHEEL_SIZES_CSV}"
+      --output-file "${WHEEL_SIZES_CSV}" \
+      "${OUTPUT_DIR}/wheel/${WHEEL_FILE}"
 
     python bin/summarize-sizes.py \
         "${WHEEL_SIZES_CSV}"
