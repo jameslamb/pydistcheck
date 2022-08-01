@@ -75,9 +75,7 @@ class _DistributionSummary:
         return out
 
 
-def summarize_distribution_contents(
-    file: str, output_file: Optional[str] = None
-) -> None:
+def summarize_distribution_contents(file: str, output_file: Optional[str] = None) -> None:
     print(f"checking file '{file}'")
 
     summary = _DistributionSummary.from_file(filename=file)

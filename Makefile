@@ -55,9 +55,9 @@ smoke-tests: build install
 
 .PHONY: test
 test:
-	py-artifact-linter check --help
-	py-artifact-linter check \
+	pydistcheck check --help
+	pydistcheck check \
 		--max-allowed-files 4 \
 		$$(pwd)/dist/py-artifact-linter*.tar.gz
-	py-artifact-linter summarize \
+	pydistcheck summarize \
 		$$(pwd)/dist/py-artifact-linter*.tar.gz

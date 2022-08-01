@@ -1,9 +1,9 @@
 import os
 import sys
 import click
-from py_artifact_linter._compat import tomllib
-from py_artifact_linter.checks import _FileCountCheck
-from py_artifact_linter.distribution_summary import (
+from pydistcheck._compat import tomllib
+from pydistcheck.checks import _FileCountCheck
+from pydistcheck.distribution_summary import (
     _DistributionSummary,
     summarize_distribution_contents,
 )
@@ -14,12 +14,12 @@ from typing import Any, Dict, List, Optional, Union
 @click.group()
 @click.pass_context
 def cli(ctx):
-    """Command group just used to group all others as sub-commands of ``py-artifact-linter``"""
+    """Command group just used to group all others as sub-commands of ``pydistcheck``"""
     options: Dict[str, Union[int, str]] = {}
     if os.path.exists("pyproject.toml"):
         with open("pyproject.toml", "rb") as f:
             config_dict = tomllib.load(f)
-            options = config_dict.get("tool", {}).get("py-artifact-linter", {})
+            options = config_dict.get("tool", {}).get("pydistcheck", {})
     ctx.obj = options
 
 
@@ -28,6 +28,7 @@ def cli(ctx):
 @click.argument(
     "filename",
     type=click.Path(exists=True),
+    help="Source distribution (.tar.gz) to check"
 )
 @click.option(
     "--max-allowed-files",
@@ -41,7 +42,7 @@ def check(tool_options: Dict[str, Any], filename: str, max_allowed_files: int) -
     errors if those are not met.
     :param file: A file path.
     """
-    print("running py-artifact-linter")
+    print("running pydistcheck")
     print(click.format_filename(filename))
     print("pyproject options")
     print(tool_options)
@@ -76,6 +77,7 @@ def check(tool_options: Dict[str, Any], filename: str, max_allowed_files: int) -
 @click.argument(
     "filename",
     type=click.Path(exists=True),
+    help="Source distribution (.tar.gz) to check"
 )
 @click.option(
     "--output-file", default=None, help="Path to a CSV file to write results to."
