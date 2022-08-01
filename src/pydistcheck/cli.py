@@ -28,7 +28,6 @@ def cli(ctx):
 @click.argument(
     "filename",
     type=click.Path(exists=True),
-    help="Source distribution (.tar.gz) to check"
 )
 @click.option(
     "--max-allowed-files",
@@ -77,13 +76,8 @@ def check(tool_options: Dict[str, Any], filename: str, max_allowed_files: int) -
 @click.argument(
     "filename",
     type=click.Path(exists=True),
-    help="Source distribution (.tar.gz) to check"
 )
-@click.option(
-    "--output-file", default=None, help="Path to a CSV file to write results to."
-)
+@click.option("--output-file", default=None, help="Path to a CSV file to write results to.")
 def summarize(filename: str, output_file: Optional[str]) -> None:
     """Print a summary of a distribution's contents"""
-    summarize_distribution_contents(
-        file=click.format_filename(filename), output_file=output_file
-    )
+    summarize_distribution_contents(file=click.format_filename(filename), output_file=output_file)

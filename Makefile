@@ -57,7 +57,7 @@ smoke-tests: build install
 test:
 	pydistcheck check --help
 	pydistcheck check \
-		--max-allowed-files 4 \
-		$$(pwd)/dist/py-artifact-linter*.tar.gz
+		--max-allowed-files 20 \
+		$$(pwd)/dist/pydistcheck*.tar.gz
 	pydistcheck summarize \
-		$$(pwd)/dist/py-artifact-linter*.tar.gz
+		$$(pwd)/dist/pydistcheck*.tar.gz
