@@ -25,5 +25,5 @@ jobs:
           use-mamba: true
       - name: run tests
         run: |
-          cd docs
-          make html
+          source activte pydistscheck-docs
+          make -C ./docs html
