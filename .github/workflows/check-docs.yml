@@ -1,0 +1,29 @@
+name: docs
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  test:
+    name: check-docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: check out repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          environment-file: docs/env.yml
+          activate-environment: pydistscheck-docs
+          miniforge-variant: Mambaforge
+          use-mamba: true
+      - name: run tests
+        run: |
+          cd $BUILD_DIRECTORY/docs
+          make html
