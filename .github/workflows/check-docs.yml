@@ -20,10 +20,9 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v2
         with:
           environment-file: docs/env.yml
-          activate-environment: pydistscheck-docs
           miniforge-variant: Mambaforge
           use-mamba: true
       - name: run tests
         run: |
-          source activte pydistscheck-docs
+          source activate pydistscheck-docs
           make -C ./docs html
