@@ -24,5 +24,6 @@ jobs:
           use-mamba: true
       - name: run tests
         run: |
+          export PATH="${CONDA}/bin:$HOME/.local/bin:${PATH}"
           source activate pydistscheck-docs
           make -C ./docs html
