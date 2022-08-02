@@ -25,5 +25,5 @@ jobs:
           use-mamba: true
       - name: run tests
         run: |
-          cd $BUILD_DIRECTORY/docs
+          cd docs
           make html
