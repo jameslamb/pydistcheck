@@ -1,6 +1,7 @@
 *.7zip
 *.a
 *.bak
+_build/
 *.bz
 *.core
 *.coverage
