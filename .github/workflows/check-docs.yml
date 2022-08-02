@@ -23,7 +23,7 @@ jobs:
           activate-environment: pydistscheck-docs
           miniforge-variant: Mambaforge
           use-mamba: true
-      - name: run tests
+      - name: build docs
         shell: bash -l {0}
         run: |
           make -C ./docs html
