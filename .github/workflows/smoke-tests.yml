@@ -48,4 +48,6 @@ jobs:
               numpy \
               pandas \
               pipx
+          make build
+          pip install dist/*.tar.gz
           make smoke-tests
