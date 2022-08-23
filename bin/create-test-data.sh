@@ -1,5 +1,6 @@
-# [description] generate test tarballs
+#!/bin/bash
 
+# [description] generate test tarballs
 
 rm -rf /tmp/base-package
 mkdir -p /tmp/base-package

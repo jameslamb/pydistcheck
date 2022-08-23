@@ -60,10 +60,9 @@ test-data:
 .PHONY: test
 test:
 	PYTHONPATH=src \
-	pytest ./tests
-	# pydistcheck --help
-	# pydistcheck \
-	# 	--max-allowed-files 20 \
-	# 	$$(pwd)/dist/pydistcheck*.tar.gz
-	# pydistcheck \
-	# 	$$(pwd)/dist/pydistcheck*.tar.gz
+	pytest \
+		--cov=src/pydistcheck \
+		--cov-fail-under=70 \
+		--cov-report="term" \
+		--cov-report="html:htmlcov" \
+		./tests
