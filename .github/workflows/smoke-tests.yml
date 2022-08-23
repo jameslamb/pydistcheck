@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    name: smoke-tests (${{ matrix.os }}, $${{ matrix.python_version }})
+    name: smoke-tests (${{ matrix.os }}, ${{ matrix.python_version }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     strategy:
@@ -37,12 +37,15 @@ jobs:
           activate-environment: pydistscheck-tests
           miniforge-variant: Mambaforge
           use-mamba: true
-          python-version: "${{ matrix.python_version}}"
+          python-version: ${{ matrix.python_version }}
       - name: run tests
+        shell: bash
         run: |
-          mamba install --yes \
-            numpy \
-            pandas \
-            pipx \
-            jq
+          mamba install \
+            --yes \
+            --name pydistscheck-tests \
+              jq \
+              numpy \
+              pandas \
+              pipx
           make smoke-tests
