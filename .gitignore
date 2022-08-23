@@ -2,6 +2,7 @@
 *.a
 *.bak
 _build/
+build/
 *.bz
 *.core
 *.coverage
@@ -48,3 +49,7 @@ wheels/
 *.xlsx
 *.xlsm
 *.zip
+
+# exclusions
+!tests/data/base-package.tar.gz
+!tests/data/base-package.zip

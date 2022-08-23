@@ -53,11 +53,17 @@ smoke-tests: build install
 		"$(OUTPUT_DIR)/tensorflow"
 	@echo "done running smoke tests"
 
+.PHONY: test-data
+test-data:
+	bash ./bin/create-test-data.sh
+
 .PHONY: test
 test:
-	pydistcheck --help
-	pydistcheck \
-		--max-allowed-files 20 \
-		$$(pwd)/dist/pydistcheck*.tar.gz
-	pydistcheck \
-		$$(pwd)/dist/pydistcheck*.tar.gz
+	PYTHONPATH=src \
+	pytest ./tests
+	# pydistcheck --help
+	# pydistcheck \
+	# 	--max-allowed-files 20 \
+	# 	$$(pwd)/dist/pydistcheck*.tar.gz
+	# pydistcheck \
+	# 	$$(pwd)/dist/pydistcheck*.tar.gz
