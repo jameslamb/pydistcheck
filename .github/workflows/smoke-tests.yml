@@ -1,0 +1,48 @@
+name: smoke-tests
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  test:
+    name: smoke-tests (${{ matrix.os }}, $${{ matrix.python_version }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python_version: 3.8
+          - os: macOS-latest
+            python_version: 3.8
+          - os: windows-latest
+            python_version: 3.8
+    steps:
+      - name: Prevent conversion of line endings on Windows
+        if: startsWith(matrix.os, 'windows')
+        shell: pwsh
+        run: git config --global core.autocrlf false
+      - name: check out repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: pydistscheck-tests
+          miniforge-variant: Mambaforge
+          use-mamba: true
+          python-version: "${{ matrix.python_version}}"
+      - name: run tests
+        run: |
+          mamba install --yes \
+            numpy \
+            pandas \
+            pipx \
+            jq
+          make smoke-tests
