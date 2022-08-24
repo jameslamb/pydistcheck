@@ -39,7 +39,7 @@ jobs:
           use-mamba: true
           python-version: ${{ matrix.python_version }}
       - name: run tests
-        shell: bash
+        shell: bash -l {0}
         run: |
           mamba install \
             --yes \
