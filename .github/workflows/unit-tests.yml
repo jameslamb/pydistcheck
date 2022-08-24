@@ -1,0 +1,66 @@
+name: unit-tests
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+    branches:
+    - main
+
+jobs:
+  test:
+    name: unit-tests (${{ matrix.os }}, ${{ matrix.python_version }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          #########
+          # Linux #
+          #########
+          - os: ubuntu-latest
+            python_version: 3.7
+          - os: ubuntu-latest
+            python_version: 3.8
+          - os: ubuntu-latest
+            python_version: 3.9
+          - os: ubuntu-latest
+            python_version: 3.10
+          - os: ubuntu-latest
+            python_version: 3.11
+          #########
+          # macOS #
+          #########
+          - os: macOS-latest
+            python_version: 3.7
+          - os: macOS-latest
+            python_version: 3.10
+          ###########
+          # Windows #
+          ###########
+          - os: windows-latest
+            python_version: 3.7
+          - os: windows-latest
+            python_version: 3.10
+    steps:
+      - name: Prevent conversion of line endings on Windows
+        if: startsWith(matrix.os, 'windows')
+        shell: pwsh
+        run: git config --global core.autocrlf false
+      - name: check out repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: pydistscheck-tests
+          miniforge-variant: Mambaforge
+          use-mamba: true
+          python-version: ${{ matrix.python_version }}
+      - name: run tests
+        shell: bash -l {0}
+        run: |
+          pip install '.[tests]'
+          make test
