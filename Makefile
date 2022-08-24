@@ -53,11 +53,16 @@ smoke-tests:
 		"$(OUTPUT_DIR)/tensorflow"
 	@echo "done running smoke tests"
 
+.PHONY: test-data
+test-data:
+	bash ./bin/create-test-data.sh
+
 .PHONY: test
 test:
-	pydistcheck --help
-	pydistcheck \
-		--max-allowed-files 20 \
-		$$(pwd)/dist/pydistcheck*.tar.gz
-	pydistcheck \
-		$$(pwd)/dist/pydistcheck*.tar.gz
+	PYTHONPATH=src \
+	pytest \
+		--cov=src/pydistcheck \
+		--cov-fail-under=70 \
+		--cov-report="term" \
+		--cov-report="html:htmlcov" \
+		./tests
