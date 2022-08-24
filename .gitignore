@@ -1,6 +1,7 @@
 *.7zip
 *.a
 *.bak
+build/
 _build/
 build/
 *.bz

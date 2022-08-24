@@ -33,7 +33,7 @@ lint:
 		.
 
 .PHONY: smoke-tests
-smoke-tests: build install
+smoke-tests:
 	@echo "running smoke tests" && \
 	mkdir -p ./smoke-tests
 	# wheel-only package
