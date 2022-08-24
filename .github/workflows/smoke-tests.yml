@@ -44,10 +44,17 @@ jobs:
           mamba install \
             --yes \
             --name pydistscheck-tests \
-              jq \
               numpy \
               pandas \
               pipx
+          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
+            chocolatey install jq
+          else
+            mamba install \
+              --yes \
+              --name pydistscheck-tests \
+                jq
+          fi
           make build
           pip install dist/*.tar.gz
           make smoke-tests
