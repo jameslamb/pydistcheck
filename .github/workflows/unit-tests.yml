@@ -21,29 +21,29 @@ jobs:
           # Linux #
           #########
           - os: ubuntu-latest
-            python_version: 3.7
+            python_version: '3.7'
           - os: ubuntu-latest
-            python_version: 3.8
+            python_version: '3.8'
           - os: ubuntu-latest
-            python_version: 3.9
+            python_version: '3.9'
           - os: ubuntu-latest
-            python_version: 3.10
+            python_version: '3.10'
           - os: ubuntu-latest
-            python_version: 3.11
+            python_version: '3.11'
           #########
           # macOS #
           #########
           - os: macOS-latest
-            python_version: 3.7
+            python_version: '3.7'
           - os: macOS-latest
-            python_version: 3.10
+            python_version: '3.10'
           ###########
           # Windows #
           ###########
           - os: windows-latest
-            python_version: 3.7
+            python_version: '3.7'
           - os: windows-latest
-            python_version: 3.10
+            python_version: '3.10'
     steps:
       - name: Prevent conversion of line endings on Windows
         if: startsWith(matrix.os, 'windows')
