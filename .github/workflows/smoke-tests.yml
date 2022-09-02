@@ -19,15 +19,7 @@ jobs:
         include:
           - os: ubuntu-latest
             python_version: 3.8
-          - os: macOS-latest
-            python_version: 3.8
-          - os: windows-latest
-            python_version: 3.8
     steps:
-      - name: Prevent conversion of line endings on Windows
-        if: startsWith(matrix.os, 'windows')
-        shell: pwsh
-        run: git config --global core.autocrlf false
       - name: check out repository
         uses: actions/checkout@v3
         with:
