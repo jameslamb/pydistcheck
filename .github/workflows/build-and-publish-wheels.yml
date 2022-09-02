@@ -3,9 +3,11 @@ name: build-and-publish-to-pypi
 # build wheels and push to PyPI whenever a GitHub release is published
 on:
   push:
-    # branches:
-    # - build/*
+    branches:
+    - build/*
   pull_request:
+    branches:
+    - build/*
   release:
     types:
       - published
