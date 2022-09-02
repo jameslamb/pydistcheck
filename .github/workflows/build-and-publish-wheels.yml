@@ -1,6 +1,6 @@
 name: build-and-publish-to-pypi
 
-# build wheels and push to PyPI whenever 
+# build wheels and push to PyPI whenever a GitHub release is published
 on:
   push:
   pull_request:
