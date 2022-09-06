@@ -1,20 +1,18 @@
-.. pydistcheck documentation master file, created by
-   sphinx-quickstart on Sun Jul 31 23:30:36 2022.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+pydistcheck
+===========
 
-Welcome to pydistcheck's documentation!
-=======================================
+``pydistcheck`` is a command-line interface (CLI) used to detect problematic characteristics
+in Python package distributions.
+
+It is intended to be used in continuous integration and interactively during development.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
-
+   Check Reference <check-reference>
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
