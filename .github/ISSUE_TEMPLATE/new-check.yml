@@ -1,0 +1,57 @@
+name: New Check Requests
+description: Request that `pydistcheck` complain about something it doesn't complain about today.
+title: "new check: "
+labels: ["enhancemment"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to recommend a new check for `pydistcheck`!
+  - type: textarea
+    attributes:
+      label: What should be checked?
+      description: |
+        Please describe, in as much detail as possible, the characteristic of
+        a Python package distribution that you would like to see `pydistcheck`
+        complain about.
+    validations:
+      required: true
+  - type: input
+    id: check-name
+    attributes:
+      label: What should the name of this check be?
+      description: |
+        This is the name that will show up in log messages, and be referenced from configuration.
+        It should include only lowercase letters and `-`.
+      placeholder: ex. too-many-files
+    validations:
+      required: true
+  - type: dropdown
+    id: new-config-requirements
+    attributes:
+      label: Will this check introduce any additional configuration?
+      description: |
+        For example, the `too-many-files` checks introduced configuration option
+        `--max-allowed-files` to allow user control over how many files are allowed in a distribution.
+      options:
+        - 'yes'
+        - 'no'
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Details on additional configuration required.
+    validations:
+      required: false
+  - type: checkboxes
+    id: distro-type
+    attributes:
+      label: Distribution type
+      description: What types of distribution does this check apply to?
+      options:
+        - label: source only (e.g. `.tar.gz`)
+          required: false
+        - label: built only (e.g. `.whl`)
+          required: false
+        - label: all Python package distributions
+          required: false
