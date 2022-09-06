@@ -60,14 +60,14 @@ jobs:
         with:
           name: artifact
           path: dist
-    - name: upload distributions to release
-      uses: svenstaro/upload-release-action@v2
-      with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: dist/*
-        file_glob: true
-        tag: ${{ github.ref }}
-        overwrite: false
+      - name: upload distributions to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: dist/*
+          file_glob: true
+          tag: ${{ github.ref }}
+          overwrite: false
 
 # adopted from:
 # https://github.com/pypa/cibuildwheel/blob/0117165b02675521b3db2d05033747819bb3ecc5/examples/github-deploy.yml
