@@ -4,7 +4,7 @@ from pydistcheck.distribution_summary import _DistributionSummary
 
 class _FileCountCheck:
 
-    check_name = "too-many-files"
+    name = "too-many-files"
 
     def __init__(self, max_allowed_files: int):
         self.max_allowed_files = max_allowed_files
@@ -13,6 +13,6 @@ class _FileCountCheck:
         out: List[str] = []
         num_files = distro_summary.num_files
         if num_files > self.max_allowed_files:
-            msg = f"[{self.check_name}] Found {num_files} files. Only {self.max_allowed_files} allowed."
+            msg = f"[{self.name}] Found {num_files} files. Only {self.max_allowed_files} allowed."
             out.append(msg)
         return out
