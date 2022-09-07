@@ -1,0 +1,26 @@
+name: Request some other new feature
+description: Request some feature other than "a new check.
+title: "[feature request] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to recommend improvements to `pydistcheck`!
+  - type: textarea
+    attributes:
+      label: What change would you like to see?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: How would implementing this improve `pydistcheck`?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Notes
+      description: |
+        Anything else you want to share?
+    validations:
+      required: false

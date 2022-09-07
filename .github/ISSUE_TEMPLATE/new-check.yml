@@ -1,6 +1,6 @@
 name: Request a new check
 description: Request that `pydistcheck` complain about something it doesn't complain about today.
-title: "new check: "
+title: "[new check] "
 labels: ["enhancement"]
 body:
   - type: markdown
@@ -51,12 +51,12 @@ body:
       options:
         - label: source (e.g. `.tar.gz`)
           required: false
-        - label: built(e.g. `.whl`)
+        - label: built (e.g. `.whl`)
           required: false
   - type: textarea
     attributes:
       label: Notes
       description: |
-        Anything else people should know?
+        Anything else you want to share?
     validations:
       required: false
