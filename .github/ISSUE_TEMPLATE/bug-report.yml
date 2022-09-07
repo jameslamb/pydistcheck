@@ -1,0 +1,41 @@
+name: Report a bug
+description: Describe a situation where `pydistcheck` behaves differently than expected.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for using `pydistcheck`, and for taking the time to report a bug!
+  - type: textarea
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: What actually happened?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: How can someone else reproduce this problem?
+      description: |
+        Please provide enough information for others investigating this report
+        to reproduce the behavior you observed.
+        For help, see the advice in ["How to Create a Minimal, Reproducible Example"](https://stackoverflow.com/help/minimal-reproducible-example).
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: What version of `pydistcheck` are you using?
+      placeholder: ex. `0.1.0`
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Notes
+      description: |
+        Anything else you want to share?
+    validations:
+      required: false
