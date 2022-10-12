@@ -16,6 +16,7 @@ dist/
 *.doc
 *.docx
 *.docm
+.DS_Store
 *.dylib
 *.egg-info/
 *.env
@@ -29,13 +30,16 @@ htmlcov/
 *.npy
 *.o
 *.pdf
+*.pem
 *.ppt
 *.pptx
 *.pptm
 *.pq
+*.pub
 *.pyc
 __pycache__/
 .pytest_cache/
+*.rsa
 smoke-tests/
 *.snappy-*.tar.gz
 *.so
