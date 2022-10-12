@@ -44,7 +44,7 @@ class _DistributionSummary:
     file_infos: List[_FileInfo]
 
     @classmethod
-    def from_file(self, filename: str) -> "_DistributionSummary":
+    def from_file(cls, filename: str) -> "_DistributionSummary":
         if filename.endswith("gz"):
             with tarfile.open(filename, mode="r:gz") as tf:
                 file_infos = [_FileInfo.from_tarfile_member(tar_info=m) for m in tf.getmembers()]
@@ -52,7 +52,7 @@ class _DistributionSummary:
             # assume anything else can be opened with zipfile
             with zipfile.ZipFile(filename, mode="r") as f:
                 file_infos = [_FileInfo.from_zipfile_member(zip_info=m) for m in f.infolist()]
-        return _DistributionSummary(file_infos=file_infos)
+        return cls(file_infos=file_infos)
 
     @property
     def num_directories(self) -> int:
