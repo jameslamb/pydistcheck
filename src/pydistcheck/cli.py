@@ -7,6 +7,7 @@ from pydistcheck.distribution_summary import (
     _DistributionSummary,
     summarize_distribution_contents,
 )
+from pydistcheck.utils import _FileSize
 
 from typing import Any, Dict, List, Optional, Union
 
@@ -52,7 +53,9 @@ def check(filename: str, max_allowed_files: int) -> None:
     print("pyproject options")
     print(tool_options)
 
-    checks = [_FileCountCheck(max_allowed_files=max_allowed_files)]
+    checks = [
+        _FileCountCheck(max_allowed_files=max_allowed_files),
+    ]
 
     summary = _DistributionSummary.from_file(filename=click.format_filename(filename))
     errors: List[str] = []
