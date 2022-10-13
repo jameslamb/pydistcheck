@@ -36,7 +36,7 @@ def cli(ctx):
     help="maximum number of files allowed in the distribution",
 )
 @click.option(
-    "--max-allowed-size",
+    "--max-allowed-size-compressed",
     default="50M",
     type=str,
     help=(
@@ -48,7 +48,7 @@ def cli(ctx):
         "  - G = gigabytes"
     ),
 )
-def check(filename: str, max_allowed_files: int, max_allowed_size: str) -> None:
+def check(filename: str, max_allowed_files: int, max_allowed_size_compressed: str) -> None:
     """
     Run the contents of a distribution through a set of checks, and raise
     errors if those are not met.
@@ -68,7 +68,9 @@ def check(filename: str, max_allowed_files: int, max_allowed_size: str) -> None:
 
     checks = [
         _DistroTooLargeCompressedCheck(
-            max_allowed_size_bytes=_FileSize.from_string(size_str=max_allowed_size).total_size_bytes
+            max_allowed_size_bytes=_FileSize.from_string(
+                size_str=max_allowed_size_compressed
+            ).total_size_bytes
         ),
         _FileCountCheck(max_allowed_files=max_allowed_files),
     ]

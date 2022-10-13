@@ -1,5 +1,6 @@
 from typing import List
 from pydistcheck.distribution_summary import _DistributionSummary
+from pydistcheck.utils import _FileSize
 
 
 class _DistroTooLargeCompressedCheck:
@@ -11,9 +12,10 @@ class _DistroTooLargeCompressedCheck:
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
-        total_size_bytes = distro_summary.total_size_in_bytes_compressed
-        if total_size_bytes > max_allowed_size_bytes:
-            msg = f"[{self.check_name}] Size {total_size_bytes} is larger than the allowed size ({self.max_allowed_size_bytes})."
+        max_size = _FileSize(num=self.max_allowed_size_bytes, unit_str="B")
+        actual_size = _FileSize(num=distro_summary.total_size_in_bytes_compressed, unit_str="B")
+        if actual_size > max_size:
+            msg = f"[{self.check_name}] Size {actual_size} is larger than the allowed size ({max_size})."
             out.append(msg)
         return out
 
