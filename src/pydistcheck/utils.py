@@ -1,13 +1,7 @@
 from typing import Union
 
 
-_UNIT_TO_NUM_BYTES = {
-    "B": 1,
-    "K": 1024,
-    "M": 1024**2,
-    "G": 1024**3,
-    "T": 1024**4,
-}
+_UNIT_TO_NUM_BYTES = {"B": 1, "K": 1024, "M": 1024**2, "G": 1024**3}
 
 
 class _FileSize:
@@ -26,26 +20,26 @@ class _FileSize:
 
     @classmethod
     def from_string(cls, size_str: str) -> "_FileSize":
-        return cls(num=size_str[-1], unit_str=size_str[:-1])
+        return cls(num=float(size_str[:-1]), unit_str=size_str[-1])
 
     @property
     def total_size_bytes(self) -> int:
         return int(self._num * _UNIT_TO_NUM_BYTES[self._unit_str])
 
     def __gt__(self, other: "_FileSize") -> bool:
-        pass
+        return self.total_size_bytes > other.total_size_bytes
 
     def __ge__(self, other: "_FileSize") -> bool:
-        pass
+        return self.total_size_bytes >= other.total_size_bytes
 
     def __lt__(self, other: "_FileSize") -> bool:
-        pass
+        return self.total_size_bytes < other.total_size_bytes
 
     def __le__(self, other: "_FileSize") -> bool:
-        pass
+        return self.total_size_bytes <= other.total_size_bytes
 
     def __eq__(self, other: "_FileSize") -> bool:
-        pass
+        return self.total_size_bytes == other.total_size_bytes
 
     def __ne__(self, other: "_FileSize") -> bool:
-        pass
+        return self.total_size_bytes != other.total_size_bytes

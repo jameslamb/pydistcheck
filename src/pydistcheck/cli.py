@@ -2,7 +2,7 @@ import os
 import sys
 import click
 from pydistcheck._compat import tomllib
-from pydistcheck.checks import _FileCountCheck
+from pydistcheck.checks import _DistroTooLargeCompressedCheck, _FileCountCheck
 from pydistcheck.distribution_summary import (
     _DistributionSummary,
     summarize_distribution_contents,
@@ -35,7 +35,20 @@ def cli(ctx):
     type=int,
     help="maximum number of files allowed in the distribution",
 )
-def check(filename: str, max_allowed_files: int) -> None:
+@click.option(
+    "--max-allowed-size",
+    default="50M",
+    type=str,
+    help=(
+        "maximum allowed compressed size, a string like '1.5M' indicating"
+        " '1.5 megabytes'. Supported units:\n"
+        "  - B = bytes\n"
+        "  - K = kilobytes\n"
+        "  - M = megabytes\n"
+        "  - G = gigabytes"
+    ),
+)
+def check(filename: str, max_allowed_files: int, max_allowed_size: str) -> None:
     """
     Run the contents of a distribution through a set of checks, and raise
     errors if those are not met.
@@ -54,6 +67,9 @@ def check(filename: str, max_allowed_files: int) -> None:
     print(tool_options)
 
     checks = [
+        _DistroTooLargeCompressedCheck(
+            max_allowed_size_bytes=_FileSize.from_string(size_str=max_allowed_size).total_size_bytes
+        ),
         _FileCountCheck(max_allowed_files=max_allowed_files),
     ]
 
@@ -72,7 +88,6 @@ def check(filename: str, max_allowed_files: int) -> None:
     # included test files
     # found executable files
     # wheel contains compiled objects/libraries with debug symbols
-    # total compressed size > {some_threshold}
     # total uncompressed size > {some_threshold}
     # found files with spaces in their names
     # found file paths longer than {} characters

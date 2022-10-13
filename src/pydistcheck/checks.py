@@ -13,7 +13,7 @@ class _DistroTooLargeCompressedCheck:
         out: List[str] = []
         total_size_bytes = distro_summary.total_size_in_bytes_compressed
         if total_size_bytes > max_allowed_size_bytes:
-            msg = f"[{self.check_name}] Size {total_size_bytes} is larger than the allowed size ({max_allowed_size_bytes})."
+            msg = f"[{self.check_name}] Size {total_size_bytes} is larger than the allowed size ({self.max_allowed_size_bytes})."
             out.append(msg)
         return out
 
