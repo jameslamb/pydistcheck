@@ -11,6 +11,9 @@ def do_stuff():
     return True
 EOF
 
+curl https://www.apache.org/licenses/LICENSE-2.0.txt \
+    --output /tmp/base-package/LICENSE.txt
+
 zip \
     -r base-package.zip \
     /tmp/base-package
