@@ -1,4 +1,5 @@
 import csv
+import os
 import pathlib
 import tarfile
 import zipfile
@@ -13,7 +14,7 @@ class _FileInfo:
     file_extension: str
     is_file: bool
     is_directory: bool
-    compressed_size_bytes: int
+    uncompressed_size_bytes: int
 
     @classmethod
     def from_tarfile_member(cls, tar_info: tarfile.TarInfo) -> "_FileInfo":
@@ -23,7 +24,7 @@ class _FileInfo:
             file_extension=pathlib.Path(file_name).suffix or "no-extension",
             is_file=tar_info.isfile(),
             is_directory=tar_info.isdir(),
-            compressed_size_bytes=tar_info.size,
+            uncompressed_size_bytes=tar_info.size,
         )
 
     @classmethod
@@ -35,16 +36,18 @@ class _FileInfo:
             file_extension=pathlib.Path(file_name).suffix or "no-extension",
             is_file=not is_directory,
             is_directory=is_directory,
-            compressed_size_bytes=zip_info.file_size,
+            uncompressed_size_bytes=zip_info.file_size,
         )
 
 
 @dataclass
 class _DistributionSummary:
+    compressed_size_bytes: int
     file_infos: List[_FileInfo]
 
     @classmethod
     def from_file(cls, filename: str) -> "_DistributionSummary":
+        compressed_size_bytes = os.path.getsize(filename)
         if filename.endswith("gz"):
             with tarfile.open(filename, mode="r:gz") as tf:
                 file_infos = [_FileInfo.from_tarfile_member(tar_info=m) for m in tf.getmembers()]
@@ -52,7 +55,7 @@ class _DistributionSummary:
             # assume anything else can be opened with zipfile
             with zipfile.ZipFile(filename, mode="r") as f:
                 file_infos = [_FileInfo.from_zipfile_member(zip_info=m) for m in f.infolist()]
-        return cls(file_infos=file_infos)
+        return cls(compressed_size_bytes=compressed_size_bytes, file_infos=file_infos)
 
     @property
     def num_directories(self) -> int:
@@ -63,11 +66,15 @@ class _DistributionSummary:
         return sum([1 for f in self.file_infos if f.is_file])
 
     @property
+    def uncompressed_size_bytes(self) -> int:
+        return sum([f.uncompressed_size_bytes for f in self.file_infos])
+
+    @property
     def size_by_file_extension(self) -> defaultdict:
         out = defaultdict(int)
         for f in self.file_infos:
             if f.is_file:
-                out[f.file_extension] += f.compressed_size_bytes
+                out[f.file_extension] += f.uncompressed_size_bytes
         return out
 
 

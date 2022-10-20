@@ -23,5 +23,5 @@ def test_check_respects_max_allowed_files(distro_file):
     assert result.exit_code == 1
 
     log_lines = result.output.split("\n")
-    assert "1. [too-many-files] Found 2 files. Only 1 allowed." in log_lines
+    assert "1. [too-many-files] Found 3 files. Only 1 allowed." in log_lines
     assert "errors found while checking: 1" in log_lines
