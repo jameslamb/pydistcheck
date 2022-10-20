@@ -58,10 +58,6 @@ class _DistributionSummary:
         return cls(compressed_size_bytes=compressed_size_bytes, file_infos=file_infos)
 
     @property
-    def compression_ratio(self) -> float:
-        return float(self.compressed_size_bytes) / float(self.uncompressed_size_bytes)
-
-    @property
     def num_directories(self) -> int:
         return sum([1 for f in self.file_infos if f.is_directory])
 

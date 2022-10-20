@@ -23,15 +23,10 @@ def test_distribution_summary_basically_works(distro_file):
     assert len([f for f in ds.file_infos if not f.is_directory]) == 3
     assert ds.num_files == 3
 
-    # compression ratio should make sense
-    #
-    # NOTE: it is POSSIBLE, but that should be rare for Python
-    #       distribution files
+    # total archive sizes should make sense
     assert ds.compressed_size_bytes > 0
     assert ds.uncompressed_size_bytes > 0
     assert ds.uncompressed_size_bytes > ds.compressed_size_bytes
-    assert ds.compression_ratio > 0.1
-    assert ds.compression_ratio <= 0.9
 
     # size_by_file_extension should work as expected
     assert ds.size_by_file_extension == {".py": 32, ".txt": 11358}
