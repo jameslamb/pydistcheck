@@ -16,7 +16,7 @@ Indicates that the package distribution is larger (compressed) than the allowed 
 Change that limit using configuration option ``max-distro-size-compressed``.
 
 distro-too-large-uncompressed
-***************************
+*****************************
 
 Indicates that the package distribution is larger (uncompressed) than the allowed size.
 
