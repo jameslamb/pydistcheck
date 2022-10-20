@@ -2,7 +2,11 @@ import os
 import sys
 import click
 from pydistcheck._compat import tomllib
-from pydistcheck.checks import _DistroTooLargeCompressedCheck, _FileCountCheck
+from pydistcheck.checks import (
+    _DistroTooLargeCompressedCheck,
+    _DistroTooLargeUnCompressedCheck,
+    _FileCountCheck,
+)
 from pydistcheck.distribution_summary import (
     _DistributionSummary,
     summarize_distribution_contents,
@@ -48,7 +52,25 @@ def cli(ctx):
         "  - G = gigabytes"
     ),
 )
-def check(filename: str, max_allowed_files: int, max_allowed_size_compressed: str) -> None:
+@click.option(
+    "--max-allowed-size-uncompressed",
+    default="75M",
+    type=str,
+    help=(
+        "maximum allowed uncompressed size, a string like '1.5M' indicating"
+        " '1.5 megabytes'. Supported units:\n"
+        "  - B = bytes\n"
+        "  - K = kilobytes\n"
+        "  - M = megabytes\n"
+        "  - G = gigabytes"
+    ),
+)
+def check(
+    filename: str,
+    max_allowed_files: int,
+    max_allowed_size_compressed: str,
+    max_allowed_size_uncompressed: str,
+) -> None:
     """
     Run the contents of a distribution through a set of checks, and raise
     errors if those are not met.
@@ -72,6 +94,11 @@ def check(filename: str, max_allowed_files: int, max_allowed_size_compressed: st
                 size_str=max_allowed_size_compressed
             ).total_size_bytes
         ),
+        _DistroTooLargeUnCompressedCheck(
+            max_allowed_size_bytes=_FileSize.from_string(
+                size_str=max_allowed_size_uncompressed
+            ).total_size_bytes
+        ),
         _FileCountCheck(max_allowed_files=max_allowed_files),
     ]
 
@@ -90,7 +117,6 @@ def check(filename: str, max_allowed_files: int, max_allowed_size_compressed: st
     # included test files
     # found executable files
     # wheel contains compiled objects/libraries with debug symbols
-    # total uncompressed size > {some_threshold}
     # found files with spaces in their names
     # found file paths longer than {} characters
     # found files with names containing control characters
