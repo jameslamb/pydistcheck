@@ -17,7 +17,7 @@ class _DistroTooLargeCompressedCheck:
         if actual_size > max_size:
             msg = (
                 f"[{self.check_name}] Compressed size {actual_size} is larger "
-                "than the allowed size ({max_size})."
+                f"than the allowed size ({max_size})."
             )
             out.append(msg)
         return out
@@ -37,7 +37,7 @@ class _DistroTooLargeUnCompressedCheck:
         if actual_size > max_size:
             msg = (
                 f"[{self.check_name}] Uncompressed size {actual_size} is larger "
-                "than the allowed size ({max_size})."
+                f"than the allowed size ({max_size})."
             )
             out.append(msg)
         return out
@@ -56,7 +56,7 @@ class _FileCountCheck:
         if num_files > self.max_allowed_files:
             msg = (
                 f"[{self.check_name}] Found {num_files} files. "
-                "Only {self.max_allowed_files} allowed."
+                f"Only {self.max_allowed_files} allowed."
             )
             out.append(msg)
         return out
