@@ -1,3 +1,7 @@
+"""
+CLI entrypoints
+"""
+
 import os
 import sys
 import click
