@@ -1,3 +1,5 @@
+# pylint: disable=unused-import
+
 try:
     import tomllib
 except ModuleNotFoundError:

@@ -1,6 +1,7 @@
 import os
 import sys
 import click
+from typing import Dict, List, Optional, Union
 from pydistcheck._compat import tomllib
 from pydistcheck.checks import (
     _DistroTooLargeCompressedCheck,
@@ -12,8 +13,6 @@ from pydistcheck.distribution_summary import (
     summarize_distribution_contents,
 )
 from pydistcheck.utils import _FileSize
-
-from typing import Any, Dict, List, Optional, Union
 
 
 @click.group()
