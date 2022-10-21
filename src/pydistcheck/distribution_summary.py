@@ -1,3 +1,8 @@
+"""
+internal-only classes used to manage information about
+source distributions and their contents
+"""
+
 import csv
 import os
 import pathlib

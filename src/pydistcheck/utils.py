@@ -1,3 +1,8 @@
+"""
+miscellaneous helper classes and functions that are
+not specific to package distributions
+"""
+
 from typing import Any, Tuple, Union
 
 
