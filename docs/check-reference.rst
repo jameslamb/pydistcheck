@@ -8,6 +8,20 @@ The section headings correspond to the error codes printed in ``pydistcheck``'s 
    :maxdepth: 2
    :caption: Contents:
 
+distro-too-large-compressed
+***************************
+
+Indicates that the package distribution is larger (compressed) than the allowed size.
+
+Change that limit using configuration option ``max-distro-size-compressed``.
+
+distro-too-large-uncompressed
+*****************************
+
+Indicates that the package distribution is larger (uncompressed) than the allowed size.
+
+Change that limit using configuration option ``max-distro-size-uncompressed``.
+
 too-many-files
 **************
 
