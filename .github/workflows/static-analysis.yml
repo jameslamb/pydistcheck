@@ -25,6 +25,7 @@ jobs:
             -c conda-forge \
               black \
               flake8 \
+              isort \
               pylint \
               shellcheck
           make lint

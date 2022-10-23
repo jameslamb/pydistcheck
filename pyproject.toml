@@ -9,6 +9,10 @@ build-backend = "setuptools.build_meta"
 [tool.black]
 line-length = 100
 
+[tool.isort]
+line_length = 100
+profile = "black"
+
 [tool.pylint.messages_control]
 
 max-line-length = 100

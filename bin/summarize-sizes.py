@@ -1,4 +1,5 @@
 import sys
+
 import pandas as pd
 
 CSV_FILE = sys.argv[1]
