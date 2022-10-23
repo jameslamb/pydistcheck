@@ -8,4 +8,4 @@ with a wide range of dependency versions.
 try:
     import tomllib  # noqa: F401
 except ModuleNotFoundError:
-    import tomli as tomllib  # noqa: F401
+    import tomli as tomllib  # type: ignore  # noqa: F401

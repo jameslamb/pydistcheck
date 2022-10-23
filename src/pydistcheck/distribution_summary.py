@@ -76,7 +76,7 @@ class _DistributionSummary:
 
     @property
     def size_by_file_extension(self) -> defaultdict:
-        out = defaultdict(int)
+        out: defaultdict = defaultdict(int)
         for f in self.file_infos:
             if f.is_file:
                 out[f.file_extension] += f.uncompressed_size_bytes

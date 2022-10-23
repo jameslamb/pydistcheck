@@ -3,13 +3,18 @@ Implementations for individual checks that ``pydistcheck``
 performs on distributions.
 """
 
-from typing import List
+from typing import List, Protocol
 
 from pydistcheck.distribution_summary import _DistributionSummary
 from pydistcheck.utils import _FileSize
 
 
-class _DistroTooLargeCompressedCheck:
+class _CheckProtocol(Protocol):
+    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
+        ...
+
+
+class _DistroTooLargeCompressedCheck(_CheckProtocol):
 
     check_name = "distro-too-large-compressed"
 
@@ -29,7 +34,7 @@ class _DistroTooLargeCompressedCheck:
         return out
 
 
-class _DistroTooLargeUnCompressedCheck:
+class _DistroTooLargeUnCompressedCheck(_CheckProtocol):
 
     check_name = "distro-too-large-uncompressed"
 
@@ -49,7 +54,7 @@ class _DistroTooLargeUnCompressedCheck:
         return out
 
 
-class _FileCountCheck:
+class _FileCountCheck(_CheckProtocol):
 
     check_name = "too-many-files"
 

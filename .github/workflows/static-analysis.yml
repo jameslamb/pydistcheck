@@ -26,6 +26,7 @@ jobs:
               black \
               flake8 \
               isort \
+              mypy \
               pylint \
               shellcheck
           make lint

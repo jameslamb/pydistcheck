@@ -14,10 +14,7 @@ from pydistcheck.checks import (
     _DistroTooLargeUnCompressedCheck,
     _FileCountCheck,
 )
-from pydistcheck.distribution_summary import (
-    _DistributionSummary,
-    summarize_distribution_contents,
-)
+from pydistcheck.distribution_summary import _DistributionSummary, summarize_distribution_contents
 from pydistcheck.utils import _FileSize
 
 
