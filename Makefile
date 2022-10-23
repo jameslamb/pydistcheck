@@ -31,6 +31,7 @@ lint:
 	black \
 		--check \
 		.
+	flake8 .
 	pylint ./src
 
 .PHONY: smoke-tests
