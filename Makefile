@@ -33,6 +33,7 @@ lint:
 		--check \
 		.
 	flake8 .
+	mypy .
 	pylint ./src
 
 .PHONY: smoke-tests

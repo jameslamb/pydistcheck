@@ -26,6 +26,7 @@ jobs:
               black \
               flake8 \
               isort \
-              pylint \
+              'mypy>=0.931' \
+              'pylint>=2.15.3' \
               shellcheck
           make lint

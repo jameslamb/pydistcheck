@@ -13,6 +13,10 @@ line-length = 100
 line_length = 100
 profile = "black"
 
+[tool.mypy]
+exclude = 'docs/conf\.py$'
+ignore_missing_imports = true
+
 [tool.pylint.messages_control]
 
 max-line-length = 100
