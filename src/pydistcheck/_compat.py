@@ -6,6 +6,6 @@ with a wide range of dependency versions.
 """
 
 try:
-    import tomllib
+    import tomllib  # noqa: F401
 except ModuleNotFoundError:
-    import tomli as tomllib
+    import tomli as tomllib  # noqa: F401

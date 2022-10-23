@@ -2,7 +2,6 @@ import os
 import re
 import pytest
 
-from typing import List
 from click.testing import CliRunner, Result
 from pydistcheck.cli import check
 
@@ -11,9 +10,12 @@ TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
 def _assert_log_matches_pattern(result: Result, pattern: str) -> None:
     log_lines = result.output.split("\n")
-    match_results = [bool(re.search(pattern, l)) for l in log_lines]
+    match_results = [bool(re.search(pattern, log_line)) for log_line in log_lines]
     num_matches_found = sum(match_results)
-    msg = f"Expected to find 1 instance of '{pattern}' in logs, found {num_matches_found} in {log_lines}."
+    msg = (
+        f"Expected to find 1 instance of '{pattern}' in logs, "
+        f"found {num_matches_found} in {log_lines}."
+    )
     assert num_matches_found == 1, msg
 
 
@@ -59,7 +61,10 @@ def test_check_respects_max_allowed_size_compressed(size_str, distro_file):
 
     _assert_log_matches_pattern(
         result,
-        r"^1\. \[distro\-too\-large\-compressed\] Compressed size [0-9]+\.[0-9]+K is larger than the allowed size \([0-9]+\.[0-9]+[BKMG]\)\.$",
+        (
+            r"^1\. \[distro\-too\-large\-compressed\] Compressed size [0-9]+\.[0-9]+K is "
+            r"larger than the allowed size \([0-9]+\.[0-9]+[BKMG]\)\.$"
+        ),
     )
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
 
@@ -85,6 +90,9 @@ def test_check_respects_max_allowed_size_uncompressed(size_str, distro_file):
 
     _assert_log_matches_pattern(
         result,
-        r"^1\. \[distro\-too\-large\-uncompressed\] Uncompressed size [0-9]+\.[0-9]+K is larger than the allowed size \([0-9]+\.[0-9]+[BKMG]\)\.$",
+        (
+            r"^1\. \[distro\-too\-large\-uncompressed\] Uncompressed size [0-9]+\.[0-9]+K is "
+            r"larger than the allowed size \([0-9]+\.[0-9]+[BKMG]\)\.$"
+        ),
     )
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
