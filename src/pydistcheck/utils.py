@@ -5,7 +5,6 @@ not specific to package distributions
 
 from typing import Any, Tuple, Union
 
-
 _UNIT_TO_NUM_BYTES = {"B": 1, "K": 1024, "M": 1024**2, "G": 1024**3}
 
 

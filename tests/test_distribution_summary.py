@@ -1,4 +1,5 @@
 import os
+
 import pytest
 
 from pydistcheck.distribution_summary import _DistributionSummary

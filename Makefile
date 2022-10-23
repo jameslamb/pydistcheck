@@ -12,6 +12,7 @@ clean:
 
 .PHONY: format
 format:
+	isort .
 	black .
 
 .PHONY: full-run

@@ -4,6 +4,7 @@ performs on distributions.
 """
 
 from typing import List
+
 from pydistcheck.distribution_summary import _DistributionSummary
 from pydistcheck.utils import _FileSize
 

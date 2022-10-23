@@ -1,8 +1,9 @@
 import os
 import re
-import pytest
 
+import pytest
 from click.testing import CliRunner, Result
+
 from pydistcheck.cli import check
 
 TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
