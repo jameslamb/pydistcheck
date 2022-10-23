@@ -12,10 +12,10 @@ _UNIT_TO_NUM_BYTES = {"B": 1, "K": 1024, "M": 1024**2, "G": 1024**3}
 def _recommend_size_str(num_bytes: float) -> Tuple[float, str]:
     if num_bytes < 512:
         return float(num_bytes), "B"
-    elif num_bytes <= (0.5 * 1024**2):
+    if num_bytes <= (0.5 * 1024**2):
         return float(num_bytes) / 1024.0, "K"
-    else:
-        return float(num_bytes) / (1024**2), "M"
+
+    return float(num_bytes) / (1024**2), "M"
 
 
 class _FileSize:

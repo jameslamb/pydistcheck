@@ -4,8 +4,8 @@ CLI entrypoints
 
 import os
 import sys
-import click
 from typing import Dict, List, Optional, Union
+import click
 from pydistcheck._compat import tomllib
 from pydistcheck.checks import (
     _DistroTooLargeCompressedCheck,
