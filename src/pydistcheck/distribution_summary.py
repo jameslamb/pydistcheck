@@ -64,15 +64,15 @@ class _DistributionSummary:
 
     @property
     def num_directories(self) -> int:
-        return sum([1 for f in self.file_infos if f.is_directory])
+        return sum(1 for f in self.file_infos if f.is_directory)
 
     @property
     def num_files(self) -> int:
-        return sum([1 for f in self.file_infos if f.is_file])
+        return sum(1 for f in self.file_infos if f.is_file)
 
     @property
     def uncompressed_size_bytes(self) -> int:
-        return sum([f.uncompressed_size_bytes for f in self.file_infos])
+        return sum(f.uncompressed_size_bytes for f in self.file_infos)
 
     @property
     def size_by_file_extension(self) -> defaultdict:
@@ -94,7 +94,7 @@ def summarize_distribution_contents(file: str, output_file: Optional[str] = None
 
     if output_file is not None:
         print(f"writing size-by-extension results to '{output_file}'")
-        with open(output_file, "w", newline="") as f:
+        with open(output_file, "w", encoding="utf-8", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=["extension", "size"])
             writer.writeheader()
             for extension, size in summary.size_by_file_extension.items():

@@ -24,5 +24,6 @@ jobs:
             --yes \
             -c conda-forge \
               black \
+              pylint \
               shellcheck
           make lint
