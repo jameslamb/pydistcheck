@@ -10,7 +10,7 @@ from pydistcheck.utils import _FileSize
 
 
 class _CheckProtocol(Protocol):
-    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
+    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:  # pragma: no cover
         ...
 
 
