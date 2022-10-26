@@ -38,24 +38,8 @@ lint:
 
 .PHONY: smoke-tests
 smoke-tests:
-	@echo "running smoke tests" && \
-	mkdir -p ./smoke-tests
-	# wheel-only package
-	@echo "  - catboost" && \
-	bin/full-run.sh \
-		"catboost" \
-		"$(OUTPUT_DIR)/catboost"
-	# package where source distro is a .zip
-	@echo "  - numpy" && \
-	bin/full-run.sh \
-		"numpy" \
-		"$(OUTPUT_DIR)/numpy"
-	# package with so many files that `find -exec du -ch` has to batch results
-	@echo "  - tensorflow" && \
-	bin/full-run.sh \
-		"tensorflow" \
-		"$(OUTPUT_DIR)/tensorflow"
-	@echo "done running smoke tests"
+	OUTPUT_DIR="$(OUTPUT_DIR)" \
+	bin/run-smoke-tests.sh
 
 .PHONY: test-data
 test-data:
