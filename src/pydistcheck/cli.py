@@ -15,7 +15,7 @@ from pydistcheck.checks import (
     _FileCountCheck,
 )
 from pydistcheck.distribution_summary import _DistributionSummary
-from pydistcheck.inspect import summarize_distribution_contents
+from pydistcheck.inspect import inspect_distribution
 from pydistcheck.utils import _FileSize
 
 
@@ -87,7 +87,7 @@ def check(
     print(tool_options)
 
     if inspect:
-        summarize_distribution_contents(filepath=click.format_filename(filename))
+        inspect_distribution(filepath=click.format_filename(filename))
 
     checks = [
         _DistroTooLargeCompressedCheck(

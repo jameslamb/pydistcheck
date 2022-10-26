@@ -6,7 +6,7 @@ from pydistcheck.distribution_summary import _DistributionSummary
 from pydistcheck.utils import _FileSize
 
 
-def summarize_distribution_contents(filepath: str) -> None:
+def inspect_distribution(filepath: str) -> None:
     print(f"checking file '{filepath}'")
 
     summary = _DistributionSummary.from_file(filename=filepath)

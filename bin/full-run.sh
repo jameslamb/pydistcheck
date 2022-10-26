@@ -17,8 +17,6 @@ fi
 
 ARTIFACTS_CSV="${OUTPUT_DIR}/artifacts.csv"
 RELEASE_JSON_FILE="${OUTPUT_DIR}/release-info.json"
-SOURCE_SIZES_CSV="${OUTPUT_DIR}/source-sizes.csv"
-WHEEL_SIZES_CSV="${OUTPUT_DIR}/wheel-sizes.csv"
 
 bin/get-release-info.sh \
     "${PACKAGE_NAME}" \

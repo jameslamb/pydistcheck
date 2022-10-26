@@ -98,9 +98,11 @@ def test_check_respects_max_allowed_size_uncompressed(size_str, distro_file):
     )
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
 
+
 # --------------------- #
 # pydistcheck --inspect #
 # --------------------- #
+
 
 @pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
 def test_inspect_runs_before_checks(distro_file):
@@ -114,4 +116,4 @@ def test_inspect_runs_before_checks(distro_file):
         result, r"^1\. \[too\-many\-files\] Found 3 files\. Only 1 allowed\.$"
     )
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
-    _assert_log_matches_pattern(result, r'^size by extension$')
+    _assert_log_matches_pattern(result, r"^size by extension$")
