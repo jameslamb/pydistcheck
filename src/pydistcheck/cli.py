@@ -4,7 +4,7 @@ CLI entrypoints
 
 import os
 import sys
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Union
 
 import click
 
@@ -14,26 +14,22 @@ from pydistcheck.checks import (
     _DistroTooLargeUnCompressedCheck,
     _FileCountCheck,
 )
-from pydistcheck.distribution_summary import _DistributionSummary, summarize_distribution_contents
+from pydistcheck.distribution_summary import _DistributionSummary
+from pydistcheck.inspect import summarize_distribution_contents
 from pydistcheck.utils import _FileSize
-
-
-@click.group()
-@click.pass_context
-def cli(ctx):
-    """Command group just used to group all others as sub-commands of ``pydistcheck``"""
-    options: Dict[str, Union[int, str]] = {}
-    if os.path.exists("pyproject.toml"):
-        with open("pyproject.toml", "rb") as f:
-            config_dict = tomllib.load(f)
-            options = config_dict.get("tool", {}).get("pydistcheck", {})
-    ctx.obj = options
 
 
 @click.command()
 @click.argument(
     "filename",
     type=click.Path(exists=True),
+)
+@click.option(
+    "--inspect",
+    is_flag=True,
+    show_default=False,
+    default=False,
+    help="print diagnostic information about the distribution",
 )
 @click.option(
     "--max-allowed-files",
@@ -69,6 +65,7 @@ def cli(ctx):
 )
 def check(
     filename: str,
+    inspect: bool,
     max_allowed_files: int,
     max_allowed_size_compressed: str,
     max_allowed_size_uncompressed: str,
@@ -76,7 +73,6 @@ def check(
     """
     Run the contents of a distribution through a set of checks, and raise
     errors if those are not met.
-    :param file: A file path.
     """
     print("running pydistcheck")
     print(click.format_filename(filename))
@@ -89,6 +85,9 @@ def check(
 
     print("pyproject options")
     print(tool_options)
+
+    if inspect:
+        summarize_distribution_contents(filepath=click.format_filename(filename))
 
     checks = [
         _DistroTooLargeCompressedCheck(
@@ -114,14 +113,3 @@ def check(
 
     print(f"errors found while checking: {len(errors)}")
     sys.exit(len(errors))
-
-
-@click.command()
-@click.argument(
-    "filename",
-    type=click.Path(exists=True),
-)
-@click.option("--output-file", default=None, help="Path to a CSV file to write results to.")
-def summarize(filename: str, output_file: Optional[str]) -> None:
-    """Print a summary of a distribution's contents"""
-    summarize_distribution_contents(file=click.format_filename(filename), output_file=output_file)

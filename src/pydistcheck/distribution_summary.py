@@ -3,14 +3,13 @@ internal-only classes used to manage information about
 source distributions and their contents
 """
 
-import csv
 import os
 import pathlib
 import tarfile
 import zipfile
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List
 
 
 @dataclass
@@ -81,26 +80,3 @@ class _DistributionSummary:
             if f.is_file:
                 out[f.file_extension] += f.uncompressed_size_bytes
         return out
-
-
-def summarize_distribution_contents(file: str, output_file: Optional[str] = None) -> None:
-    print(f"checking file '{file}'")
-
-    summary = _DistributionSummary.from_file(filename=file)
-
-    print("contents")
-    print(f"  * directories: {summary.num_directories}")
-    print(f"  * files: {summary.num_files}")
-
-    if output_file is not None:
-        print(f"writing size-by-extension results to '{output_file}'")
-        with open(output_file, "w", encoding="utf-8", newline="") as f:
-            writer = csv.DictWriter(f, fieldnames=["extension", "size"])
-            writer.writeheader()
-            for extension, size in summary.size_by_file_extension.items():
-                writer.writerow({"extension": extension, "size": size})
-        print("done writing CSV")
-    else:
-        print("sizes")
-        for extension, size in summary.size_by_file_extension.items():
-            print(f"  * {extension} - {round(size / 1024.0, 1)}K")
