@@ -18,7 +18,8 @@ format:
 .PHONY: full-run
 full-run:
 	bin/full-run.sh \
-		"$(PACKAGE_NAME)"
+		"$(PACKAGE_NAME)" \
+		"$(OUTPUT_DIR)"
 
 .PHONY: install
 install:

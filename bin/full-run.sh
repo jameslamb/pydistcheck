@@ -43,12 +43,12 @@ else
         "${SOURCE_FILE}" \
         "${OUTPUT_DIR}/source"
 
-    pydistcheck-summarize \
-      --output-file "${SOURCE_SIZES_CSV}" \
+    pydistcheck \
+      --inspect \
+      --max-allowed-files 2500 \
+      --max-allowed-size-compressed '250M' \
+      --max-allowed-size-uncompressed '250M' \
       "${OUTPUT_DIR}/source/${SOURCE_FILE}"
-
-    python bin/summarize-sizes.py \
-        "${SOURCE_SIZES_CSV}"
 fi
 
 echo "searching for a wheel"
@@ -69,10 +69,10 @@ else
         "${WHEEL_FILE}" \
         "${OUTPUT_DIR}/wheel"
 
-    pydistcheck-summarize \
-      --output-file "${WHEEL_SIZES_CSV}" \
+    pydistcheck \
+      --inspect \
+      --max-allowed-files 2500 \
+      --max-allowed-size-compressed '250M' \
+      --max-allowed-size-uncompressed '250M' \
       "${OUTPUT_DIR}/wheel/${WHEEL_FILE}"
-
-    python bin/summarize-sizes.py \
-        "${WHEEL_SIZES_CSV}"
 fi
