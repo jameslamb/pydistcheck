@@ -1,5 +1,5 @@
 """
-Implementation of codde that prints diagnostic information about a distribution.
+Code that prints diagnostic information about a distribution.
 """
 
 from pydistcheck.distribution_summary import _DistributionSummary
