@@ -115,16 +115,6 @@ def check(
     print(f"errors found while checking: {len(errors)}")
     sys.exit(len(errors))
 
-    # surprising / disallowed file extensions
-    # included test files
-    # found executable files
-    # wheel contains compiled objects/libraries with debug symbols
-    # found files with spaces in their names
-    # found file paths longer than {} characters
-    # found files with names containing control characters
-    # more than {n} total files
-    # found files with compressed size > {some_threshold}
-
 
 @click.command()
 @click.argument(
