@@ -7,7 +7,7 @@ import os
 import pathlib
 import tarfile
 import zipfile
-from collections import defaultdict
+from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
 from typing import List
 
@@ -74,9 +74,21 @@ class _DistributionSummary:
         return sum(f.uncompressed_size_bytes for f in self.file_infos)
 
     @property
-    def size_by_file_extension(self) -> defaultdict:
-        out: defaultdict = defaultdict(int)
+    def size_by_file_extension(self) -> OrderedDict:
+        """
+        Aggregate file sizes in a distribution by extension.
+
+        :return: An OrderedDict where keys are file extensions and values are the total size in
+                 bytes occupied by such files in the distribution. Sorted in descending
+                 order by size.
+        """
+        summary_dict: defaultdict = defaultdict(int)
         for f in self.file_infos:
             if f.is_file:
-                out[f.file_extension] += f.uncompressed_size_bytes
+                summary_dict[f.file_extension] += f.uncompressed_size_bytes
+        sorted_sizes = list(summary_dict.items())
+        sorted_sizes.sort(key=lambda x: x[1], reverse=True)
+        out = OrderedDict()
+        for file_extension, size_in_bytes in sorted_sizes:
+            out[file_extension] = size_in_bytes
         return out
