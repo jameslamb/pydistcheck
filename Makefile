@@ -18,7 +18,8 @@ format:
 .PHONY: full-run
 full-run:
 	bin/full-run.sh \
-		"$(PACKAGE_NAME)"
+		"$(PACKAGE_NAME)" \
+		"$(OUTPUT_DIR)"
 
 .PHONY: install
 install:
@@ -50,7 +51,7 @@ test:
 	PYTHONPATH=src \
 	pytest \
 		--cov=src/pydistcheck \
-		--cov-fail-under=88 \
+		--cov-fail-under=100 \
 		--cov-report="term" \
 		--cov-report="html:htmlcov" \
 		./tests
