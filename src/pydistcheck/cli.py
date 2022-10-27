@@ -21,8 +21,9 @@ from pydistcheck.utils import _FileSize
 
 @click.command()
 @click.argument(
-    "filename",
+    "filepaths",
     type=click.Path(exists=True),
+    nargs=-1,
 )
 @click.option(
     "--inspect",
@@ -64,7 +65,7 @@ from pydistcheck.utils import _FileSize
     ),
 )
 def check(
-    filename: str,
+    filepaths: str,
     inspect: bool,
     max_allowed_files: int,
     max_allowed_size_compressed: str,
@@ -75,7 +76,7 @@ def check(
     any problematic characteristics that are detected.
     """
     print("==================== running pydistcheck ====================")
-    print(click.format_filename(filename))
+    filepaths_to_check = [click.format_filename(f) for f in filepaths]
 
     tool_options: Dict[str, Union[int, str]] = {}
     if os.path.exists("pyproject.toml"):
@@ -85,9 +86,6 @@ def check(
 
     print("pyproject options")
     print(tool_options)
-
-    if inspect:
-        inspect_distribution(filepath=click.format_filename(filename))
 
     checks = [
         _DistroTooLargeCompressedCheck(
@@ -103,14 +101,29 @@ def check(
         _FileCountCheck(max_allowed_files=max_allowed_files),
     ]
 
-    summary = _DistributionSummary.from_file(filename=click.format_filename(filename))
-    errors: List[str] = []
-    for this_check in checks:
-        errors += this_check(distro_summary=summary)
+    any_errors_found = False
+    for filepath in filepaths_to_check:
+        print(f"checking '{filepath}'")
 
-    for i, error_msg in enumerate(errors):
-        print(f"{i + 1}. {error_msg}")
+        if inspect:
+            inspect_distribution(filepath=filepath)
 
-    print(f"errors found while checking: {len(errors)}")
+        summary = _DistributionSummary.from_file(filename=filepath)
+        errors: List[str] = []
+        for this_check in checks:
+            errors += this_check(distro_summary=summary)
+
+        for i, error_msg in enumerate(errors):
+            print(f"{i + 1}. {error_msg}")
+
+        num_errors_for_this_file = len(errors)
+        if num_errors_for_this_file:
+            any_errors_found = True
+
+        print(f"errors found while checking: {num_errors_for_this_file}")
+
     print("==================== done running pydistcheck ===============")
-    sys.exit(len(errors))
+
+    # now that all files have been checked, be sure to exit with a non-0 code
+    # if any errors were found
+    sys.exit(int(any_errors_found))
