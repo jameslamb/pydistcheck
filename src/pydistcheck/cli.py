@@ -75,7 +75,7 @@ def check(
     Run the contents of a distribution through a set of checks, and warn about
     any problematic characteristics that are detected.
     """
-    print("running pydistcheck")
+    print("==================== running pydistcheck ====================")
     filepaths_to_check = [click.format_filename(f) for f in filepaths]
 
     tool_options: Dict[str, Union[int, str]] = {}
@@ -121,6 +121,8 @@ def check(
             any_errors_found = True
 
         print(f"errors found while checking: {num_errors_for_this_file}")
+
+    print("==================== done running pydistcheck ===============")
 
     # now that all files have been checked, be sure to exit with a non-0 code
     # if any errors were found
