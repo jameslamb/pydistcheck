@@ -103,22 +103,24 @@ def check(
 
     any_errors_found = False
     for filepath in filepaths_to_check:
+        print(f"checking '{filepath}'")
+
         if inspect:
             inspect_distribution(filepath=filepath)
 
-            summary = _DistributionSummary.from_file(filename=filepath)
-            errors: List[str] = []
-            for this_check in checks:
-                errors += this_check(distro_summary=summary)
+        summary = _DistributionSummary.from_file(filename=filepath)
+        errors: List[str] = []
+        for this_check in checks:
+            errors += this_check(distro_summary=summary)
 
-            for i, error_msg in enumerate(errors):
-                print(f"{i + 1}. {error_msg}")
+        for i, error_msg in enumerate(errors):
+            print(f"{i + 1}. {error_msg}")
 
-            num_errors_for_this_file = len(errors)
-            if num_errors_for_this_file:
-                any_errors_found = True
+        num_errors_for_this_file = len(errors)
+        if num_errors_for_this_file:
+            any_errors_found = True
 
-            print(f"errors found while checking: {num_errors_for_this_file}")
+        print(f"errors found while checking: {num_errors_for_this_file}")
 
     # now that all files have been checked, be sure to exit with a non-0 code
     # if any errors were found
