@@ -8,10 +8,16 @@
 [![GitHub Actions](https://github.com/jameslamb/pydistcheck/workflows/unit-tests/badge.svg?branch=main)](https://github.com/jameslamb/pydistcheck/actions/workflows/unit-tests.yml)
 [![GitHub Actions](https://github.com/jameslamb/pydistcheck/workflows/smoke-tests/badge.svg?branch=main)](https://github.com/jameslamb/pydistcheck/actions/workflows/smoke-tests.yml)
 
-> **Warning**
->
-> This project is very-very-very new and will change significantly.
-> If I was you, **I wouldn't use it**.
+## What is `pydistcheck`?
+
+`pydistcheck` is a command line interface (CLI) for:
+
+* inspecting the contents of Python package distributions during development
+* enforcing constraints on Python package distributions in continuous integration
+
+It's inspired by R's `R CMD check`.
+
+For more background on the value of such a tool, see the SciPY 2022 talk "Does that CSV Belong on PyPI? Probably Not" ([video link](https://www.youtube.com/watch?v=1a7g5l_g_U8)).
 
 ## Installation
 
@@ -26,7 +32,7 @@ pipx install pydistcheck
 Given a Python distribution...
 
 ```shell
-pydistcheck dist/*.tar.gz
+pydistcheck dist/*
 ```
 
 ## Related Projects
