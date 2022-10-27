@@ -32,8 +32,7 @@ Such paths are not portable, as some filesystems (notably macOS), are case-insen
 too-many-files
 **************
 
-``too-many-files`` is raised whenever ``pydistcheck`` encounters a package distribution
-that contains more than the allowed number of files.
+The package distribution contains more than the allowed number of files.
 
 This is a very very rough way to detect that unexpected files have been included in a new release of a project.
 
