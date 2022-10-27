@@ -44,7 +44,13 @@ smoke-tests:
 
 .PHONY: test-data
 test-data:
-	bash ./bin/create-test-data.sh
+	docker run \
+		--rm \
+		-v $$(pwd):/usr/local/src \
+		--workdir /usr/local/src \
+		--entrypoint="" \
+		-it ubuntu:latest \
+		bash -c "apt-get update && apt-get install -y --no-install-recommends ca-certificates curl zip && bin/create-test-data.sh"
 
 .PHONY: test
 test:

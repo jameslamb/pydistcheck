@@ -131,6 +131,29 @@ def test_check_respects_max_allowed_size_uncompressed(size_str, distro_file):
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
 
 
+@pytest.mark.parametrize("distro_file", ["problematic-package.tar.gz", "problematic-package.zip"])
+def test_files_only_differ_by_case_works(distro_file):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [os.path.join(TEST_DATA_DIR, distro_file)],
+    )
+    assert result.exit_code == 1
+
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^1\. \[files\-only\-differ\-by\-case\] Found files which differ only by case\. "
+            r"Such files are not portable, since some filesystems are case-insensitive\. "
+            r"Files\: tmp/problematic-package/question\.PY,tmp/problematic-package/question\.py"
+            r",tmp/problematic-package/Question\.py"
+        ),
+    )
+    _assert_log_matches_pattern(
+        result=result, pattern="errors found while checking\\: 1"
+    )
+
+
 # --------------------- #
 # pydistcheck --inspect #
 # --------------------- #

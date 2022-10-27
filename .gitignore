@@ -59,3 +59,5 @@ wheels/
 # exclusions
 !tests/data/base-package.tar.gz
 !tests/data/base-package.zip
+!tests/data/problematic-package.tar.gz
+!tests/data/problematic-package.zip
