@@ -10,9 +10,7 @@ if [ -d "${OUTPUT_DIR}" ]; then
     exit 1
 else
     echo "creating directory '${OUTPUT_DIR}'"
-    mkdir -p "${OUTPUT_DIR}"
-    mkdir -p "${OUTPUT_DIR}/source"
-    mkdir -p "${OUTPUT_DIR}/wheel"
+    mkdir -p "${OUTPUT_DIR}/distributions"
 fi
 
 ARTIFACTS_CSV="${OUTPUT_DIR}/artifacts.csv"
@@ -39,14 +37,7 @@ else
     bin/download-package.sh \
         "${ARTIFACTS_CSV}" \
         "${SOURCE_FILE}" \
-        "${OUTPUT_DIR}/source"
-
-    pydistcheck \
-      --inspect \
-      --max-allowed-files 2500 \
-      --max-allowed-size-compressed '250M' \
-      --max-allowed-size-uncompressed '250M' \
-      "${OUTPUT_DIR}/source/${SOURCE_FILE}"
+        "${OUTPUT_DIR}/distributions"
 fi
 
 echo "searching for a wheel"
@@ -65,12 +56,13 @@ else
     bin/download-package.sh \
         "${ARTIFACTS_CSV}" \
         "${WHEEL_FILE}" \
-        "${OUTPUT_DIR}/wheel"
-
-    pydistcheck \
-      --inspect \
-      --max-allowed-files 2500 \
-      --max-allowed-size-compressed '250M' \
-      --max-allowed-size-uncompressed '250M' \
-      "${OUTPUT_DIR}/wheel/${WHEEL_FILE}"
+        "${OUTPUT_DIR}/distributions"
 fi
+
+
+pydistcheck \
+  --inspect \
+  --max-allowed-files 2500 \
+  --max-allowed-size-compressed '250M' \
+  --max-allowed-size-uncompressed '250M' \
+  "${OUTPUT_DIR}/distributions"/*
