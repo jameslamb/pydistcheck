@@ -71,8 +71,8 @@ def check(
     max_allowed_size_uncompressed: str,
 ) -> None:
     """
-    Run the contents of a distribution through a set of checks, and raise
-    errors if those are not met.
+    Run the contents of a distribution through a set of checks, and warn about
+    any problematic characteristics that are detected.
     """
     print("running pydistcheck")
     print(click.format_filename(filename))
