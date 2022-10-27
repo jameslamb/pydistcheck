@@ -9,7 +9,7 @@ from pydistcheck.cli import check
 TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
 
-def _assert_log_matches_pattern(result: Result, pattern: str) -> None:
+def _assert_log_matches_pattern(result: Result, pattern: str, num_times: int = 1) -> None:
     log_lines = result.output.split("\n")
     match_results = [bool(re.search(pattern, log_line)) for log_line in log_lines]
     num_matches_found = sum(match_results)
@@ -17,7 +17,7 @@ def _assert_log_matches_pattern(result: Result, pattern: str) -> None:
         f"Expected to find 1 instance of '{pattern}' in logs, "
         f"found {num_matches_found} in {log_lines}."
     )
-    assert num_matches_found == 1, msg
+    assert num_matches_found == num_times, msg
 
 
 @pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
@@ -25,6 +25,38 @@ def test_check_runs_without_error(distro_file):
     runner = CliRunner()
     result = runner.invoke(check, [os.path.join(TEST_DATA_DIR, distro_file)])
     assert result.exit_code == 0
+
+
+def test_check_fails_with_informative_error_if_file_doesnt_exist():
+    runner = CliRunner()
+    result = runner.invoke(check, ["some-garbage.exe"])
+    assert result.exit_code > 0
+    _assert_log_matches_pattern(result, r"Path 'some\-garbage\.exe' does not exist\.$")
+
+
+def test_check_runs_for_all_files_before_exiting():
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [
+            "--max-allowed-size-compressed=5B",
+            os.path.join(TEST_DATA_DIR, "base-package.tar.gz"),
+            os.path.join(TEST_DATA_DIR, "base-package.zip"),
+        ],
+    )
+    assert result.exit_code == 1
+
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^1\. \[distro\-too\-large\-compressed\] Compressed size [0-9]+\.[0-9]+K is "
+            r"larger than the allowed size \(5\.0B\)\.$"
+        ),
+        num_times=2,
+    )
+    _assert_log_matches_pattern(
+        result=result, pattern="errors found while checking\\: 1", num_times=2
+    )
 
 
 @pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
