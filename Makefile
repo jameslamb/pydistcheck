@@ -23,7 +23,7 @@ full-run:
 
 .PHONY: install
 install:
-	pipx install --force dist/*.tar.gz
+	pipx install --force -e .
 
 .PHONY: lint
 lint:
