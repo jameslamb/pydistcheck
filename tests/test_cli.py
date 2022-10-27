@@ -27,6 +27,13 @@ def test_check_runs_without_error(distro_file):
     assert result.exit_code == 0
 
 
+def test_check_fails_with_informative_error_if_file_doesnt_exist():
+    runner = CliRunner()
+    result = runner.invoke(check, ["some-garbage.exe"])
+    assert result.exit_code > 0
+    _assert_log_matches_pattern(result, r"Path 'some\-garbage\.exe' does not exist\.$")
+
+
 @pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
 def test_check_respects_max_allowed_files(distro_file):
     runner = CliRunner()
