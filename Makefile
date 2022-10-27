@@ -23,7 +23,7 @@ full-run:
 
 .PHONY: install
 install:
-	pipx install -e --force .
+	pipx install --force -e .
 
 .PHONY: lint
 lint:
