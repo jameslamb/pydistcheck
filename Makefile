@@ -4,7 +4,7 @@ OUTPUT_DIR ?= $(PWD)/tmp-dir
 build:
 	pipx install cibuildwheel
 	rm -r ./dist || true
-	pipx run build --sdist
+	pipx run build --sdist --wheel
 
 .PHONY: clean
 clean:
