@@ -28,6 +28,11 @@ If you use tools like ``conda`` or ``mamba`` to manage environments, install ``p
 .. code-block:: shell
 
     conda install -c conda-forge pydistcheck
+
+or
+
+.. code-block:: shell
+
     mamba install pydistcheck
 
 development version
