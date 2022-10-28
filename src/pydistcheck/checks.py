@@ -3,6 +3,7 @@ Implementations for individual checks that ``pydistcheck``
 performs on distributions.
 """
 
+from collections import defaultdict
 from typing import List, Protocol
 
 from pydistcheck.distribution_summary import _DistributionSummary
@@ -68,6 +69,32 @@ class _FileCountCheck(_CheckProtocol):
             msg = (
                 f"[{self.check_name}] Found {num_files} files. "
                 f"Only {self.max_allowed_files} allowed."
+            )
+            out.append(msg)
+        return out
+
+
+class _FilesOnlyDifferByCaseCheck(_CheckProtocol):
+
+    check_name = "files-only-differ-by-case"
+
+    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
+        out: List[str] = []
+        path_lower_to_raw = defaultdict(list)
+        for file_info in distro_summary.file_infos:
+            path_lower_to_raw[file_info.name.lower()].append(file_info.name)
+
+        duplicates_list: List[str] = []
+        for _, filepaths in path_lower_to_raw.items():
+            if len(filepaths) > 1:
+                duplicates_list += filepaths
+
+        if duplicates_list:
+            duplicates_str = ",".join(duplicates_list)
+            msg = (
+                f"[{self.check_name}] Found files which differ only by case. "
+                "Such files are not portable, since some filesystems are case-insensitive. "
+                f"Files: {duplicates_str}"
             )
             out.append(msg)
         return out

@@ -25,3 +25,36 @@ tar \
     /tmp/base-package
 
 mv ./base-package.tar.gz ./tests/data/
+
+#-----------------------#
+# package with problems #
+#-----------------------#
+
+cp -R /tmp/base-package /tmp/problematic-package
+
+cat << EOF > /tmp/problematic-package/question.py
+from spongebobcase import tospongebob
+tospongebob("but does it scale?")
+EOF
+
+# only differs by one letter in name
+cp \
+    /tmp/problematic-package/question.py \
+    /tmp/problematic-package/Question.py
+
+# only differs by extension
+cp \
+    /tmp/problematic-package/question.py \
+    /tmp/problematic-package/question.PY
+
+zip \
+    -r problematic-package.zip \
+    /tmp/problematic-package
+
+mv ./problematic-package.zip ./tests/data/
+
+tar \
+    -czvf problematic-package.tar.gz \
+    /tmp/problematic-package
+
+mv ./problematic-package.tar.gz ./tests/data/

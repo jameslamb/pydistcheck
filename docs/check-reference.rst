@@ -11,22 +11,28 @@ The section headings correspond to the error codes printed in ``pydistcheck``'s 
 distro-too-large-compressed
 ***************************
 
-Indicates that the package distribution is larger (compressed) than the allowed size.
+The package distribution is larger (compressed) than the allowed size.
 
 Change that limit using configuration option ``max-distro-size-compressed``.
 
 distro-too-large-uncompressed
 *****************************
 
-Indicates that the package distribution is larger (uncompressed) than the allowed size.
+The package distribution is larger (uncompressed) than the allowed size.
 
 Change that limit using configuration option ``max-distro-size-uncompressed``.
+
+files-only-differ-by-case
+*************************
+
+The package distribution contains filepaths which are identical after lowercasing.
+
+Such paths are not portable, as some filesystems (notably macOS), are case-insensitive.
 
 too-many-files
 **************
 
-``too-many-files`` is raised whenever ``pydistcheck`` encounters a package distribution
-that contains more than the allowed number of files.
+The package distribution contains more than the allowed number of files.
 
 This is a very very rough way to detect that unexpected files have been included in a new release of a project.
 
