@@ -149,9 +149,7 @@ def test_files_only_differ_by_case_works(distro_file):
             r",tmp/problematic-package/Question\.py"
         ),
     )
-    _assert_log_matches_pattern(
-        result=result, pattern="errors found while checking\\: 1"
-    )
+    _assert_log_matches_pattern(result=result, pattern="errors found while checking\\: 1")
 
 
 # --------------------- #
