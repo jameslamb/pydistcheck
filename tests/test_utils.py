@@ -35,6 +35,6 @@ def test_file_size_from_different_inputs_all_parsed_consistently(file_size):
 
 
 def test_file_size_from_number_switches_unit_str_based_on_size():
-    _FileSize.from_number(1.1) == _FileSize(num=1.1, unit_str="B")
-    _FileSize.from_number(100.01) == _FileSize(num=0.10001, unit_str="K")
-    _FileSize.from_number(3456789) == _FileSize(num=3.456789, unit_str="G")
+    assert _FileSize.from_number(1.1) == _FileSize(num=1.1, unit_str="B")
+    assert _FileSize.from_number(100.01) == _FileSize(num=0.10001, unit_str="K")
+    assert _FileSize.from_number(3456789) == _FileSize(num=3.456789, unit_str="G")

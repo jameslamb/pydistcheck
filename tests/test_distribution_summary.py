@@ -34,6 +34,6 @@ def test_distribution_summary_basically_works(distro_file):
 
     # size_by_file_extension should return results sorted from largest to smallest by file size
     last_size_seen = float("inf")
-    for file_extension, size_in_bytes in ds.size_by_file_extension.items():
+    for _, size_in_bytes in ds.size_by_file_extension.items():
         assert size_in_bytes < last_size_seen
         last_size_seen = size_in_bytes
