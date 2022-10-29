@@ -3,12 +3,12 @@ miscellaneous helper classes and functions that are
 not specific to package distributions
 """
 
-from typing import Any, Tuple, Union
+from typing import Any, Tuple
 
 _UNIT_TO_NUM_BYTES = {"B": 1, "K": 1024, "M": 1024**2, "G": 1024**3}
 
 
-def _recommend_size_str(num_bytes: float) -> Tuple[float, str]:
+def _recommend_size_str(num_bytes: int) -> Tuple[float, str]:
     if num_bytes < 512:
         return float(num_bytes), "B"
     if num_bytes <= (0.5 * 1024**2):
@@ -23,8 +23,8 @@ class _FileSize:
         self._unit_str = unit_str
 
     @classmethod
-    def from_number(cls, num: Union[int, float]) -> "_FileSize":
-        num_bytes, unit_str = _recommend_size_str(num_bytes=float(num))
+    def from_number(cls, num: int) -> "_FileSize":
+        num_bytes, unit_str = _recommend_size_str(num_bytes=num)
         return cls(num=num_bytes, unit_str=unit_str)
 
     @classmethod
