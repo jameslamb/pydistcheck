@@ -201,6 +201,7 @@ def test_path_contains_spaces_works(distro_file):
 
     _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: [0-9]{1}")
 
+
 # --------------------- #
 # pydistcheck --inspect #
 # --------------------- #
