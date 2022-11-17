@@ -98,3 +98,19 @@ class _FilesOnlyDifferByCaseCheck(_CheckProtocol):
             )
             out.append(msg)
         return out
+
+
+class _SpacesInPathCheck(_CheckProtocol):
+
+    check_name = "path-contains-spaces"
+
+    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
+        out: List[str] = []
+        for file_path in distro_summary.file_paths:
+            if file_path != file_path.replace(" ", ""):
+                msg = (
+                    f"[{self.check_name}] File paths with spaces are not portable. "
+                    f"Found path with spaces: '{file_path}'"
+                )
+                out.append(msg)
+        return out

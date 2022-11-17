@@ -132,6 +132,17 @@ def test_check_respects_max_allowed_size_uncompressed(size_str, distro_file):
 
 
 @pytest.mark.parametrize("distro_file", ["problematic-package.tar.gz", "problematic-package.zip"])
+def test_cli_raises_exactly_the_expected_number_of_errors_for_the_probllematic_package(distro_file):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [os.path.join(TEST_DATA_DIR, distro_file)],
+    )
+    assert result.exit_code == 1
+    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: 4$")
+
+
+@pytest.mark.parametrize("distro_file", ["problematic-package.tar.gz", "problematic-package.zip"])
 def test_files_only_differ_by_case_works(distro_file):
     runner = CliRunner()
     result = runner.invoke(
@@ -149,8 +160,46 @@ def test_files_only_differ_by_case_works(distro_file):
             r",tmp/problematic-package/Question\.py"
         ),
     )
-    _assert_log_matches_pattern(result=result, pattern="errors found while checking\\: 1")
+    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: [0-9]{1}")
 
+
+@pytest.mark.parametrize("distro_file", ["problematic-package.tar.gz", "problematic-package.zip"])
+def test_path_contains_spaces_works(distro_file):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [os.path.join(TEST_DATA_DIR, distro_file)],
+    )
+    assert result.exit_code == 1
+
+    # should report a file with spaces in a directory without spaces
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^2\. \[path\-contains\-spaces\] File paths with spaces are not portable\. "
+            r"Found path with spaces\: 'tmp/problematic\-package/beep boop\.ini"
+        ),
+    )
+
+    # should report a directory with spaces
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^3\. \[path\-contains\-spaces\] File paths with spaces are not portable\. "
+            r"Found path with spaces\: 'tmp/problematic\-package/bad code[/]*"
+        ),
+    )
+
+    # should report a file without spaces inside a directory with spaces
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^4\. \[path\-contains\-spaces\] File paths with spaces are not portable\. "
+            r"Found path with spaces\: 'tmp/problematic\-package/bad code/ship\-it\.py"
+        ),
+    )
+
+    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: [0-9]{1}")
 
 # --------------------- #
 # pydistcheck --inspect #

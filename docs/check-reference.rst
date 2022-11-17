@@ -29,6 +29,20 @@ The package distribution contains filepaths which are identical after lowercasin
 
 Such paths are not portable, as some filesystems (notably macOS), are case-insensitive.
 
+path-contains-spaces
+********************
+
+At least one filepath in the package distribution contains spaces.
+
+Filepaths with spaces require special treatment, like quoting in some settings.
+Avoiding paths with spaces eliminates a whole class of potential issues related to software that doesn't handle such paths well.
+
+For more information, see:
+
+* `"Long filenames or paths with spaces require quotation marks" (Windows docs) <https://learn.microsoft.com/en-us/troubleshoot/windows-server/deployment/filenames-with-spaces-require-quotation-mark>`_
+* `"Don't use spaces or underscores in file paths" (blog post) <https://yihui.org/en/2018/03/space-pain/>`_
+* `"What technical reasons exist for not using space characters in file names?" (Stack Overflow) <https://superuser.com/questions/29111/what-technical-reasons-exist-for-not-using-space-characters-in-file-names>`_
+
 too-many-files
 **************
 

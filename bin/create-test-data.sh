@@ -47,6 +47,25 @@ cp \
     /tmp/problematic-package/question.py \
     /tmp/problematic-package/question.PY
 
+# spaces in directory name
+mkdir -p "/tmp/problematic-package/bad code"
+cat << EOF > "/tmp/problematic-package/bad code/ship-it.py"
+def is_even(num: int) -> bool:
+    if num == 1:
+        return False
+    elif num == 2:
+        return True
+    else:
+        import random
+        return random.random() > 0.5
+EOF
+
+# spaces in file name but not directory name
+cat << EOF > "/tmp/problematic-package/beep boop.ini"
+[config]
+allow_bugs = False
+EOF
+
 zip \
     -r problematic-package.zip \
     /tmp/problematic-package

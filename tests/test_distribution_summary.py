@@ -24,6 +24,20 @@ def test_distribution_summary_basically_works(distro_file):
     assert len([f for f in ds.file_infos if not f.is_directory]) == 3
     assert ds.num_files == 3
 
+    # file_paths should include all the files and directories
+    # (NOTE: zip adds trailing slashes to directories, tar does not)
+    if distro_file.endswith("zip"):
+        expected_file_paths = ["tmp/base-package/"]
+    else:
+        expected_file_paths = ["tmp/base-package"]
+    expected_file_paths += [
+        "tmp/base-package/thing.py",
+        "tmp/base-package/__init__.py",
+        "tmp/base-package/LICENSE.txt",
+    ]
+
+    assert ds.file_paths == expected_file_paths
+
     # total archive sizes should make sense
     assert ds.compressed_size_bytes > 0
     assert ds.uncompressed_size_bytes > 0

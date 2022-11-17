@@ -62,6 +62,10 @@ class _DistributionSummary:
         return cls(compressed_size_bytes=compressed_size_bytes, file_infos=file_infos)
 
     @property
+    def file_paths(self) -> List[str]:
+        return [f.name for f in self.file_infos]
+
+    @property
     def num_directories(self) -> int:
         return sum(1 for f in self.file_infos if f.is_directory)
 
