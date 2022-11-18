@@ -14,6 +14,7 @@ from pydistcheck.checks import (
     _DistroTooLargeUnCompressedCheck,
     _FileCountCheck,
     _FilesOnlyDifferByCaseCheck,
+    _NonAsciiCharacterCheck,
     _SpacesInPathCheck,
 )
 from pydistcheck.distribution_summary import _DistributionSummary
@@ -103,6 +104,7 @@ def check(
         _FileCountCheck(max_allowed_files=max_allowed_files),
         _FilesOnlyDifferByCaseCheck(),
         _SpacesInPathCheck(),
+        _NonAsciiCharacterCheck(),
     ]
 
     any_errors_found = False

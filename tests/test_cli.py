@@ -139,7 +139,7 @@ def test_cli_raises_exactly_the_expected_number_of_errors_for_the_probllematic_p
         [os.path.join(TEST_DATA_DIR, distro_file)],
     )
     assert result.exit_code == 1
-    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: 4$")
+    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: 5$")
 
 
 @pytest.mark.parametrize("distro_file", ["problematic-package.tar.gz", "problematic-package.zip"])
@@ -196,6 +196,28 @@ def test_path_contains_spaces_works(distro_file):
         pattern=(
             r"^4\. \[path\-contains\-spaces\] File paths with spaces are not portable\. "
             r"Found path with spaces\: 'tmp/problematic\-package/bad code/ship\-it\.py"
+        ),
+    )
+
+    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: [0-9]{1}")
+
+
+@pytest.mark.parametrize("distro_file", ["problematic-package.tar.gz", "problematic-package.zip"])
+def test_path_contains_non_ascii_characters_works(distro_file):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [os.path.join(TEST_DATA_DIR, distro_file)],
+    )
+    assert result.exit_code == 1
+
+    # NOTE: matching a variable number of '?' because zip and tar (and even different
+    #       implementations of those) encode non-ASCII characters in paths differently
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^5\. \[path\-contains\-non\-ascii\-characters\] Found file path containing non-ASCII "
+            r"characters\: 'tmp/problematic-package/\?+veryone-loves-python\.py'"
         ),
     )
 

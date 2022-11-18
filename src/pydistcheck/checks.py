@@ -100,6 +100,23 @@ class _FilesOnlyDifferByCaseCheck(_CheckProtocol):
         return out
 
 
+class _NonAsciiCharacterCheck(_CheckProtocol):
+
+    check_name = "path-contains-non-ascii-characters"
+
+    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
+        out: List[str] = []
+        for file_path in distro_summary.file_paths:
+            if not file_path.isascii():
+                ascii_converted_str = file_path.encode("ascii", "replace").decode("ascii")
+                msg = (
+                    f"[{self.check_name}] Found file path containing non-ASCII characters: "
+                    f"'{ascii_converted_str}'"
+                )
+                out.append(msg)
+        return out
+
+
 class _SpacesInPathCheck(_CheckProtocol):
 
     check_name = "path-contains-spaces"

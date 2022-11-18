@@ -66,6 +66,11 @@ cat << EOF > "/tmp/problematic-package/beep boop.ini"
 allow_bugs = False
 EOF
 
+# non-ASCII character in path
+cat << EOF > "/tmp/problematic-package/€veryone-loves-python.py"
+print('Python is great.')
+EOF
+
 zip \
     -r problematic-package.zip \
     /tmp/problematic-package
