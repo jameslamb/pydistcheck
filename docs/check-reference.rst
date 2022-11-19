@@ -29,6 +29,18 @@ The package distribution contains filepaths which are identical after lowercasin
 
 Such paths are not portable, as some filesystems (notably macOS), are case-insensitive.
 
+path-contains-non-ascii-characters
+**********************************
+
+At least one filepath in the package distribution contains non-ASCII characters.
+
+Non-ASCII characters are not portable, and their inclusion in filepaths can lead to installation and usage issues on different platforms.
+
+For more information, see:
+
+* `"Archives Containing Non-ASCII Filenames" (Oracle docs) <https://docs.oracle.com/cd/E36784_01/html/E36823/glnlx.html>`_
+* `example issue from pillow/PIL <https://github.com/python-pillow/Pillow/issues/5077>`_
+
 path-contains-spaces
 ********************
 
