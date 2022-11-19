@@ -40,6 +40,7 @@ For more information, see:
 
 * `"Archives Containing Non-ASCII Filenames" (Oracle docs) <https://docs.oracle.com/cd/E36784_01/html/E36823/glnlx.html>`_
 * `example issue from pillow/PIL <https://github.com/python-pillow/Pillow/issues/5077>`_
+* `"Unix and non-ASCII file names, a summary of issues" <https://www.lesbonscomptes.com/recoll/faqsandhowtos/NonAsciiFileNames.html>`_
 
 path-contains-spaces
 ********************
