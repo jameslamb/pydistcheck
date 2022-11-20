@@ -33,6 +33,7 @@ pydistcheck
 
    Check Reference <check-reference>
    Installation <installation>
+   Configuration <configuration>
 
 Indices and tables
 ==================

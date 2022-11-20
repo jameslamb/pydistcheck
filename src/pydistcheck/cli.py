@@ -2,13 +2,11 @@
 CLI entrypoints
 """
 
-import os
 import sys
-from typing import Dict, List, Union
+from typing import List
 
 import click
 
-from pydistcheck._compat import tomllib
 from pydistcheck.checks import (
     _DistroTooLargeCompressedCheck,
     _DistroTooLargeUnCompressedCheck,
@@ -17,6 +15,7 @@ from pydistcheck.checks import (
     _NonAsciiCharacterCheck,
     _SpacesInPathCheck,
 )
+from pydistcheck.config import _Config
 from pydistcheck.distribution_summary import _DistributionSummary
 from pydistcheck.inspect import inspect_distribution
 from pydistcheck.utils import _FileSize
@@ -81,27 +80,26 @@ def check(
     print("==================== running pydistcheck ====================")
     filepaths_to_check = [click.format_filename(f) for f in filepaths]
 
-    tool_options: Dict[str, Union[int, str]] = {}
-    if os.path.exists("pyproject.toml"):
-        with open("pyproject.toml", "rb") as f:
-            config_dict = tomllib.load(f)
-            tool_options = config_dict.get("tool", {}).get("pydistcheck", {})
-
-    print("pyproject options")
-    print(tool_options)
+    config = _Config(
+        inspect=inspect,
+        max_allowed_files=max_allowed_files,
+        max_allowed_size_compressed=max_allowed_size_compressed,
+        max_allowed_size_uncompressed=max_allowed_size_uncompressed,
+    )
+    config.update_from_toml(toml_file="pyproject.toml")
 
     checks = [
         _DistroTooLargeCompressedCheck(
             max_allowed_size_bytes=_FileSize.from_string(
-                size_str=max_allowed_size_compressed
+                size_str=config.max_allowed_size_compressed
             ).total_size_bytes
         ),
         _DistroTooLargeUnCompressedCheck(
             max_allowed_size_bytes=_FileSize.from_string(
-                size_str=max_allowed_size_uncompressed
+                size_str=config.max_allowed_size_uncompressed
             ).total_size_bytes
         ),
-        _FileCountCheck(max_allowed_files=max_allowed_files),
+        _FileCountCheck(max_allowed_files=config.max_allowed_files),
         _FilesOnlyDifferByCaseCheck(),
         _SpacesInPathCheck(),
         _NonAsciiCharacterCheck(),
@@ -111,7 +109,7 @@ def check(
     for filepath in filepaths_to_check:
         print(f"checking '{filepath}'")
 
-        if inspect:
+        if config.inspect:
             inspect_distribution(filepath=filepath)
 
         summary = _DistributionSummary.from_file(filename=filepath)
