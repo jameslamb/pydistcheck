@@ -3,9 +3,17 @@ Configuration
 
 This page describes how to configure ``pydistcheck``.
 
+``pydistscheck`` resolves different sources of configuration in the following order.
+
+1. default values
+2. :ref:`pyproject-toml`
+3. :ref:`cli-arguments`
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+
+.. _cli-arguments:
 
 CLI arguments
 *************
@@ -13,6 +21,8 @@ CLI arguments
 .. click:: pydistcheck.cli:check
   :prog: pydistcheck
   :nested: none
+
+.. _pyproject-toml:
 
 pyproject.toml
 **************

@@ -23,11 +23,19 @@ def test_allowed_config_values_constant_matches_class():
     assert fields_from_class == _ALLOWED_CONFIG_VALUES
 
 
-def test_config_works_as_expected(base_config):
+def test_config_fixture_works_as_expected(base_config):
     assert base_config.inspect is False
     assert base_config.max_allowed_files == 7
     assert base_config.max_allowed_size_compressed == "1G"
     assert base_config.max_allowed_size_uncompressed == "18K"
+
+
+def test_config_can_be_initialized_without_any_arguments():
+    config = _Config()
+    assert config.inspect is False
+    assert config.max_allowed_files == 2000
+    assert config.max_allowed_size_compressed == "50M"
+    assert config.max_allowed_size_uncompressed == "75M"
 
 
 def test_update_from_dict_raises_exception_for_first_bad_value_encountered(base_config):
@@ -92,7 +100,7 @@ def test_update_from_toml_works_for_files_with_empty_pydistcheck_configuration(b
 def test_update_from_toml_works_with_underscores_and_hyphens(base_config, tmpdir, config_key):
     temp_file = os.path.join(tmpdir, f"{str(uuid.uuid4())}.toml")
     with open(temp_file, "w") as f:
-        f.write("[tool.pylint]\n" "[tool.pydistcheck]\n" f"{config_key} = '2.5G'\n")
+        f.write(f"[tool.pylint]\n[tool.pydistcheck]\n{config_key} = '2.5G'\n")
     base_config.update_from_toml(toml_file=temp_file)
     assert base_config.max_allowed_size_compressed == "2.5G"
 

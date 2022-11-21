@@ -31,18 +31,18 @@ from pydistcheck.utils import _FileSize
     "--inspect",
     is_flag=True,
     show_default=False,
-    default=False,
+    default=_Config.inspect,
     help="print diagnostic information about the distribution",
 )
 @click.option(
     "--max-allowed-files",
-    default=2000,
+    default=_Config.max_allowed_files,
     type=int,
     help="maximum number of files allowed in the distribution",
 )
 @click.option(
     "--max-allowed-size-compressed",
-    default="50M",
+    default=_Config.max_allowed_size_compressed,
     type=str,
     help=(
         "maximum allowed compressed size, a string like '1.5M' indicating"
@@ -55,7 +55,7 @@ from pydistcheck.utils import _FileSize
 )
 @click.option(
     "--max-allowed-size-uncompressed",
-    default="75M",
+    default=_Config.max_allowed_size_uncompressed,
     type=str,
     help=(
         "maximum allowed uncompressed size, a string like '1.5M' indicating"
@@ -79,14 +79,19 @@ def check(
     """
     print("==================== running pydistcheck ====================")
     filepaths_to_check = [click.format_filename(f) for f in filepaths]
-
-    config = _Config(
-        inspect=inspect,
-        max_allowed_files=max_allowed_files,
-        max_allowed_size_compressed=max_allowed_size_compressed,
-        max_allowed_size_uncompressed=max_allowed_size_uncompressed,
-    )
+    config = _Config()
+    kwargs = {
+        "inspect": inspect,
+        "max_allowed_files": max_allowed_files,
+        "max_allowed_size_compressed": max_allowed_size_compressed,
+        "max_allowed_size_uncompressed": max_allowed_size_uncompressed,
+    }
+    kwargs_that_differ_from_defaults = {}
+    for k, v in kwargs.items():
+        if v != getattr(config, k):
+            kwargs_that_differ_from_defaults[k] = v
     config.update_from_toml(toml_file="pyproject.toml")
+    config.update_from_dict(input_dict=kwargs_that_differ_from_defaults)
 
     checks = [
         _DistroTooLargeCompressedCheck(

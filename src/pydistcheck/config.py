@@ -6,7 +6,7 @@ Manages configuration of ``pydistcheck` CLI, including:
 """
 import os
 from dataclasses import dataclass
-from typing import Any, Dict, Union
+from typing import Any, Dict
 
 from pydistcheck._compat import tomllib
 
@@ -24,10 +24,10 @@ _ALLOWED_CONFIG_VALUES = {
 
 @dataclass
 class _Config:
-    inspect: bool
-    max_allowed_files: int
-    max_allowed_size_compressed: str
-    max_allowed_size_uncompressed: str
+    inspect: bool = False
+    max_allowed_files: int = 2000
+    max_allowed_size_compressed: str = "50M"
+    max_allowed_size_uncompressed: str = "75M"
 
     def __setattr__(self, name: str, value: Any) -> None:
         attr_name = name.replace("-", "_")
@@ -35,7 +35,7 @@ class _Config:
             raise ValueError(f"Configuration value '{name}' is not recognized by pydistcheck")
         object.__setattr__(self, attr_name, value)
 
-    def update_from_dict(self, input_dict: Dict[str, Union[bool, float, int, str]]) -> "_Config":
+    def update_from_dict(self, input_dict: Dict[str, Any]) -> "_Config":
         for k, v in input_dict.items():
             setattr(self, k, v)
         return self
@@ -45,7 +45,7 @@ class _Config:
         if not os.path.exists(toml_file):
             return self
 
-        tool_options: Dict[str, Union[bool, float, int, str]] = {}
+        tool_options: Dict[str, Any] = {}
         with open(toml_file, "rb") as f:
             config_dict = tomllib.load(f)
             tool_options = config_dict.get("tool", {}).get("pydistcheck", {})

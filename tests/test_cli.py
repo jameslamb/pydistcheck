@@ -131,6 +131,50 @@ def test_check_respects_max_allowed_size_uncompressed(size_str, distro_file):
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
 
 
+@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+def test_check_prefers_pyproject_toml_to_defaults(distro_file, tmp_path):
+    runner = CliRunner()
+    with runner.isolated_filesystem(temp_dir=tmp_path):
+        with open("pyproject.toml", "w") as f:
+            f.write("[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '7B'\n")
+        result = runner.invoke(
+            check,
+            [os.path.join(TEST_DATA_DIR, distro_file)],
+        )
+
+    assert result.exit_code == 1
+    _assert_log_matches_pattern(
+        result,
+        (
+            r"^1\. \[distro\-too\-large\-uncompressed\] Uncompressed size [0-9]+\.[0-9]+K is "
+            r"larger than the allowed size \(7\.0B\)\.$"
+        ),
+    )
+    _assert_log_matches_pattern(result, "errors found while checking\\: 1")
+
+
+@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+def test_check_prefers_keyword_args_to_pyrpoject_toml_and_defaults(distro_file, tmp_path):
+    runner = CliRunner()
+    with runner.isolated_filesystem(temp_dir=tmp_path):
+        with open("pyproject.toml", "w") as f:
+            f.write("[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '7B'\n")
+        result = runner.invoke(
+            check,
+            [os.path.join(TEST_DATA_DIR, distro_file), "--max-allowed-size-uncompressed=123B"],
+        )
+
+    assert result.exit_code == 1
+    _assert_log_matches_pattern(
+        result,
+        (
+            r"^1\. \[distro\-too\-large\-uncompressed\] Uncompressed size [0-9]+\.[0-9]+K is "
+            r"larger than the allowed size \(123\.0B\)\.$"
+        ),
+    )
+    _assert_log_matches_pattern(result, "errors found while checking\\: 1")
+
+
 @pytest.mark.parametrize("distro_file", ["problematic-package.tar.gz", "problematic-package.zip"])
 def test_cli_raises_exactly_the_expected_number_of_errors_for_the_probllematic_package(distro_file):
     runner = CliRunner()
