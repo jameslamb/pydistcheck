@@ -27,4 +27,3 @@ Put configuration in a ``[tool.pydistcheck]`` section, like the following exampl
     inspect = False
     max_allowed_size_compressed = '1G'
     max_allowed_size_uncompressed = '4.5G'
-
