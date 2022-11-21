@@ -3,8 +3,9 @@ build:
   os: "ubuntu-20.04"
   tools:
     python: "mambaforge-4.10"
-  post_create_environment:
-    - pip install .
+  jobs:
+    post_create_environment:
+      - pip install .
 conda:
   environment: docs/env.yml
 formats:
