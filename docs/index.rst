@@ -31,11 +31,6 @@ pydistcheck
    :maxdepth: 1
    :caption: Contents:
 
-   Check Reference <check-reference>
    Installation <installation>
    Configuration <configuration>
-
-Indices and tables
-==================
-
-* :ref:`genindex`
+    Check Reference <check-reference>

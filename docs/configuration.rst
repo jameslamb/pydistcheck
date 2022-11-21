@@ -1,5 +1,5 @@
-Check Reference
-===============
+Configuration
+=============
 
 This page describes how to configure ``pydistcheck``.
 
