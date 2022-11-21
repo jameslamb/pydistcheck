@@ -19,7 +19,7 @@ def base_config():
 
 
 def test_allowed_config_values_constant_matches_class():
-    fields_from_class = set(f.name for f in fields(_Config))
+    fields_from_class = {f.name for f in fields(_Config)}
     assert fields_from_class == _ALLOWED_CONFIG_VALUES
 
 
