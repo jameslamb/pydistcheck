@@ -33,4 +33,4 @@ pydistcheck
 
    Installation <installation>
    Configuration <configuration>
-    Check Reference <check-reference>
+   Check Reference <check-reference>
