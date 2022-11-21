@@ -26,4 +26,5 @@ jobs:
       - name: build docs
         shell: bash -l {0}
         run: |
+          pip install .
           make -C ./docs html
