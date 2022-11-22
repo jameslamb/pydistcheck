@@ -2,13 +2,11 @@
 CLI entrypoints
 """
 
-import os
 import sys
-from typing import Dict, List, Union
+from typing import List
 
 import click
 
-from pydistcheck._compat import tomllib
 from pydistcheck.checks import (
     _DistroTooLargeCompressedCheck,
     _DistroTooLargeUnCompressedCheck,
@@ -17,6 +15,7 @@ from pydistcheck.checks import (
     _NonAsciiCharacterCheck,
     _SpacesInPathCheck,
 )
+from pydistcheck.config import _Config
 from pydistcheck.distribution_summary import _DistributionSummary
 from pydistcheck.inspect import inspect_distribution
 from pydistcheck.utils import _FileSize
@@ -32,18 +31,18 @@ from pydistcheck.utils import _FileSize
     "--inspect",
     is_flag=True,
     show_default=False,
-    default=False,
+    default=_Config.inspect,
     help="print diagnostic information about the distribution",
 )
 @click.option(
     "--max-allowed-files",
-    default=2000,
+    default=_Config.max_allowed_files,
     type=int,
     help="maximum number of files allowed in the distribution",
 )
 @click.option(
     "--max-allowed-size-compressed",
-    default="50M",
+    default=_Config.max_allowed_size_compressed,
     type=str,
     help=(
         "maximum allowed compressed size, a string like '1.5M' indicating"
@@ -56,7 +55,7 @@ from pydistcheck.utils import _FileSize
 )
 @click.option(
     "--max-allowed-size-uncompressed",
-    default="75M",
+    default=_Config.max_allowed_size_uncompressed,
     type=str,
     help=(
         "maximum allowed uncompressed size, a string like '1.5M' indicating"
@@ -80,28 +79,32 @@ def check(
     """
     print("==================== running pydistcheck ====================")
     filepaths_to_check = [click.format_filename(f) for f in filepaths]
-
-    tool_options: Dict[str, Union[int, str]] = {}
-    if os.path.exists("pyproject.toml"):
-        with open("pyproject.toml", "rb") as f:
-            config_dict = tomllib.load(f)
-            tool_options = config_dict.get("tool", {}).get("pydistcheck", {})
-
-    print("pyproject options")
-    print(tool_options)
+    config = _Config()
+    kwargs = {
+        "inspect": inspect,
+        "max_allowed_files": max_allowed_files,
+        "max_allowed_size_compressed": max_allowed_size_compressed,
+        "max_allowed_size_uncompressed": max_allowed_size_uncompressed,
+    }
+    kwargs_that_differ_from_defaults = {}
+    for k, v in kwargs.items():
+        if v != getattr(config, k):
+            kwargs_that_differ_from_defaults[k] = v
+    config.update_from_toml(toml_file="pyproject.toml")
+    config.update_from_dict(input_dict=kwargs_that_differ_from_defaults)
 
     checks = [
         _DistroTooLargeCompressedCheck(
             max_allowed_size_bytes=_FileSize.from_string(
-                size_str=max_allowed_size_compressed
+                size_str=config.max_allowed_size_compressed
             ).total_size_bytes
         ),
         _DistroTooLargeUnCompressedCheck(
             max_allowed_size_bytes=_FileSize.from_string(
-                size_str=max_allowed_size_uncompressed
+                size_str=config.max_allowed_size_uncompressed
             ).total_size_bytes
         ),
-        _FileCountCheck(max_allowed_files=max_allowed_files),
+        _FileCountCheck(max_allowed_files=config.max_allowed_files),
         _FilesOnlyDifferByCaseCheck(),
         _SpacesInPathCheck(),
         _NonAsciiCharacterCheck(),
@@ -111,7 +114,7 @@ def check(
     for filepath in filepaths_to_check:
         print(f"checking '{filepath}'")
 
-        if inspect:
+        if config.inspect:
             inspect_distribution(filepath=filepath)
 
         summary = _DistributionSummary.from_file(filename=filepath)
