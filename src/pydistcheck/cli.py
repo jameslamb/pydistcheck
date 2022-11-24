@@ -112,7 +112,7 @@ def check(
 
     any_errors_found = False
     for filepath in filepaths_to_check:
-        print(f"checking '{filepath}'")
+        print(f"\nchecking '{filepath}'")
 
         if config.inspect:
             inspect_distribution(filepath=filepath)
@@ -131,7 +131,7 @@ def check(
 
         print(f"errors found while checking: {num_errors_for_this_file}")
 
-    print("==================== done running pydistcheck ===============")
+    print("\n==================== done running pydistcheck ===============")
 
     # now that all files have been checked, be sure to exit with a non-0 code
     # if any errors were found
