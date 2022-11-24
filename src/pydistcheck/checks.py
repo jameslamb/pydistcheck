@@ -23,6 +23,8 @@ ALL_CHECKS = {
 
 
 class _CheckProtocol(Protocol):
+    check_name: str
+
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:  # pragma: no cover
         ...
 
