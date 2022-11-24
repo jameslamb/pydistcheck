@@ -77,7 +77,7 @@ def check(
     Run the contents of a distribution through a set of checks, and warn about
     any problematic characteristics that are detected.
     """
-    print("\n==================== running pydistcheck ====================")
+    print("==================== running pydistcheck ====================")
     filepaths_to_check = [click.format_filename(f) for f in filepaths]
     config = _Config()
     kwargs = {
