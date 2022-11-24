@@ -28,6 +28,15 @@ from pydistcheck.utils import _FileSize
     nargs=-1,
 )
 @click.option(
+    "--ignore",
+    type=str,
+    default=_Config.ignore,
+    help=(
+        "comma-separated list of checks to skip, e.g. "
+        "``distro-too-large-compressed,path-contains-spaces``."
+    ),
+)
+@click.option(
     "--inspect",
     is_flag=True,
     show_default=False,
@@ -66,8 +75,9 @@ from pydistcheck.utils import _FileSize
         "  - G = gigabytes"
     ),
 )
-def check(
+def check(  # pylint: disable=too-many-arguments
     filepaths: str,
+    ignore: str,
     inspect: bool,
     max_allowed_files: int,
     max_allowed_size_compressed: str,
@@ -81,6 +91,7 @@ def check(
     filepaths_to_check = [click.format_filename(f) for f in filepaths]
     config = _Config()
     kwargs = {
+        "ignore": ignore,
         "inspect": inspect,
         "max_allowed_files": max_allowed_files,
         "max_allowed_size_compressed": max_allowed_size_compressed,
@@ -92,6 +103,8 @@ def check(
             kwargs_that_differ_from_defaults[k] = v
     config.update_from_toml(toml_file="pyproject.toml")
     config.update_from_dict(input_dict=kwargs_that_differ_from_defaults)
+
+    checks_to_ignore = {x for x in ignore.split(",") if x.strip() != ""}
 
     checks = [
         _DistroTooLargeCompressedCheck(
@@ -109,6 +122,9 @@ def check(
         _SpacesInPathCheck(),
         _NonAsciiCharacterCheck(),
     ]
+
+    # filter out ignored checks
+    checks = [c for c in checks if c.check_name not in checks_to_ignore]
 
     any_errors_found = False
     for filepath in filepaths_to_check:

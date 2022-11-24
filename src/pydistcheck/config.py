@@ -15,6 +15,7 @@ from pydistcheck._compat import tomllib
 #
 # unit tests confirm that it matches the `_Config` class, so it shouldn't ever drift from that class
 _ALLOWED_CONFIG_VALUES = {
+    "ignore",
     "inspect",
     "max_allowed_files",
     "max_allowed_size_compressed",
@@ -24,6 +25,7 @@ _ALLOWED_CONFIG_VALUES = {
 
 @dataclass
 class _Config:
+    ignore: str = ""
     inspect: bool = False
     max_allowed_files: int = 2000
     max_allowed_size_compressed: str = "50M"
