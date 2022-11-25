@@ -113,7 +113,7 @@ def check(  # pylint: disable=too-many-arguments
     if unrecognized_checks:
         # converting to list + sorting here so outputs are deterministic
         # (since sets don't guarantee ordering)
-        error_str = ",".join(sorted(list(unrecognized_checks)))
+        error_str = ",".join(sorted(unrecognized_checks))
         print(f"ERROR: found the following unrecognized checks passed via '--ignore': {error_str}")
         sys.exit(1)
 
