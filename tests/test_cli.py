@@ -60,6 +60,122 @@ def test_check_runs_for_all_files_before_exiting():
 
 
 @pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+def test_check_respects_ignore_with_one_check(distro_file):
+    runner = CliRunner()
+
+    # fails when running all checks
+    result = runner.invoke(
+        check, [os.path.join(TEST_DATA_DIR, distro_file), "--max-allowed-files=1"]
+    )
+    assert result.exit_code == 1
+
+    # fails with --ignore if the failing check isn't mentioned in --ignore
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--ignore=path-contains-spaces",
+            "--max-allowed-files=1",
+        ],
+    )
+    assert result.exit_code == 1
+
+    # succeeds if the failing check is mentioned in --ignore
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--ignore=too-many-files",
+            "--max-allowed-files=1",
+        ],
+    )
+    assert result.exit_code == 0
+    _assert_log_matches_pattern(result, "errors found while checking\\: 0")
+
+
+@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+def test_check_respects_ignore_with_multiple_checks(distro_file):
+    runner = CliRunner()
+
+    # fails when running all checks
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--max-allowed-files=1",
+            "--max-allowed-size-compressed=1B",
+        ],
+    )
+    assert result.exit_code == 1
+
+    # fails with --ignore if all of the failing checks aren't mentioned in --ignore
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--ignore=path-contains-spaces,too-many-files",
+            "--max-allowed-files=1",
+            "--max-allowed-size-compressed=1B",
+        ],
+    )
+    _assert_log_matches_pattern(
+        result,
+        (
+            r"^1\. \[distro\-too\-large\-compressed\] Compressed size [0-9]+\.[0-9]+K is "
+            r"larger than the allowed size \(1\.0B\)\.$"
+        ),
+    )
+    assert result.exit_code == 1
+
+    # succeeds if the failing checks are mentioned in --ignore
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--ignore=too-many-files,distro-too-large-compressed",
+            "--max-allowed-files=1",
+        ],
+    )
+    assert result.exit_code == 0
+    _assert_log_matches_pattern(result, "errors found while checking\\: 0")
+
+
+@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+def test_check_fails_with_expected_error_if_one_check_is_unrecognized(distro_file):
+    result = CliRunner().invoke(
+        check,
+        [os.path.join(TEST_DATA_DIR, distro_file), "--ignore=too-many-files,random-nonsense"],
+    )
+    assert result.exit_code == 1
+    _assert_log_matches_pattern(
+        result,
+        (
+            r"ERROR\: found the following unrecognized checks passed via '\-\-ignore'\: "
+            r"random\-nonsense"
+        ),
+    )
+
+
+@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+def test_check_fails_with_expected_error_if_multiple_checks_are_unrecognized(distro_file):
+    result = CliRunner().invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--ignore=garbage,too-many-files,random-nonsense,other-trash",
+        ],
+    )
+    assert result.exit_code == 1
+    _assert_log_matches_pattern(
+        result,
+        (
+            r"ERROR\: found the following unrecognized checks passed via '\-\-ignore'\: "
+            r"garbage,other\-trash,random\-nonsense"
+        ),
+    )
+
+
+@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
 def test_check_respects_max_allowed_files(distro_file):
     runner = CliRunner()
     result = runner.invoke(
