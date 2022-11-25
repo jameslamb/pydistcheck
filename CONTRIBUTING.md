@@ -13,14 +13,11 @@ make build install
 
 ## Releasing
 
-Open a pull request changing `VERSION.txt` to the desired version.
-
-After merging the pull request, create a GitHub release.
-
-1. navigate to https://github.com/jameslamb/pydistcheck/releases
-2. edit the draft release
-3. click "publish"
-
-When that happens, CI jobs will run that automatically publish the package to PyPI.
-
-Open another pull request adding `.99` to the version in `VERSION.txt`.
+1. Open a pull request with title `release v{major}.{minor}.{patch}`, changing `VERSION.txt` to the desired version.
+2. navigate to https://github.com/jameslamb/pydistcheck/releases
+3. edit the draft release there
+    - remove any changelog items that are just "changed the version number" PRs
+    - ensure that the tag that'll be created matches the version number, in the form `v{major}.{minor}.{patch}`
+4. click "publish"
+    - when that happens, CI jobs will run that automatically publish the package to PyPI.
+5. Open another pull request with title `bump development version` adding `.99` to the version in `VERSION.txt`.
