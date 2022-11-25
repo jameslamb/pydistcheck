@@ -57,6 +57,7 @@ def test_update_from_dict_works_when_changing_all_values(base_config):
     assert base_config.max_allowed_size_compressed == "1G"
     assert base_config.max_allowed_size_uncompressed == "18K"
     patch_dict = {
+        "ignore": "path-contains-spaces,too-many-files",
         "inspect": True,
         "max_allowed_files": 8,
         "max_allowed_size_compressed": "2G",
@@ -109,6 +110,7 @@ def test_update_from_toml_works_with_underscores_and_hyphens(base_config, tmpdir
 def test_update_from_toml_works_with_all_config_values(base_config, tmpdir, use_hyphens):
     temp_file = os.path.join(tmpdir, f"{str(uuid.uuid4())}.toml")
     patch_dict = {
+        "ignore": "'path-contains-spaces,too-many-files'",
         "inspect": "true",
         "max_allowed_files": 8,
         "max_allowed_size_compressed": "'3G'",
@@ -127,3 +129,14 @@ def test_update_from_toml_works_with_all_config_values(base_config, tmpdir, use_
     assert base_config.max_allowed_files == 8
     assert base_config.max_allowed_size_compressed == "3G"
     assert base_config.max_allowed_size_uncompressed == "4.12G"
+
+
+def test_update_from_toml_converts_lists_to_comma_delimited_string(base_config, tmpdir):
+    temp_file = os.path.join(tmpdir, f"{str(uuid.uuid4())}.toml")
+    with open(temp_file, "w") as f:
+        f.write(
+            "[tool.pylint]\n[tool.pydistcheck]\n"
+            "max_allowed_size_compressed = [\n'2.5G',\n'1.56K',\n'4.236B'\n]\n"
+        )
+    base_config.update_from_toml(toml_file=temp_file)
+    assert base_config.max_allowed_size_compressed == "2.5G,1.56K,4.236B"

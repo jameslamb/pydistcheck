@@ -9,8 +9,22 @@ from typing import List, Protocol
 from pydistcheck.distribution_summary import _DistributionSummary
 from pydistcheck.utils import _FileSize
 
+# ALL_CHECKS constant is used to validate configuration options like '--ignore' that reference
+# check names. It's a set literal so it doesn't need to be recomputed at runtime, and this project
+# relies on unit tests to ensure that it's updated as the list of checks changes.
+ALL_CHECKS = {
+    "distro-too-large-compressed",
+    "distro-too-large-uncompressed",
+    "too-many-files",
+    "files-only-differ-by-case",
+    "path-contains-non-ascii-characters",
+    "path-contains-spaces",
+}
+
 
 class _CheckProtocol(Protocol):
+    check_name: str
+
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:  # pragma: no cover
         ...
 

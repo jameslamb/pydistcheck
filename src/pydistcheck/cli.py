@@ -8,6 +8,7 @@ from typing import List
 import click
 
 from pydistcheck.checks import (
+    ALL_CHECKS,
     _DistroTooLargeCompressedCheck,
     _DistroTooLargeUnCompressedCheck,
     _FileCountCheck,
@@ -26,6 +27,15 @@ from pydistcheck.utils import _FileSize
     "filepaths",
     type=click.Path(exists=True),
     nargs=-1,
+)
+@click.option(
+    "--ignore",
+    type=str,
+    default=_Config.ignore,
+    help=(
+        "comma-separated list of checks to skip, e.g. "
+        "``distro-too-large-compressed,path-contains-spaces``."
+    ),
 )
 @click.option(
     "--inspect",
@@ -69,8 +79,9 @@ from pydistcheck.utils import _FileSize
         "  - G = gigabytes"
     ),
 )
-def check(
+def check(  # pylint: disable=too-many-arguments
     filepaths: str,
+    ignore: str,
     inspect: bool,
     max_allowed_files: int,
     max_allowed_size_compressed: str,
@@ -84,6 +95,7 @@ def check(
     filepaths_to_check = [click.format_filename(f) for f in filepaths]
     config = _Config()
     kwargs = {
+        "ignore": ignore,
         "inspect": inspect,
         "max_allowed_files": max_allowed_files,
         "max_allowed_size_compressed": max_allowed_size_compressed,
@@ -95,6 +107,15 @@ def check(
             kwargs_that_differ_from_defaults[k] = v
     config.update_from_toml(toml_file="pyproject.toml")
     config.update_from_dict(input_dict=kwargs_that_differ_from_defaults)
+
+    checks_to_ignore = {x for x in config.ignore.split(",") if x.strip() != ""}
+    unrecognized_checks = checks_to_ignore - ALL_CHECKS
+    if unrecognized_checks:
+        # converting to list + sorting here so outputs are deterministic
+        # (since sets don't guarantee ordering)
+        error_str = ",".join(sorted(unrecognized_checks))
+        print(f"ERROR: found the following unrecognized checks passed via '--ignore': {error_str}")
+        sys.exit(1)
 
     checks = [
         _DistroTooLargeCompressedCheck(
@@ -112,6 +133,9 @@ def check(
         _SpacesInPathCheck(),
         _NonAsciiCharacterCheck(),
     ]
+
+    # filter out ignored checks
+    checks = [c for c in checks if c.check_name not in checks_to_ignore]
 
     any_errors_found = False
     for filepath in filepaths_to_check:
