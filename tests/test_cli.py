@@ -270,6 +270,31 @@ def test_check_prefers_pyproject_toml_to_defaults(distro_file, tmp_path):
 
 
 @pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+def test_check_handles_ignore_list_in_pyproject_toml_correctly(distro_file, tmp_path):
+    runner = CliRunner()
+    with runner.isolated_filesystem(temp_dir=tmp_path):
+        result = runner.invoke(
+            check,
+            [os.path.join(TEST_DATA_DIR, distro_file), "--max-allowed-files=1"],
+        )
+        assert result.exit_code == 1
+        _assert_log_matches_pattern(
+            result, r"^1\. \[too\-many\-files\] Found [0-9]+ files\. Only 1 allowed\.$"
+        )
+        with open("pyproject.toml", "w") as f:
+            f.write(
+                "[tool.pylint]\n[tool.pydistcheck]\n"
+                "ignore = [\n'too-many-files', 'path-contains-non-ascii-characters'\n]\n"
+            )
+        result = runner.invoke(
+            check,
+            [os.path.join(TEST_DATA_DIR, distro_file), "--max-allowed-files=1"],
+        )
+        assert result.exit_code == 0
+        _assert_log_matches_pattern(result, "errors found while checking\\: 0")
+
+
+@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
 def test_check_prefers_keyword_args_to_pyrpoject_toml_and_defaults(distro_file, tmp_path):
     runner = CliRunner()
     with runner.isolated_filesystem(temp_dir=tmp_path):

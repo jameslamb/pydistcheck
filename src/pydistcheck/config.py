@@ -51,5 +51,13 @@ class _Config:
         with open(toml_file, "rb") as f:
             config_dict = tomllib.load(f)
             tool_options = config_dict.get("tool", {}).get("pydistcheck", {})
+
+        # list-like stuff in TOML is expected to be a comma-delimited string when passed as
+        # a command-line argument
+        patch_dict: Dict[str, Any] = {}
+        for k, v in tool_options.items():
+            if isinstance(v, list):
+                patch_dict[k] = ",".join(v)
+        tool_options.update(patch_dict)
         self.update_from_dict(tool_options)
         return self

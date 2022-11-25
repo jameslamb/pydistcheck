@@ -108,7 +108,7 @@ def check(  # pylint: disable=too-many-arguments
     config.update_from_toml(toml_file="pyproject.toml")
     config.update_from_dict(input_dict=kwargs_that_differ_from_defaults)
 
-    checks_to_ignore = {x for x in ignore.split(",") if x.strip() != ""}
+    checks_to_ignore = {x for x in config.ignore.split(",") if x.strip() != ""}
     unrecognized_checks = checks_to_ignore - ALL_CHECKS
     if unrecognized_checks:
         # converting to list + sorting here so outputs are deterministic
