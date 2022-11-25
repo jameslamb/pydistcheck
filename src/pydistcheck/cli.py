@@ -46,12 +46,14 @@ from pydistcheck.utils import _FileSize
 @click.option(
     "--max-allowed-files",
     default=_Config.max_allowed_files,
+    show_default=True,
     type=int,
     help="maximum number of files allowed in the distribution",
 )
 @click.option(
     "--max-allowed-size-compressed",
     default=_Config.max_allowed_size_compressed,
+    show_default=True,
     type=str,
     help=(
         "maximum allowed compressed size, a string like '1.5M' indicating"
@@ -65,6 +67,7 @@ from pydistcheck.utils import _FileSize
 @click.option(
     "--max-allowed-size-uncompressed",
     default=_Config.max_allowed_size_uncompressed,
+    show_default=True,
     type=str,
     help=(
         "maximum allowed uncompressed size, a string like '1.5M' indicating"
