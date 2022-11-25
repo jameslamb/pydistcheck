@@ -142,8 +142,10 @@ def check(  # pylint: disable=too-many-arguments
         print(f"\nchecking '{filepath}'")
 
         if config.inspect:
+            print("----- package inspection summary -----")
             inspect_distribution(filepath=filepath)
 
+        print("------------ check results -----------")
         summary = _DistributionSummary.from_file(filename=filepath)
         errors: List[str] = []
         for this_check in checks:

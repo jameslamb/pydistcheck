@@ -7,8 +7,6 @@ from pydistcheck.utils import _FileSize
 
 
 def inspect_distribution(filepath: str) -> None:
-    print(f"checking file '{filepath}'")
-
     summary = _DistributionSummary.from_file(filename=filepath)
     print("file size")
     compressed_size = _FileSize(summary.compressed_size_bytes, "B")
