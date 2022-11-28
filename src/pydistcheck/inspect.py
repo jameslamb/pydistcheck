@@ -14,7 +14,7 @@ def inspect_distribution(filepath: str) -> None:
     print(f"  * compressed size: {compressed_size}")
     print(f"  * uncompressed size: {uncompressed_size}")
     space_saving = 1.0 - (compressed_size.total_size_bytes / uncompressed_size.total_size_bytes)
-    print(f"  * compression space saving: {round(space_saving, 3)}")
+    print(f"  * compression space saving: {round(100 * space_saving, 1)}%")
 
     print("contents")
     print(f"  * directories: {summary.num_directories}")
