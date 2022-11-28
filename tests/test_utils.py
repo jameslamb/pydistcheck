@@ -41,3 +41,22 @@ def test_file_size_from_number_switches_unit_str_based_on_size():
     assert _FileSize.from_number(102) == _FileSize(num=0.1, unit_str="K")
     # 3.456789 * 10**3 = 3711698926.043136
     assert _FileSize.from_number(3711698926) == _FileSize(num=3.456789, unit_str="G")
+
+
+@pytest.mark.parametrize(
+    "file_size,expected_str",
+    [
+        (_FileSize.from_number(110), "0.1K"),
+        (_FileSize.from_number(150), "0.1K"),
+        (_FileSize.from_number(1024), "1.0K"),
+        (_FileSize.from_number(100 * 1024), "100.0K"),
+        (_FileSize.from_number(200 * 1024), "0.2M"),
+        (_FileSize.from_number(1024**2), "1.0M"),
+        (_FileSize.from_number(400 * 1024**2), "0.4G"),
+        (_FileSize.from_number(405 * 1024**2), "0.4G"),
+        (_FileSize.from_number(1024**3), "1.0G"),
+        (_FileSize.from_number(int(7.5 * 1024**3)), "7.5G"),
+    ],
+)
+def test_file_size_string_representation_looks_correct(file_size, expected_str):
+    assert str(file_size) == expected_str
