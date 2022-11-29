@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - name: check package
+      - name: check '${{ inputs.package_name }}'
         run: |
           export PATH="/usr/share/miniconda/bin:${PATH}"
           sudo apt-get update
@@ -26,7 +26,6 @@ jobs:
           conda install \
             --yes \
             -c conda-forge \
-              numpy \
-              pandas
+              pipx
           make full-run \
             -e PACKAGE_NAME=${{ inputs.package_name }}

@@ -36,8 +36,6 @@ jobs:
           mamba install \
             --yes \
             --name pydistscheck-tests \
-              numpy \
-              pandas \
               pipx
           if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
             chocolatey install jq
@@ -47,8 +45,7 @@ jobs:
               --name pydistscheck-tests \
                 jq
           fi
-          make build
-          pip install dist/*.tar.gz
+          make install
           make smoke-tests
   all-smoke-tests-successful:
     # https://github.community/t/is-it-possible-to-require-all-github-actions-tasks-to-pass-without-enumerating-them/117957/4?u=graingert

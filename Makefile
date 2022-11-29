@@ -16,14 +16,14 @@ format:
 	black .
 
 .PHONY: full-run
-full-run:
+full-run: install
 	bin/full-run.sh \
 		"$(PACKAGE_NAME)" \
 		"$(OUTPUT_DIR)"
 
 .PHONY: install
 install:
-	pipx install --force -e .
+	pipx install --force .
 
 .PHONY: lint
 lint:
