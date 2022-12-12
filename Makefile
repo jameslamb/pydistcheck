@@ -49,7 +49,7 @@ test-data:
 		-v $$(pwd):/usr/local/src \
 		--workdir /usr/local/src \
 		--entrypoint="" \
-		-it ubuntu:latest \
+		-it python:3.10 \
 		bash -c "apt-get update && apt-get install -y --no-install-recommends ca-certificates curl zip && bin/create-test-data.sh"
 
 .PHONY: test

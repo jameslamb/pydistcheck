@@ -2,29 +2,59 @@
 
 # [description] generate test tarballs
 
+set -e -u -o pipefail
+
+pip install \
+    'build>=0.9.0' \
+    'setuptools>=42'
+
 rm -rf /tmp/base-package
 mkdir -p /tmp/base-package
 touch /tmp/base-package/__init__.py
 
-cat << EOF > /tmp/base-package/thing.py
+mkdir -p /tmp/base-package/base_package
+cat << EOF > /tmp/base-package/base_package/thing.py
 def do_stuff():
     return True
+EOF
+
+cat << EOF > /tmp/base-package/setup.py
+from setuptools import setup
+
+setup()
+EOF
+
+cat << EOF > /tmp/base-package/setup.cfg
+[metadata]
+name = base_package
+version = 0.1.0
+description = base_package (pydistcheck test package)
+maintainer_email = jaylamb20@gmail.com
+license = BSD-3-Clause
+
+[options]
+packages = find:
 EOF
 
 curl https://www.apache.org/licenses/LICENSE-2.0.txt \
     --output /tmp/base-package/LICENSE.txt
 
-zip \
-    -r base-package.zip \
-    /tmp/base-package
+pushd /tmp/base-package
+    python setup.py sdist \
+        --format=zip
+    rm -rf ./base_package.egg-info
 
-mv ./base-package.zip ./tests/data/
+    python -m build \
+        --no-isolation \
+        --sdist
+popd
 
-tar \
-    -czvf base-package.tar.gz \
-    /tmp/base-package
-
-mv ./base-package.tar.gz ./tests/data/
+mv \
+    /tmp/base-package/dist/*.tar.gz \
+    ./tests/data
+mv \
+    /tmp/base-package/dist/*.zip \
+    ./tests/data
 
 #-----------------------#
 # package with problems #
