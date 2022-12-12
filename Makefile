@@ -60,4 +60,4 @@ test:
 		--cov-fail-under=100 \
 		--cov-report="term" \
 		--cov-report="html:htmlcov" \
-		./tests
+		./tests --pdb

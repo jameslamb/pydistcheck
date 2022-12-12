@@ -20,7 +20,7 @@ def _assert_log_matches_pattern(result: Result, pattern: str, num_times: int = 1
     assert num_matches_found == num_times, msg
 
 
-@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+@pytest.mark.parametrize("distro_file", ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"])
 def test_check_runs_without_error(distro_file):
     runner = CliRunner()
     result = runner.invoke(check, [os.path.join(TEST_DATA_DIR, distro_file)])
@@ -40,8 +40,8 @@ def test_check_runs_for_all_files_before_exiting():
         check,
         [
             "--max-allowed-size-compressed=5B",
-            os.path.join(TEST_DATA_DIR, "base-package.tar.gz"),
-            os.path.join(TEST_DATA_DIR, "base-package.zip"),
+            os.path.join(TEST_DATA_DIR, "base-package-0.1.0.tar.gz"),
+            os.path.join(TEST_DATA_DIR, "base-package-0.1.0.zip"),
         ],
     )
     assert result.exit_code == 1
@@ -59,7 +59,7 @@ def test_check_runs_for_all_files_before_exiting():
     )
 
 
-@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+@pytest.mark.parametrize("distro_file", ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"])
 def test_check_respects_ignore_with_one_check(distro_file):
     runner = CliRunner()
 
@@ -93,7 +93,7 @@ def test_check_respects_ignore_with_one_check(distro_file):
     _assert_log_matches_pattern(result, "errors found while checking\\: 0")
 
 
-@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+@pytest.mark.parametrize("distro_file", ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"])
 def test_check_respects_ignore_with_multiple_checks(distro_file):
     runner = CliRunner()
 
@@ -140,7 +140,7 @@ def test_check_respects_ignore_with_multiple_checks(distro_file):
     _assert_log_matches_pattern(result, "errors found while checking\\: 0")
 
 
-@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+@pytest.mark.parametrize("distro_file", ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"])
 def test_check_fails_with_expected_error_if_one_check_is_unrecognized(distro_file):
     result = CliRunner().invoke(
         check,
@@ -156,7 +156,7 @@ def test_check_fails_with_expected_error_if_one_check_is_unrecognized(distro_fil
     )
 
 
-@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+@pytest.mark.parametrize("distro_file", ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"])
 def test_check_fails_with_expected_error_if_multiple_checks_are_unrecognized(distro_file):
     result = CliRunner().invoke(
         check,
@@ -175,7 +175,7 @@ def test_check_fails_with_expected_error_if_multiple_checks_are_unrecognized(dis
     )
 
 
-@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+@pytest.mark.parametrize("distro_file", ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"])
 def test_check_respects_max_allowed_files(distro_file):
     runner = CliRunner()
     result = runner.invoke(
@@ -184,7 +184,7 @@ def test_check_respects_max_allowed_files(distro_file):
     assert result.exit_code == 1
 
     _assert_log_matches_pattern(
-        result, r"^1\. \[too\-many\-files\] Found 3 files\. Only 1 allowed\.$"
+        result, r"^1\. \[too\-many\-files\] Found 8 files\. Only 1 allowed\.$"
     )
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
 
@@ -199,7 +199,7 @@ def test_check_respects_max_allowed_files(distro_file):
         "708B",
     ],
 )
-@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+@pytest.mark.parametrize("distro_file", ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"])
 def test_check_respects_max_allowed_size_compressed(size_str, distro_file):
     runner = CliRunner()
     result = runner.invoke(
@@ -228,7 +228,7 @@ def test_check_respects_max_allowed_size_compressed(size_str, distro_file):
         "708B",
     ],
 )
-@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+@pytest.mark.parametrize("distro_file", ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"])
 def test_check_respects_max_allowed_size_uncompressed(size_str, distro_file):
     runner = CliRunner()
     result = runner.invoke(
@@ -247,7 +247,7 @@ def test_check_respects_max_allowed_size_uncompressed(size_str, distro_file):
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
 
 
-@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+@pytest.mark.parametrize("distro_file", ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"])
 def test_check_prefers_pyproject_toml_to_defaults(distro_file, tmp_path):
     runner = CliRunner()
     with runner.isolated_filesystem(temp_dir=tmp_path):
@@ -269,7 +269,7 @@ def test_check_prefers_pyproject_toml_to_defaults(distro_file, tmp_path):
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
 
 
-@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+@pytest.mark.parametrize("distro_file", ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"])
 def test_check_handles_ignore_list_in_pyproject_toml_correctly(distro_file, tmp_path):
     runner = CliRunner()
     with runner.isolated_filesystem(temp_dir=tmp_path):
@@ -294,7 +294,7 @@ def test_check_handles_ignore_list_in_pyproject_toml_correctly(distro_file, tmp_
         _assert_log_matches_pattern(result, "errors found while checking\\: 0")
 
 
-@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+@pytest.mark.parametrize("distro_file", ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"])
 def test_check_prefers_keyword_args_to_pyrpoject_toml_and_defaults(distro_file, tmp_path):
     runner = CliRunner()
     with runner.isolated_filesystem(temp_dir=tmp_path):
@@ -414,7 +414,7 @@ def test_path_contains_non_ascii_characters_works(distro_file):
 # --------------------- #
 
 
-@pytest.mark.parametrize("distro_file", ["base-package.tar.gz", "base-package.zip"])
+@pytest.mark.parametrize("distro_file", ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"])
 def test_inspect_runs_before_checks(distro_file):
     runner = CliRunner()
     result = runner.invoke(
@@ -423,7 +423,7 @@ def test_inspect_runs_before_checks(distro_file):
     assert result.exit_code == 1
 
     _assert_log_matches_pattern(
-        result, r"^1\. \[too\-many\-files\] Found 3 files\. Only 1 allowed\.$"
+        result, r"^1\. \[too\-many\-files\] Found 8 files\. Only 1 allowed\.$"
     )
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
     _assert_log_matches_pattern(result, r"^size by extension$")

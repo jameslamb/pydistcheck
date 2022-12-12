@@ -26,7 +26,7 @@ EOF
 
 cat << EOF > /tmp/base-package/setup.cfg
 [metadata]
-name = base_package
+name = base-package
 version = 0.1.0
 description = base_package (pydistcheck test package)
 maintainer_email = jaylamb20@gmail.com
@@ -60,6 +60,8 @@ mv \
 # package with problems #
 #-----------------------#
 
+rm -rf /tmp/base-package/dist
+rm -rf /tmp/base-package/*.egg-info
 cp -R /tmp/base-package /tmp/problematic-package
 
 cat << EOF > /tmp/problematic-package/question.py
