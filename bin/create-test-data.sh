@@ -63,6 +63,7 @@ mv \
 rm -rf /tmp/base-package/dist
 rm -rf /tmp/base-package/*.egg-info
 cp -R /tmp/base-package /tmp/problematic-package
+mkdir -p /tmp/problematic-package/problematic_package
 
 cat << EOF > /tmp/problematic-package/question.py
 from spongebobcase import tospongebob
