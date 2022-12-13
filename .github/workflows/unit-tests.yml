@@ -97,7 +97,7 @@ jobs:
       - name: run tests
         shell: bash -l {0}
         run: |
-          make check-test-packages
+          bin/check-test-packages.sh ${BUILD_DIRECTORY}/tests/data
   all-unit-tests-successful:
     # https://github.community/t/is-it-possible-to-require-all-github-actions-tasks-to-pass-without-enumerating-them/117957/4?u=graingert
     runs-on: ubuntu-latest
