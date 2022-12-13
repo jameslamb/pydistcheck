@@ -83,8 +83,8 @@ jobs:
         run: |
           pip install '.[tests]'
           make test
-  check-test-package:
-    name: check-test-package
+  check-test-packages:
+    name: check-test-packages
     runs-on: ubuntu-latest
     container:
       image: python:3.10
@@ -97,11 +97,11 @@ jobs:
       - name: run tests
         shell: bash -l {0}
         run: |
-          make check-test-package
+          make check-test-packages
   all-unit-tests-successful:
     # https://github.community/t/is-it-possible-to-require-all-github-actions-tasks-to-pass-without-enumerating-them/117957/4?u=graingert
     runs-on: ubuntu-latest
-    needs: [test-cpython, test-pypy, check-test-package]
+    needs: [test-cpython, test-pypy, check-test-packages]
     steps:
     - name: Note that all tests succeeded
       run: echo "🎉"
