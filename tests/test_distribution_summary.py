@@ -18,11 +18,11 @@ def test_distribution_summary_basically_works(distro_file):
     # should correctly capture the contents:
     #   * 2 directories
     #   * 8 files
-    assert len(ds.file_infos) == 10
+    assert len(ds.file_infos) == 11
     assert len([f for f in ds.file_infos if f.is_directory]) == 2
     assert ds.num_directories == 2
-    assert len([f for f in ds.file_infos if not f.is_directory]) == 8
-    assert ds.num_files == 8
+    assert len([f for f in ds.file_infos if not f.is_directory]) == 9
+    assert ds.num_files == 9
 
     # file_paths should include all the files and directories
     # (NOTE: zip adds trailing slashes to directories, tar does not)
@@ -35,10 +35,11 @@ def test_distribution_summary_basically_works(distro_file):
         "base-package-0.1.0/PKG-INFO",
         "base-package-0.1.0/setup.py",
         "base-package-0.1.0/LICENSE.txt",
+        "base-package-0.1.0/README.md",
         "base-package-0.1.0/base_package.egg-info/top_level.txt",
         "base-package-0.1.0/base_package.egg-info/dependency_links.txt",
         "base-package-0.1.0/base_package.egg-info/SOURCES.txt",
-        "base-package-0.1.0/base_package.egg-info/PKG-INFO"
+        "base-package-0.1.0/base_package.egg-info/PKG-INFO",
     ]
 
     assert sorted(ds.file_paths) == sorted(expected_file_paths)
@@ -49,7 +50,7 @@ def test_distribution_summary_basically_works(distro_file):
     assert ds.uncompressed_size_bytes > ds.compressed_size_bytes
 
     # size_by_file_extension should work as expected
-    assert ds.size_by_file_extension == {".cfg": 230, "no-extension": 382, ".py": 38, ".txt": 11534}
+    assert ds.size_by_file_extension == {".cfg": 230, ".md": 15, "no-extension": 382, ".py": 38, ".txt": 11544}
 
     # size_by_file_extension should return results sorted from largest to smallest by file size
     last_size_seen = float("inf")

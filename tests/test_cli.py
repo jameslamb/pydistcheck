@@ -184,7 +184,7 @@ def test_check_respects_max_allowed_files(distro_file):
     assert result.exit_code == 1
 
     _assert_log_matches_pattern(
-        result, r"^1\. \[too\-many\-files\] Found 8 files\. Only 1 allowed\.$"
+        result, r"^1\. \[too\-many\-files\] Found 9 files\. Only 1 allowed\.$"
     )
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
 
@@ -423,7 +423,7 @@ def test_inspect_runs_before_checks(distro_file):
     assert result.exit_code == 1
 
     _assert_log_matches_pattern(
-        result, r"^1\. \[too\-many\-files\] Found 8 files\. Only 1 allowed\.$"
+        result, r"^1\. \[too\-many\-files\] Found 9 files\. Only 1 allowed\.$"
     )
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
     _assert_log_matches_pattern(result, r"^size by extension$")

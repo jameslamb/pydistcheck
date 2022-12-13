@@ -24,6 +24,10 @@ from setuptools import setup
 setup()
 EOF
 
+cat << EOF > /tmp/base-package/README.md
+read me please
+EOF
+
 cat << EOF > /tmp/base-package/setup.cfg
 [metadata]
 name = base-package
@@ -42,7 +46,7 @@ curl https://www.apache.org/licenses/LICENSE-2.0.txt \
 pushd /tmp/base-package
     python setup.py sdist \
         --format=zip
-    rm -rf ./base_package.egg-info
+    rm -rf ./base-package.egg-info
 
     python -m build \
         --no-isolation \
@@ -64,25 +68,29 @@ rm -rf /tmp/base-package/dist
 rm -rf /tmp/base-package/*.egg-info
 cp -R /tmp/base-package /tmp/problematic-package
 mkdir -p /tmp/problematic-package/problematic_package
+sed \
+    -i.bak \
+    -e "s/base/problematic/" \
+    /tmp/problematic-package/setup.cfg
 
-cat << EOF > /tmp/problematic-package/question.py
+cat << EOF > /tmp/problematic-package/problematic_package/question.py
 from spongebobcase import tospongebob
-tospongebob("but does it scale?")
+SPONGEBOB_STR = tospongebob("but does it scale?")
 EOF
 
 # only differs by one letter in name
 cp \
-    /tmp/problematic-package/question.py \
-    /tmp/problematic-package/Question.py
+    /tmp/problematic-package/problematic_package/question.py \
+    /tmp/problematic-package/problematic_package/Question.py
 
 # only differs by extension
 cp \
-    /tmp/problematic-package/question.py \
-    /tmp/problematic-package/question.PY
+    /tmp/problematic-package/problematic_package/question.py \
+    /tmp/problematic-package/problematic_package/question.PY
 
 # spaces in directory name
-mkdir -p "/tmp/problematic-package/bad code"
-cat << EOF > "/tmp/problematic-package/bad code/ship-it.py"
+mkdir -p "/tmp/problematic-package/problematic_package/bad code"
+cat << EOF > "/tmp/problematic-package/problematic_package/bad code/ship-it.py"
 def is_even(num: int) -> bool:
     if num == 1:
         return False
@@ -100,18 +108,23 @@ allow_bugs = False
 EOF
 
 # non-ASCII character in path
-cat << EOF > "/tmp/problematic-package/€veryone-loves-python.py"
+cat << EOF > "/tmp/problematic-package/problematic_package/€veryone-loves-python.py"
 print('Python is great.')
 EOF
 
-zip \
-    -r problematic-package.zip \
-    /tmp/problematic-package
+pushd /tmp/problematic-package
+    python setup.py sdist \
+        --format=zip
+    rm -rf ./problematic-package.egg-info
 
-mv ./problematic-package.zip ./tests/data/
+    python -m build \
+        --no-isolation \
+        --sdist
+popd
 
-tar \
-    -czvf problematic-package.tar.gz \
-    /tmp/problematic-package
-
-mv ./problematic-package.tar.gz ./tests/data/
+mv \
+    /tmp/problematic-package/dist/*.tar.gz \
+    ./tests/data
+mv \
+    /tmp/problematic-package/dist/*.zip \
+    ./tests/data
