@@ -9,10 +9,9 @@ pip install \
     'setuptools>=42'
 
 rm -rf /tmp/base-package
-mkdir -p /tmp/base-package
-touch /tmp/base-package/__init__.py
-
 mkdir -p /tmp/base-package/base_package
+touch /tmp/base-package/base_package/__init__.py
+
 cat << EOF > /tmp/base-package/base_package/thing.py
 def do_stuff():
     return True
@@ -38,6 +37,7 @@ license = BSD-3-Clause
 
 [options]
 packages = find:
+include_package_data = True
 EOF
 
 curl https://www.apache.org/licenses/LICENSE-2.0.txt \
@@ -64,13 +64,17 @@ mv \
 # package with problems #
 #-----------------------#
 
+rm -rf /tmp/base-package/base-package
 rm -rf /tmp/base-package/dist
 rm -rf /tmp/base-package/*.egg-info
-cp -R /tmp/base-package /tmp/problematic-package
-mkdir -p /tmp/problematic-package/problematic_package
+mkdir -p /tmp/problematic-package
+cp -R /tmp/base-package/* /tmp/problematic-package/
+mv \
+    /tmp/problematic-package/base_package \
+    /tmp/problematic-package/problematic_package
 sed \
     -i.bak \
-    -e "s/base/problematic/" \
+    -e "s/base/problematic/g" \
     /tmp/problematic-package/setup.cfg
 
 cat << EOF > /tmp/problematic-package/problematic_package/question.py
@@ -90,6 +94,7 @@ cp \
 
 # spaces in directory name
 mkdir -p "/tmp/problematic-package/problematic_package/bad code"
+touch "/tmp/problematic-package/problematic_package/bad code/__init__.py"
 cat << EOF > "/tmp/problematic-package/problematic_package/bad code/ship-it.py"
 def is_even(num: int) -> bool:
     if num == 1:
@@ -105,6 +110,11 @@ EOF
 cat << EOF > "/tmp/problematic-package/beep boop.ini"
 [config]
 allow_bugs = False
+EOF
+
+cat << EOF > "/tmp/problematic-package/MANIFEST.in"
+include *.ini
+include problematic_package/*.PY
 EOF
 
 # non-ASCII character in path

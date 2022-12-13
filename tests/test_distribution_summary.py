@@ -18,24 +18,34 @@ def test_distribution_summary_basically_works(distro_file):
     # should correctly capture the contents:
     #   * 2 directories
     #   * 8 files
-    assert len(ds.file_infos) == 11
-    assert len([f for f in ds.file_infos if f.is_directory]) == 2
-    assert ds.num_directories == 2
-    assert len([f for f in ds.file_infos if not f.is_directory]) == 9
-    assert ds.num_files == 9
+    assert len(ds.file_infos) == 14
+    assert len([f for f in ds.file_infos if f.is_directory]) == 3
+    assert ds.num_directories == 3
+    assert len([f for f in ds.file_infos if not f.is_directory]) == 11
+    assert ds.num_files == 11
 
     # file_paths should include all the files and directories
     # (NOTE: zip adds trailing slashes to directories, tar does not)
     if distro_file.endswith("zip"):
-        expected_file_paths = ["base-package-0.1.0/", "base-package-0.1.0/base_package.egg-info/"]
+        expected_file_paths = [
+            "base-package-0.1.0/",
+            "base-package-0.1.0/base_package/",
+            "base-package-0.1.0/base_package.egg-info/",
+        ]
     else:
-        expected_file_paths = ["base-package-0.1.0", "base-package-0.1.0/base_package.egg-info"]
+        expected_file_paths = [
+            "base-package-0.1.0",
+            "base-package-0.1.0/base_package",
+            "base-package-0.1.0/base_package.egg-info",
+        ]
     expected_file_paths += [
         "base-package-0.1.0/setup.cfg",
         "base-package-0.1.0/PKG-INFO",
         "base-package-0.1.0/setup.py",
         "base-package-0.1.0/LICENSE.txt",
         "base-package-0.1.0/README.md",
+        "base-package-0.1.0/base_package/__init__.py",
+        "base-package-0.1.0/base_package/thing.py",
         "base-package-0.1.0/base_package.egg-info/top_level.txt",
         "base-package-0.1.0/base_package.egg-info/dependency_links.txt",
         "base-package-0.1.0/base_package.egg-info/SOURCES.txt",
@@ -50,7 +60,13 @@ def test_distribution_summary_basically_works(distro_file):
     assert ds.uncompressed_size_bytes > ds.compressed_size_bytes
 
     # size_by_file_extension should work as expected
-    assert ds.size_by_file_extension == {".cfg": 230, ".md": 15, "no-extension": 382, ".py": 38, ".txt": 11544}
+    assert ds.size_by_file_extension == {
+        ".cfg": 258,
+        ".md": 15,
+        "no-extension": 382,
+        ".py": 70,
+        ".txt": 11603,
+    }
 
     # size_by_file_extension should return results sorted from largest to smallest by file size
     last_size_seen = float("inf")
