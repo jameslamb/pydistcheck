@@ -6,6 +6,16 @@ build:
 	rm -r ./dist || true
 	pipx run build --sdist --wheel
 
+.PHONY: check-test-packages
+check-test-packages:
+	docker run \
+		--rm \
+		-v "$${PWD}/tests/data":/opt/test-packages:ro \
+		-v "$${PWD}/bin":/ci-scripts \
+		--workdir /ci-scripts \
+		-it python:3.10 \
+		./check-test-packages.sh /opt/test-packages
+
 .PHONY: clean
 clean:
 	rm -r ./tmp-dir

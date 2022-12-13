@@ -78,7 +78,11 @@ sed \
     /tmp/problematic-package/setup.cfg
 
 cat << EOF > /tmp/problematic-package/problematic_package/question.py
-from spongebobcase import tospongebob
+try:
+    from spongebobcase import tospongebob
+except ImportError:
+    def tospongebob(x):
+        return("install 'spongebobcase' to use this")
 SPONGEBOB_STR = tospongebob("but does it scale?")
 EOF
 
