@@ -12,6 +12,7 @@ jobs:
   test-cpython:
     name: unit-tests (${{ matrix.os }}, Python-CPython ${{ matrix.python_version }})
     runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
     timeout-minutes: 30
     strategy:
       fail-fast: false
@@ -22,24 +23,31 @@ jobs:
           #########
           - os: ubuntu-latest
             python_version: '3.8'
+            container: 'ubuntu:22.04'
           - os: ubuntu-latest
             python_version: '3.9'
+            container: 'ubuntu:22.04'
           - os: ubuntu-latest
             python_version: '3.10'
+            container: 'ubuntu:22.04'
           #########
           # macOS #
           #########
           - os: macOS-latest
             python_version: '3.8'
+            container: null
           - os: macOS-latest
             python_version: '3.10'
+            container: null
           ###########
           # Windows #
           ###########
           - os: windows-latest
             python_version: '3.8'
+            container: null
           - os: windows-latest
             python_version: '3.10'
+            container: null
     steps:
       - name: Prevent conversion of line endings on Windows
         if: startsWith(matrix.os, 'windows')
