@@ -151,7 +151,7 @@ def check(  # pylint: disable=too-many-arguments
         for this_check in checks:
             errors += this_check(distro_summary=summary)
 
-        for i, error_msg in enumerate(errors):
+        for i, error_msg in enumerate(sorted(errors)):
             print(f"{i + 1}. {error_msg}")
 
         num_errors_for_this_file = len(errors)

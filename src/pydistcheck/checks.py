@@ -104,7 +104,7 @@ class _FilesOnlyDifferByCaseCheck(_CheckProtocol):
                 duplicates_list += filepaths
 
         if duplicates_list:
-            duplicates_str = ",".join(duplicates_list)
+            duplicates_str = ",".join(sorted(duplicates_list))
             msg = (
                 f"[{self.check_name}] Found files which differ only by case. "
                 "Such files are not portable, since some filesystems are case-insensitive. "
