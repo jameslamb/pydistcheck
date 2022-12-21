@@ -35,7 +35,6 @@ jobs:
         run: |
           mamba install \
             --yes \
-            --name pydistcheck-tests \
               pipx \
               requests
           make install
