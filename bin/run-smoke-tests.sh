@@ -21,7 +21,11 @@ get-files catboost
 get-files numpy
 
 # package with so many files that `find -exec du -ch` has to batch results
-get-files numpy
+get-files tensorflow
+
+# package with lots of bundled non-Python code
+get-files bokeh
+get-files Flask
 
 pydistcheck \
     --inspect \
