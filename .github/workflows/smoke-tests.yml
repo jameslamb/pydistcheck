@@ -35,16 +35,9 @@ jobs:
         run: |
           mamba install \
             --yes \
-            --name pydistscheck-tests \
-              pipx
-          if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-            chocolatey install jq
-          else
-            mamba install \
-              --yes \
-              --name pydistscheck-tests \
-                jq
-          fi
+            --name pydistcheck-tests \
+              pipx \
+              requests
           make install
           make smoke-tests
   all-smoke-tests-successful:
