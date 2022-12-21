@@ -27,5 +27,8 @@ jobs:
             --yes \
             -c conda-forge \
               pipx
-          make full-run \
-            -e PACKAGE_NAME=${{ inputs.package_name }}
+          mkdir -p ./tmp-dir
+          python bin/get-release-files.py\
+            ${{ inputs.package_name }} \
+            ./tmp-dir
+          pydistcheck ./tmp-dir/*
