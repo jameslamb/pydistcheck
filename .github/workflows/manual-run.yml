@@ -20,12 +20,13 @@ jobs:
       - name: check '${{ inputs.package_name }}'
         run: |
           export PATH="/usr/share/miniconda/bin:${PATH}"
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            jq
           conda install \
             --yes \
             -c conda-forge \
               pipx
-          make full-run \
-            -e PACKAGE_NAME=${{ inputs.package_name }}
+          make install
+          mkdir -p ./tmp-dir
+          python bin/get-release-files.py\
+            ${{ inputs.package_name }} \
+            ./tmp-dir
+          pydistcheck ./tmp-dir/*

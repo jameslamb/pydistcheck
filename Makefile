@@ -1,5 +1,3 @@
-OUTPUT_DIR ?= $(PWD)/tmp-dir
-
 .PHONY: build
 build:
 	pipx install cibuildwheel
@@ -25,12 +23,6 @@ format:
 	isort .
 	black .
 
-.PHONY: full-run
-full-run: install
-	bin/full-run.sh \
-		"$(PACKAGE_NAME)" \
-		"$(OUTPUT_DIR)"
-
 .PHONY: install
 install:
 	pipx install --force .
@@ -49,8 +41,7 @@ lint:
 
 .PHONY: smoke-tests
 smoke-tests:
-	OUTPUT_DIR="$(OUTPUT_DIR)" \
-	bin/run-smoke-tests.sh
+	@bin/run-smoke-tests.sh
 
 .PHONY: test-data
 test-data:
