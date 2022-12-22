@@ -29,7 +29,7 @@ get-files Flask
 
 pydistcheck \
     --inspect \
-    --max-allowed-files 8500 \
+    --max-allowed-files 8750 \
     --max-allowed-size-compressed '500M' \
     --max-allowed-size-uncompressed '1G' \
     ./smoke-tests/*
