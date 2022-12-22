@@ -9,6 +9,7 @@ mkdir -p ./smoke-tests
 
 get-files() {
     pkg_name=$1
+    echo ""
     python bin/get-release-files.py \
         "${pkg_name}" \
         ./smoke-tests
