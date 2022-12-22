@@ -15,6 +15,7 @@ from pydistcheck.utils import _FileSize
 ALL_CHECKS = {
     "distro-too-large-compressed",
     "distro-too-large-uncompressed",
+    "executable-files",
     "too-many-files",
     "files-only-differ-by-case",
     "path-contains-non-ascii-characters",
@@ -66,6 +67,23 @@ class _DistroTooLargeUnCompressedCheck(_CheckProtocol):
                 f"than the allowed size ({max_size})."
             )
             out.append(msg)
+        return out
+
+
+class _ExecutableFileCheck(_CheckProtocol):
+
+    check_name = "executable-files"
+
+    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
+        out: List[str] = []
+        for file_info in distro_summary.file_infos:
+            if file_info.is_executable:
+                msg = (
+                    f"[{self.check_name}] Found executable file '{file_info.name}'. "
+                    "Executable files are a security risk. "
+                    "Restrict this file's permissions and re-build the distribution."
+                )
+                out.append(msg)
         return out
 
 

@@ -326,7 +326,45 @@ def test_cli_raises_exactly_the_expected_number_of_errors_for_the_problematic_pa
         [os.path.join(TEST_DATA_DIR, distro_file)],
     )
     assert result.exit_code == 1
-    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: 6$")
+    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: 9$")
+
+
+@pytest.mark.parametrize(
+    "distro_file", ["problematic-package-0.1.0.tar.gz", "problematic-package-0.1.0.zip"]
+)
+def test_executable_files_check_works(distro_file):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [os.path.join(TEST_DATA_DIR, distro_file)],
+    )
+    assert result.exit_code == 1
+
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^1\. \[executable\-files\] Found executable file 'problematic-package-0\.1\.0/all-executable-file\.ini'\. "
+            r"Executable files are a security risk\. "
+            r"Restrict this file's permissions and re\-build the distribution\."
+        ),
+    )
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^2\. \[executable\-files\] Found executable file 'problematic-package-0\.1\.0/group-executable-file\.ini'\. "
+            r"Executable files are a security risk\. "
+            r"Restrict this file's permissions and re\-build the distribution\."
+        ),
+    )
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^3\. \[executable\-files\] Found executable file 'problematic-package-0\.1\.0/user-executable-file\.ini'\. "
+            r"Executable files are a security risk\. "
+            r"Restrict this file's permissions and re\-build the distribution\."
+        ),
+    )
+    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: [0-9]{1}")
 
 
 @pytest.mark.parametrize(
@@ -343,7 +381,7 @@ def test_files_only_differ_by_case_works(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^1\. \[files\-only\-differ\-by\-case\] Found files which differ only by case\. "
+            r"^4\. \[files\-only\-differ\-by\-case\] Found files which differ only by case\. "
             r"Such files are not portable, since some filesystems are case-insensitive\. "
             r"Files\: problematic\-package\-0\.1\.0/problematic_package/Question\.py"
             r",problematic\-package\-0\.1\.0/problematic_package/question\.PY"
@@ -368,7 +406,7 @@ def test_path_contains_spaces_works(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^3\. \[path\-contains\-spaces\] File paths with spaces are not portable\. "
+            r"^6\. \[path\-contains\-spaces\] File paths with spaces are not portable\. "
             r"Found path with spaces\: 'problematic\-package\-0\.1\.0/beep boop\.ini"
         ),
     )
@@ -377,7 +415,7 @@ def test_path_contains_spaces_works(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^4\. \[path\-contains\-spaces\] File paths with spaces are not portable\. "
+            r"^7\. \[path\-contains\-spaces\] File paths with spaces are not portable\. "
             r"Found path with spaces\: "
             r"'problematic\-package\-0\.1\.0/problematic_package/bad code[/]*"
         ),
@@ -387,7 +425,7 @@ def test_path_contains_spaces_works(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^5\. \[path\-contains\-spaces\] File paths with spaces are not portable\. "
+            r"^8\. \[path\-contains\-spaces\] File paths with spaces are not portable\. "
             r"Found path with spaces\: "
             r"'problematic\-package\-0\.1\.0/problematic_package/bad code/__init__\.py"
         ),
@@ -395,7 +433,7 @@ def test_path_contains_spaces_works(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^6\. \[path\-contains\-spaces\] File paths with spaces are not portable\. "
+            r"^9\. \[path\-contains\-spaces\] File paths with spaces are not portable\. "
             r"Found path with spaces\: "
             r"'problematic\-package\-0\.1\.0/problematic_package/bad code/ship\-it\.py"
         ),
@@ -420,7 +458,7 @@ def test_path_contains_non_ascii_characters_works(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^2\. \[path\-contains\-non\-ascii\-characters\] Found file path containing non-ASCII "
+            r"^5\. \[path\-contains\-non\-ascii\-characters\] Found file path containing non-ASCII "
             r"characters\: "
             r"'problematic\-package\-0\.1\.0/problematic_package/\?+veryone-loves-python\.py'"
         ),

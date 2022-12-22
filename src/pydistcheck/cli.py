@@ -11,6 +11,7 @@ from pydistcheck.checks import (
     ALL_CHECKS,
     _DistroTooLargeCompressedCheck,
     _DistroTooLargeUnCompressedCheck,
+    _ExecutableFileCheck,
     _FileCountCheck,
     _FilesOnlyDifferByCaseCheck,
     _NonAsciiCharacterCheck,
@@ -128,6 +129,7 @@ def check(  # pylint: disable=too-many-arguments
                 size_str=config.max_allowed_size_uncompressed
             ).total_size_bytes
         ),
+        _ExecutableFileCheck(),
         _FileCountCheck(max_allowed_files=config.max_allowed_files),
         _FilesOnlyDifferByCaseCheck(),
         _SpacesInPathCheck(),

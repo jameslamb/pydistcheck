@@ -126,6 +126,23 @@ cat << EOF > "/tmp/problematic-package/problematic_package/€veryone-loves-pyth
 print('Python is great.')
 EOF
 
+# executable files
+cat << EOF > "/tmp/problematic-package/user-executable-file.ini"
+#!/bin/sh
+ls -alF ~/.ssh
+EOF
+chmod 744 "/tmp/problematic-package/user-executable-file.ini"
+
+cp \
+    "/tmp/problematic-package/user-executable-file.ini" \
+    "/tmp/problematic-package/group-executable-file.ini"
+chmod 436 "/tmp/problematic-package/group-executable-file.ini"
+
+cp \
+    "/tmp/problematic-package/user-executable-file.ini" \
+    "/tmp/problematic-package/all-executable-file.ini"
+chmod 555 "/tmp/problematic-package/all-executable-file.ini"
+
 pushd /tmp/problematic-package
     python setup.py sdist \
         --format=zip

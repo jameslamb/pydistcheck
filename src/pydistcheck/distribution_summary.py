@@ -9,13 +9,17 @@ import tarfile
 import zipfile
 from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
+from stat import S_IXGRP, S_IXOTH, S_IXUSR
 from typing import List
+
+_executable_digits = {"1", "3", "5", "7"}
 
 
 @dataclass
 class _FileInfo:
     name: str
     file_extension: str
+    is_executable: bool
     is_file: bool
     is_directory: bool
     uncompressed_size_bytes: int
@@ -23,10 +27,24 @@ class _FileInfo:
     @classmethod
     def from_tarfile_member(cls, tar_info: tarfile.TarInfo) -> "_FileInfo":
         file_name = tar_info.name
+        # * mode (base-10 int): 493
+        # * mode (octal): '0o755'
+        #    - 7 (group full access)
+        #    - 5 (user read and execute)
+        #    - 5 (world read and execute)
+        # references:
+        #   - https://unix.stackexchange.com/a/14727/550004
+        #   - https://stackoverflow.com/a/67613246/3986677
+        #   - https://stackoverflow.com/a/55166014/3986677
+        #   - https://www.gnu.org/software/libc/manual/html_node/Permission-Bits.html
+        chmod_str = oct(tar_info.mode)[2:]
+        is_file = tar_info.isfile()
+        is_executable = is_file and bool(set(chmod_str).intersection(_executable_digits))
         return cls(
             name=file_name,
             file_extension=pathlib.Path(file_name).suffix or "no-extension",
-            is_file=tar_info.isfile(),
+            is_executable=is_executable,
+            is_file=is_file,
             is_directory=tar_info.isdir(),
             uncompressed_size_bytes=tar_info.size,
         )
@@ -35,10 +53,19 @@ class _FileInfo:
     def from_zipfile_member(cls, zip_info: zipfile.ZipInfo) -> "_FileInfo":
         file_name = zip_info.filename
         is_directory = zip_info.is_dir()
+        is_file = not is_directory
+        # ref:
+        #    * https://stackoverflow.com/a/55166014/3986677
+        #    * https://www.gnu.org/software/libc/manual/html_node/Permission-Bits.html
+        file_attrs = zip_info.external_attr >> 16
+        is_executable = is_file and (
+            bool(S_IXUSR & file_attrs) or bool(S_IXGRP & file_attrs) or bool(S_IXOTH & file_attrs)
+        )
         return cls(
             name=file_name,
             file_extension=pathlib.Path(file_name).suffix or "no-extension",
-            is_file=not is_directory,
+            is_executable=is_executable,
+            is_file=is_file,
             is_directory=is_directory,
             uncompressed_size_bytes=zip_info.file_size,
         )

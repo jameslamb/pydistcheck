@@ -28,8 +28,16 @@ get-files tensorflow
 get-files bokeh
 get-files Flask
 
+# package that isn't actually Python code
+get-files cmake
+
+# Python clilents for non-Python systems
+get-files kafka-python
+get-files kubernetes
+
 pydistcheck \
     --inspect \
+    --ignore 'path-contains-spaces' \
     --max-allowed-files 8750 \
     --max-allowed-size-compressed '500M' \
     --max-allowed-size-uncompressed '1G' \
