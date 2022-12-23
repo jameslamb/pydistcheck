@@ -41,7 +41,7 @@ lint:
 
 .PHONY: smoke-tests
 smoke-tests:
-	@bin/run-smoke-tests.sh
+	@bash ./bin/run-smoke-tests.sh
 
 .PHONY: test-data
 test-data:
