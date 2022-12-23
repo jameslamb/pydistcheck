@@ -44,7 +44,6 @@ for file_type, release_files in files_by_type.items():
 
 
 for file_type in files_by_type.keys():
-    print(f"Looking for a '{file_type}' distribution")
     sample_release = files_by_type[file_type][0]
     output_file = os.path.join(OUTPUT_DIR, sample_release.filename)
     print(f"Downloading '{sample_release.filename}'")
