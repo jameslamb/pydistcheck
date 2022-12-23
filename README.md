@@ -27,13 +27,28 @@ Install with `pipx`.
 pipx install pydistcheck
 ```
 
-## Minimal Example
+## Quickstart
 
-Given a Python distribution...
+Try it out on the test data in this project!
 
 ```shell
-pydistcheck dist/*
+pydistcheck tests/data/problematic-package-*
 ```
+
+Yields something like the following.
+
+```text
+------------ check results -----------
+1. [files-only-differ-by-case] Found files which differ only by case. Such files are not portable, since some filesystems are case-insensitive. Files: problematic-package-0.1.0/problematic_package/Question.py,problematic-package-0.1.0/problematic_package/question.PY,problematic-package-0.1.0/problematic_package/question.py
+2. [path-contains-spaces] File paths with spaces are not portable. Found path with spaces: 'problematic-package-0.1.0/beep boop.ini'
+3. [path-contains-spaces] File paths with spaces are not portable. Found path with spaces: 'problematic-package-0.1.0/problematic_package/bad code'
+4. [path-contains-spaces] File paths with spaces are not portable. Found path with spaces: 'problematic-package-0.1.0/problematic_package/bad code/__init__.py'
+5. [path-contains-spaces] File paths with spaces are not portable. Found path with spaces: 'problematic-package-0.1.0/problematic_package/bad code/ship-it.py'
+6. [path-contains-non-ascii-characters] Found file path containing non-ASCII characters: 'problematic-package-0.1.0/problematic_package/?veryone-loves-python.py'
+errors found while checking: 6
+```
+
+See https://pydistcheck.readthedocs.io/en/latest/ to learn more.
 
 ## Related Projects
 
