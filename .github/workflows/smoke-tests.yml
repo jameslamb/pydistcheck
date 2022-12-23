@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: fail
         run: |
-          exit 123
+          exit 124
   all-smoke-tests-successful:
     if: always()
     runs-on: ubuntu-latest
