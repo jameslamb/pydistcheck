@@ -22,6 +22,22 @@ The package distribution is larger (uncompressed) than the allowed size.
 
 Change that limit using configuration option ``max-distro-size-uncompressed``.
 
+executable-files
+****************
+
+The package distribution contains executable files.
+
+It shouldn't be necessary to include executable files in a Python distribution, and their
+inclusion can lead to packages by flagged by security scanning tools.
+
+Executable-ness is tracked in files' content on disk, and therefore in source control.
+On a Unix-like operating system, use ``chmod`` to reduce the affected files' permissions, and re-build the affected distributions.
+
+For more information, see:
+
+* `"Understanding Linux File Permissions" (Linux Foundation blog) <https://www.linuxfoundation.org/blog/blog/classic-sysadmin-understanding-linux-file-permissions>`_
+* `"Package Structure" (CRAN docs) <https://cran.r-project.org/doc/manuals/R-exts.html#Package-structure>`_
+
 files-only-differ-by-case
 *************************
 
