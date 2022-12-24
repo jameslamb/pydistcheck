@@ -22,9 +22,25 @@ jobs:
           - os: windows-latest
             python_version: '3.10'
     steps:
-      - name: fail
+      - name: check out repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+      - uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: pydistscheck-tests
+          miniforge-variant: Mambaforge
+          use-mamba: true
+          python-version: ${{ matrix.python_version }}
+      - name: run tests
+        shell: bash -l {0}
         run: |
-          exit 123
+          mamba install \
+            --yes \
+              pipx \
+              requests
+          make install
+          make smoke-tests
   all-smoke-tests-successful:
     if: always()
     runs-on: ubuntu-latest
