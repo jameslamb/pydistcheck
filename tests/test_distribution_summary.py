@@ -16,29 +16,28 @@ def test_distribution_summary_basically_works(distro_file):
     assert ds.compressed_size_bytes < 1e8
 
     # should correctly capture the contents:
-    #   * 2 directories
-    #   * 8 files
-    assert len(ds.file_infos) == 14
-    assert len([f for f in ds.file_infos if f.is_directory]) == 3
-    assert ds.num_directories == 3
-    assert len([f for f in ds.file_infos if not f.is_directory]) == 11
+    #   * 3 directories
+    #   * 11 files
+    assert len(ds.files) == 11
     assert ds.num_files == 11
+    assert len(ds.directories) == 3
+    assert ds.num_directories == 3
 
     # file_paths should include all the files and directories
     # (NOTE: zip adds trailing slashes to directories, tar does not)
     if distro_file.endswith("zip"):
-        expected_file_paths = [
+        expected_dir_paths = [
             "base-package-0.1.0/",
             "base-package-0.1.0/base_package/",
             "base-package-0.1.0/base_package.egg-info/",
         ]
     else:
-        expected_file_paths = [
+        expected_dir_paths = [
             "base-package-0.1.0",
             "base-package-0.1.0/base_package",
             "base-package-0.1.0/base_package.egg-info",
         ]
-    expected_file_paths += [
+    expected_file_paths = [
         "base-package-0.1.0/setup.cfg",
         "base-package-0.1.0/PKG-INFO",
         "base-package-0.1.0/setup.py",
@@ -51,7 +50,10 @@ def test_distribution_summary_basically_works(distro_file):
         "base-package-0.1.0/base_package.egg-info/SOURCES.txt",
         "base-package-0.1.0/base_package.egg-info/PKG-INFO",
     ]
+    expected_all_paths = expected_dir_paths + expected_file_paths
 
+    assert sorted(ds.all_paths) == sorted(expected_all_paths)
+    assert sorted(ds.directory_paths) == sorted(expected_dir_paths)
     assert sorted(ds.file_paths) == sorted(expected_file_paths)
 
     # total archive sizes should make sense

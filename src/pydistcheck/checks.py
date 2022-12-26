@@ -19,6 +19,7 @@ ALL_CHECKS = {
     "files-only-differ-by-case",
     "path-contains-non-ascii-characters",
     "path-contains-spaces",
+    "unexpected-files",
 }
 
 
@@ -95,8 +96,8 @@ class _FilesOnlyDifferByCaseCheck(_CheckProtocol):
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
         path_lower_to_raw = defaultdict(list)
-        for file_info in distro_summary.file_infos:
-            path_lower_to_raw[file_info.name.lower()].append(file_info.name)
+        for file_path in distro_summary.all_paths:
+            path_lower_to_raw[file_path.lower()].append(file_path)
 
         duplicates_list: List[str] = []
         for _, filepaths in path_lower_to_raw.items():
@@ -120,7 +121,7 @@ class _NonAsciiCharacterCheck(_CheckProtocol):
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
-        for file_path in distro_summary.file_paths:
+        for file_path in distro_summary.all_paths:
             if not file_path.isascii():
                 ascii_converted_str = file_path.encode("ascii", "replace").decode("ascii")
                 msg = (
@@ -137,7 +138,7 @@ class _SpacesInPathCheck(_CheckProtocol):
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
-        for file_path in distro_summary.file_paths:
+        for file_path in distro_summary.all_paths:
             if file_path != file_path.replace(" ", ""):
                 msg = (
                     f"[{self.check_name}] File paths with spaces are not portable. "
@@ -148,13 +149,14 @@ class _SpacesInPathCheck(_CheckProtocol):
 
 
 _UNEXPECTED_DIRECTORIES = {
+    ".appveyor",
     ".binder",
     ".circleci",
     ".git",
     ".github",
     ".idea",
     ".pytest_cache",
-    ".mypy_cache"
+    ".mypy_cache",
 }
 
 _UNEXPECTED_FILES = {
@@ -172,7 +174,7 @@ _UNEXPECTED_FILES = {
     ".readthedocs.yaml",
     ".travis.yml",
     "vsts-ci.yml",
-    ".vsts-ci.yml"
+    ".vsts-ci.yml",
 }
 
 
@@ -182,10 +184,11 @@ class _UnexpectedFiles(_CheckProtocol):
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
-        for file_path in distro_summary.file_paths:
+        for file_path in distro_summary.all_paths:
             if file_path != file_path.replace(" ", ""):
                 msg = (
                     f"[{self.check_name}] File paths with spaces are not portable. "
                     f"Found path with spaces: '{file_path}'"
                 )
                 out.append(msg)
+        return out
