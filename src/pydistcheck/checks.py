@@ -145,3 +145,47 @@ class _SpacesInPathCheck(_CheckProtocol):
                 )
                 out.append(msg)
         return out
+
+
+_UNEXPECTED_DIRECTORIES = {
+    ".binder",
+    ".circleci",
+    ".git",
+    ".github",
+    ".idea",
+    ".pytest_cache",
+    ".mypy_cache"
+}
+
+_UNEXPECTED_FILES = {
+    "appveyor.yml",
+    ".appveyor.yml",
+    "azure-pipelines.yml",
+    ".azure-pipelines.yml",
+    ".cirrus.star",
+    ".cirrus.yml",
+    "codecov.yml",
+    ".codecov.yml",
+    ".DS_Store",
+    ".gitpod.yml",
+    ".hadolint.yaml",
+    ".readthedocs.yaml",
+    ".travis.yml",
+    "vsts-ci.yml",
+    ".vsts-ci.yml"
+}
+
+
+class _UnexpectedFiles(_CheckProtocol):
+
+    check_name = "unexpected-files"
+
+    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
+        out: List[str] = []
+        for file_path in distro_summary.file_paths:
+            if file_path != file_path.replace(" ", ""):
+                msg = (
+                    f"[{self.check_name}] File paths with spaces are not portable. "
+                    f"Found path with spaces: '{file_path}'"
+                )
+                out.append(msg)
