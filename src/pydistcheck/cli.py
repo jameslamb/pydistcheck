@@ -15,6 +15,7 @@ from pydistcheck.checks import (
     _FilesOnlyDifferByCaseCheck,
     _NonAsciiCharacterCheck,
     _SpacesInPathCheck,
+    _UnexpectedFilesCheck,
 )
 from pydistcheck.config import _Config
 from pydistcheck.distribution_summary import _DistributionSummary
@@ -131,6 +132,7 @@ def check(  # pylint: disable=too-many-arguments
         _FileCountCheck(max_allowed_files=config.max_allowed_files),
         _FilesOnlyDifferByCaseCheck(),
         _SpacesInPathCheck(),
+        _UnexpectedFilesCheck(),
         _NonAsciiCharacterCheck(),
     ]
 

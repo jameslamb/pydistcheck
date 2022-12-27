@@ -4,6 +4,7 @@ performs on distributions.
 """
 
 from collections import defaultdict
+from fnmatch import fnmatchcase
 from typing import List, Protocol
 
 from pydistcheck.distribution_summary import _DistributionSummary
@@ -149,46 +150,63 @@ class _SpacesInPathCheck(_CheckProtocol):
 
 
 _UNEXPECTED_DIRECTORIES = {
-    ".appveyor",
-    ".binder",
-    ".circleci",
-    ".git",
-    ".github",
-    ".idea",
-    ".pytest_cache",
-    ".mypy_cache",
+    "*/.appveyor",
+    "*/.binder",
+    "*/.circleci",
+    "*/.git",
+    "*/.github",
+    "*/.idea",
+    "*/.pytest_cache",
+    "*/.mypy_cache",
 }
 
 _UNEXPECTED_FILES = {
-    "appveyor.yml",
-    ".appveyor.yml",
-    "azure-pipelines.yml",
-    ".azure-pipelines.yml",
-    ".cirrus.star",
-    ".cirrus.yml",
-    "codecov.yml",
-    ".codecov.yml",
-    ".DS_Store",
-    ".gitpod.yml",
-    ".hadolint.yaml",
-    ".readthedocs.yaml",
-    ".travis.yml",
-    "vsts-ci.yml",
-    ".vsts-ci.yml",
+    "*/appveyor.yml",
+    "*/.appveyor.yml",
+    "*/azure-pipelines.yml",
+    "*/.azure-pipelines.yml",
+    "*/.cirrus.star",
+    "*/.cirrus.yml",
+    "*/codecov.yml",
+    "*/.codecov.yml",
+    "*/.DS_Store",
+    "*/.gitignore",
+    "*/.gitpod.yml",
+    "*/.hadolint.yaml",
+    "*/.readthedocs.yaml",
+    "*/.travis.yml",
+    "*/vsts-ci.yml",
+    "*/.vsts-ci.yml",
 }
 
 
-class _UnexpectedFiles(_CheckProtocol):
+class _UnexpectedFilesCheck(_CheckProtocol):
 
     check_name = "unexpected-files"
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
-        for file_path in distro_summary.all_paths:
-            if file_path != file_path.replace(" ", ""):
-                msg = (
-                    f"[{self.check_name}] File paths with spaces are not portable. "
-                    f"Found path with spaces: '{file_path}'"
-                )
-                out.append(msg)
+        for file_path in distro_summary.file_paths:
+            for pattern in _UNEXPECTED_FILES:
+                if fnmatchcase(file_path, pattern):
+                    msg = (
+                        f"[{self.check_name}] Found file '{file_path}'. "
+                        "This type of file is unlikely to be necessary in a Python "
+                        "package distribution. Consider removing it."
+                    )
+                    out.append(msg)
+
+        for directory_path in distro_summary.directory_paths:
+            for pattern in _UNEXPECTED_DIRECTORIES:
+                # NOTE: some archive formats have a trailing "/" on directory names,
+                #       some do not
+                if fnmatchcase(directory_path, pattern) or fnmatchcase(
+                    directory_path, pattern + "/"
+                ):
+                    msg = (
+                        f"[{self.check_name}] Found directory '{directory_path}'. "
+                        "This type of directory is unlikely to be necessary in a Python "
+                        "package distribution. Consider removing it."
+                    )
+                    out.append(msg)
         return out

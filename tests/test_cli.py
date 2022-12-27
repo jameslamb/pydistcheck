@@ -326,7 +326,7 @@ def test_cli_raises_exactly_the_expected_number_of_errors_for_the_problematic_pa
         [os.path.join(TEST_DATA_DIR, distro_file)],
     )
     assert result.exit_code == 1
-    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: 6$")
+    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: 10$")
 
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)

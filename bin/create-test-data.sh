@@ -117,14 +117,27 @@ allow_bugs = False
 EOF
 
 cat << EOF > "/tmp/problematic-package/MANIFEST.in"
+include .git/*
+include *.gitignore
 include *.ini
+include problematic_package/.gitignore
 include problematic_package/*.PY
+include *.yaml
 EOF
 
 # non-ASCII character in path
 cat << EOF > "/tmp/problematic-package/problematic_package/€veryone-loves-python.py"
 print('Python is great.')
 EOF
+
+# files and directories that don't need to be in a Python distribution
+pushd /tmp/problematic-package
+    git init --initial-branch='main'
+    echo '*.csv' > ./.gitignore
+    echo 'ignored: [DL3008]' > ./.hadolint.yaml
+    # nested file
+    echo '*.csv' > ./problematic_package/.gitignore
+popd
 
 pushd /tmp/problematic-package
     python setup.py sdist \
