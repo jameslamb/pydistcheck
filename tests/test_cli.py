@@ -423,6 +423,61 @@ def test_path_contains_non_ascii_characters_works(distro_file):
     _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: [0-9]{1}")
 
 
+@pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
+def test_unexpected_files_check_works(distro_file):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [os.path.join(TEST_DATA_DIR, distro_file)],
+    )
+    assert result.exit_code == 1
+
+    # directory
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^7\. \[unexpected\-files\] Found directory "
+            r"'problematic\-package\-0\.1\.0/\.git[/]{0,1}'\. "
+            r"This type of directory is unlikely to be necessary in "
+            r"a Python package distribution\. "
+            r"Consider removing it\."
+        ),
+    )
+
+    # root-level files
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^8\. \[unexpected\-files\] Found file "
+            r"'problematic\-package\-0\.1\.0/\.gitignore'\. "
+            r"This type of file is unlikely to be necessary in a Python package distribution\. "
+            r"Consider removing it\."
+        ),
+    )
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^9\. \[unexpected\-files\] Found file "
+            r"'problematic\-package\-0\.1\.0/\.hadolint\.yaml'\. "
+            r"This type of file is unlikely to be necessary in a Python package distribution\. "
+            r"Consider removing it\."
+        ),
+    )
+
+    # nested files
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^10\. \[unexpected\-files\] Found file "
+            r"'problematic\-package\-0\.1\.0/problematic_package/\.gitignore'\. "
+            r"This type of file is unlikely to be necessary in a Python package distribution\. "
+            r"Consider removing it\."
+        ),
+    )
+
+    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: [0-9]{1}")
+
+
 # --------------------- #
 # pydistcheck --inspect #
 # --------------------- #
