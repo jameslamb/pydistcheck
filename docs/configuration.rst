@@ -29,11 +29,9 @@ pyproject.toml
 
 If a file ``pyproject.toml`` exists in the working directory ``pydistcheck`` is run from, ``pydistcheck`` will look there for configuration.
 
-Put configuration in a ``[tool.pydistcheck]`` section, like the following example.
+Put configuration in a ``[tool.pydistcheck]`` section.
 
-.. code-block:: toml
+The example below contains all of the configuration options for ``pydistcheck``, set to their default values.
 
-    [tool.pydistcheck]
-    inspect = False
-    max_allowed_size_compressed = '1G'
-    max_allowed_size_uncompressed = '4.5G'
+.. literalinclude:: ./_static/defaults.toml
+    :language: toml
