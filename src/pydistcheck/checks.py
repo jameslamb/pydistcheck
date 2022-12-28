@@ -149,45 +149,20 @@ class _SpacesInPathCheck(_CheckProtocol):
         return out
 
 
-_UNEXPECTED_DIRECTORIES = {
-    "*/.appveyor",
-    "*/.binder",
-    "*/.circleci",
-    "*/.git",
-    "*/.github",
-    "*/.idea",
-    "*/.pytest_cache",
-    "*/.mypy_cache",
-}
-
-_UNEXPECTED_FILES = {
-    "*/appveyor.yml",
-    "*/.appveyor.yml",
-    "*/azure-pipelines.yml",
-    "*/.azure-pipelines.yml",
-    "*/.cirrus.star",
-    "*/.cirrus.yml",
-    "*/codecov.yml",
-    "*/.codecov.yml",
-    "*/.DS_Store",
-    "*/.gitignore",
-    "*/.gitpod.yml",
-    "*/.hadolint.yaml",
-    "*/.readthedocs.yaml",
-    "*/.travis.yml",
-    "*/vsts-ci.yml",
-    "*/.vsts-ci.yml",
-}
-
-
 class _UnexpectedFilesCheck(_CheckProtocol):
 
     check_name = "unexpected-files"
 
+    def __init__(
+        self, unexpected_directory_patterns: List[str], unexpected_file_patterns: List[str]
+    ):
+        self.unexpected_directory_patterns = unexpected_directory_patterns
+        self.unexpected_file_patterns = unexpected_file_patterns
+
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
         for file_path in distro_summary.file_paths:
-            for pattern in _UNEXPECTED_FILES:
+            for pattern in self.unexpected_file_patterns:
                 if fnmatchcase(file_path, pattern):
                     msg = (
                         f"[{self.check_name}] Found file '{file_path}'. "
@@ -197,7 +172,7 @@ class _UnexpectedFilesCheck(_CheckProtocol):
                     out.append(msg)
 
         for directory_path in distro_summary.directory_paths:
-            for pattern in _UNEXPECTED_DIRECTORIES:
+            for pattern in self.unexpected_directory_patterns:
                 # NOTE: some archive formats have a trailing "/" on directory names,
                 #       some do not
                 if fnmatchcase(directory_path, pattern) or fnmatchcase(
