@@ -6,8 +6,8 @@ state of the project's source code.
 from pathlib import Path
 
 from pydistcheck._compat import tomllib
-from pydistcheck.config import _ALLOWED_CONFIG_VALUES, _Config
 from pydistcheck.checks import ALL_CHECKS
+from pydistcheck.config import _ALLOWED_CONFIG_VALUES, _Config
 
 DOCS_ROOT = Path(__file__).parents[1].joinpath("docs")
 
@@ -39,4 +39,6 @@ def test_all_checks_are_documented_in_check_reference():
         check_ref_str = f.read()
 
     for check in ALL_CHECKS:
-        assert f"\n\n{check}\n****" in check_ref_str, f"'{check}' not yet documented in 'docs/check-reference.rst'"
+        assert (
+            f"\n\n{check}\n****" in check_ref_str
+        ), f"'{check}' not yet documented in 'docs/check-reference.rst'"
