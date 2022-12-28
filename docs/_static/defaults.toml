@@ -1,0 +1,7 @@
+[tool.pydistcheck]
+
+ignore = []
+inspect = false
+max_allowed_files = 2000
+max_allowed_size_compressed = '50M'
+max_allowed_size_uncompressed = '75M'
