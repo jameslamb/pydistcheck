@@ -1,5 +1,5 @@
 import ctypes
-from baseballmetrics._lib import _LIB
+from baseballmetrics._shared_lib import _LIB
 
 
 def batting_average(hits: int, at_bats: int) -> float:

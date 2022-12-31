@@ -28,10 +28,10 @@ if(DEFINED SKBUILD)
         _baseballmetrics PROPERTIES INSTALL_RPATH "$ORIGIN/${CMAKE_INSTALL_LIBDIR}"
       )
     endif()
+else()
+    # store a copy of the library right about the build/ folder
+    set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 endif()
-
-# store a copy of the library right about the build/ folder
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 
 # ensure that the library is a .so on mac
 set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
