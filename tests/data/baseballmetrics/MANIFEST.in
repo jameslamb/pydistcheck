@@ -1,0 +1,10 @@
+include CMakeLists.txt
+include baseballmetrics/__init__.py
+include baseballmetrics/_lib.py
+include baseballmetrics/metrics.py
+include include/baseballmetrics/c_api.h
+include pyproject.toml
+include setup.py
+include src/*.cpp
+include baseballmetrics/lib_baseballmetrics.so
+exclude MANIFEST.in
