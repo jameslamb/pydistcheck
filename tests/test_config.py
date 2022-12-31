@@ -62,6 +62,8 @@ def test_update_from_dict_works_when_changing_all_values(base_config):
         "max_allowed_files": 8,
         "max_allowed_size_compressed": "2G",
         "max_allowed_size_uncompressed": "141K",
+        "unexpected_directory_patterns": "*/tests",
+        "unexpected_file_patterns": "*.xlsx,data/*.csv",
     }
     assert set(patch_dict.keys()) == _ALLOWED_CONFIG_VALUES, "this test needs to be updated"
     base_config.update_from_dict(patch_dict)
@@ -69,6 +71,8 @@ def test_update_from_dict_works_when_changing_all_values(base_config):
     assert base_config.max_allowed_files == 8
     assert base_config.max_allowed_size_compressed == "2G"
     assert base_config.max_allowed_size_uncompressed == "141K"
+    assert base_config.unexpected_directory_patterns == "*/tests"
+    assert base_config.unexpected_file_patterns == "*.xlsx,data/*.csv"
 
 
 def test_update_from_toml_silently_returns_self_if_file_does_not_exist(base_config):
@@ -110,11 +114,13 @@ def test_update_from_toml_works_with_underscores_and_hyphens(base_config, tmpdir
 def test_update_from_toml_works_with_all_config_values(base_config, tmpdir, use_hyphens):
     temp_file = os.path.join(tmpdir, f"{str(uuid.uuid4())}.toml")
     patch_dict = {
-        "ignore": "'path-contains-spaces,too-many-files'",
+        "ignore": "[\n'path-contains-spaces',\n'too-many-files'\n]",
         "inspect": "true",
         "max_allowed_files": 8,
         "max_allowed_size_compressed": "'3G'",
         "max_allowed_size_uncompressed": "'4.12G'",
+        "unexpected_directory_patterns": "[\n'tests/*'\n]",
+        "unexpected_file_patterns": "[\n'*.pq',\n'*/tests/data/*.csv']",
     }
     assert set(patch_dict.keys()) == _ALLOWED_CONFIG_VALUES, "this test needs to be updated"
     if use_hyphens:
@@ -125,10 +131,13 @@ def test_update_from_toml_works_with_all_config_values(base_config, tmpdir, use_
         ]
         f.write("\n".join(lines))
     base_config.update_from_toml(toml_file=temp_file)
+    assert base_config.ignore == "path-contains-spaces,too-many-files"
     assert base_config.inspect is True
     assert base_config.max_allowed_files == 8
     assert base_config.max_allowed_size_compressed == "3G"
     assert base_config.max_allowed_size_uncompressed == "4.12G"
+    assert base_config.unexpected_directory_patterns == "tests/*"
+    assert base_config.unexpected_file_patterns == "*.pq,*/tests/data/*.csv"
 
 
 def test_update_from_toml_converts_lists_to_comma_delimited_string(base_config, tmpdir):

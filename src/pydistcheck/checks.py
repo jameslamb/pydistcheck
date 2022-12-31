@@ -4,6 +4,7 @@ performs on distributions.
 """
 
 from collections import defaultdict
+from fnmatch import fnmatchcase
 from typing import List, Protocol
 
 from pydistcheck.distribution_summary import _DistributionSummary
@@ -19,6 +20,7 @@ ALL_CHECKS = {
     "files-only-differ-by-case",
     "path-contains-non-ascii-characters",
     "path-contains-spaces",
+    "unexpected-files",
 }
 
 
@@ -95,8 +97,8 @@ class _FilesOnlyDifferByCaseCheck(_CheckProtocol):
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
         path_lower_to_raw = defaultdict(list)
-        for file_info in distro_summary.file_infos:
-            path_lower_to_raw[file_info.name.lower()].append(file_info.name)
+        for file_path in distro_summary.all_paths:
+            path_lower_to_raw[file_path.lower()].append(file_path)
 
         duplicates_list: List[str] = []
         for _, filepaths in path_lower_to_raw.items():
@@ -120,7 +122,7 @@ class _NonAsciiCharacterCheck(_CheckProtocol):
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
-        for file_path in distro_summary.file_paths:
+        for file_path in distro_summary.all_paths:
             if not file_path.isascii():
                 ascii_converted_str = file_path.encode("ascii", "replace").decode("ascii")
                 msg = (
@@ -137,11 +139,41 @@ class _SpacesInPathCheck(_CheckProtocol):
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
-        for file_path in distro_summary.file_paths:
+        for file_path in distro_summary.all_paths:
             if file_path != file_path.replace(" ", ""):
                 msg = (
                     f"[{self.check_name}] File paths with spaces are not portable. "
                     f"Found path with spaces: '{file_path}'"
                 )
                 out.append(msg)
+        return out
+
+
+class _UnexpectedFilesCheck(_CheckProtocol):
+
+    check_name = "unexpected-files"
+
+    def __init__(
+        self, unexpected_directory_patterns: List[str], unexpected_file_patterns: List[str]
+    ):
+        self.unexpected_directory_patterns = unexpected_directory_patterns
+        self.unexpected_file_patterns = unexpected_file_patterns
+
+    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
+        out: List[str] = []
+        for file_path in distro_summary.file_paths:
+            for pattern in self.unexpected_file_patterns:
+                if fnmatchcase(file_path, pattern):
+                    msg = f"[{self.check_name}] Found unexpected file '{file_path}'."
+                    out.append(msg)
+
+        for directory_path in distro_summary.directory_paths:
+            for pattern in self.unexpected_directory_patterns:
+                # NOTE: some archive formats have a trailing "/" on directory names,
+                #       some do not
+                if fnmatchcase(directory_path, pattern) or fnmatchcase(
+                    directory_path, pattern + "/"
+                ):
+                    msg = f"[{self.check_name}] Found unexpected directory '{directory_path}'."
+                    out.append(msg)
         return out

@@ -326,7 +326,7 @@ def test_cli_raises_exactly_the_expected_number_of_errors_for_the_problematic_pa
         [os.path.join(TEST_DATA_DIR, distro_file)],
     )
     assert result.exit_code == 1
-    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: 6$")
+    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: 10$")
 
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
@@ -417,6 +417,52 @@ def test_path_contains_non_ascii_characters_works(distro_file):
             r"^2\. \[path\-contains\-non\-ascii\-characters\] Found file path containing non-ASCII "
             r"characters\: "
             r"'problematic\-package\-0\.1\.0/problematic_package/\?+veryone-loves-python\.py'"
+        ),
+    )
+
+    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: [0-9]{1}")
+
+
+@pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
+def test_unexpected_files_check_works(distro_file):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [os.path.join(TEST_DATA_DIR, distro_file)],
+    )
+    assert result.exit_code == 1
+
+    # directory
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^7\. \[unexpected\-files\] Found unexpected directory "
+            r"'problematic\-package\-0\.1\.0/\.git[/]{0,1}'\."
+        ),
+    )
+
+    # root-level files
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^8\. \[unexpected\-files\] Found unexpected file "
+            r"'problematic\-package\-0\.1\.0/\.gitignore'\."
+        ),
+    )
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^9\. \[unexpected\-files\] Found unexpected file "
+            r"'problematic\-package\-0\.1\.0/\.hadolint\.yaml'\."
+        ),
+    )
+
+    # nested files
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^10\. \[unexpected\-files\] Found unexpected file "
+            r"'problematic\-package\-0\.1\.0/problematic_package/\.gitignore'\."
         ),
     )
 

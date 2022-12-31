@@ -66,3 +66,13 @@ This is a very very rough way to detect that unexpected files have been included
 ``pydistcheck`` defaults to raising this error when a distribution has more than 2000 files...a totally arbitrary number chosen by the author.
 
 To change that limit, use configuration option ``max-allowed-files``.
+
+unexpected-files
+****************
+
+Files were found in the distribution which weren't expected to be included.
+
+With ``pydistcheck``'s default settings, this check raises errors for the inclusion of files that are commonly found in source control during development but are not useful in distributions, like ``.gitignore``.
+
+Which files are "expected" is highly project-specific.
+See :doc:`configuration` for a list of the files ``pydistcheck`` complains about by default, and for information about how to customize that list.

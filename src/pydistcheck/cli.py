@@ -15,6 +15,7 @@ from pydistcheck.checks import (
     _FilesOnlyDifferByCaseCheck,
     _NonAsciiCharacterCheck,
     _SpacesInPathCheck,
+    _UnexpectedFilesCheck,
 )
 from pydistcheck.config import _Config
 from pydistcheck.distribution_summary import _DistributionSummary
@@ -79,6 +80,28 @@ from pydistcheck.utils import _FileSize
         "  - G = gigabytes"
     ),
 )
+@click.option(
+    "--unexpected-directory-patterns",
+    default=_Config.unexpected_directory_patterns,
+    show_default=True,
+    type=str,
+    help=(
+        "comma-delimited list of patterns matching directories that are not expected "
+        "to be found in the distribution. Patterns should be in the format understood "
+        "by ``fnmatch.fnmatchcase()``. See https://docs.python.org/3/library/fnmatch.html."
+    ),
+)
+@click.option(
+    "--unexpected-file-patterns",
+    default=_Config.unexpected_file_patterns,
+    show_default=True,
+    type=str,
+    help=(
+        "comma-delimited list of patterns matching files that are not expected "
+        "to be found in the distribution. Patterns should be in the format understood "
+        "by ``fnmatch.fnmatchcase()``. See https://docs.python.org/3/library/fnmatch.html."
+    ),
+)
 def check(  # pylint: disable=too-many-arguments
     filepaths: str,
     ignore: str,
@@ -86,6 +109,8 @@ def check(  # pylint: disable=too-many-arguments
     max_allowed_files: int,
     max_allowed_size_compressed: str,
     max_allowed_size_uncompressed: str,
+    unexpected_directory_patterns: str,
+    unexpected_file_patterns: str,
 ) -> None:
     """
     Run the contents of a distribution through a set of checks, and warn about
@@ -100,6 +125,8 @@ def check(  # pylint: disable=too-many-arguments
         "max_allowed_files": max_allowed_files,
         "max_allowed_size_compressed": max_allowed_size_compressed,
         "max_allowed_size_uncompressed": max_allowed_size_uncompressed,
+        "unexpected_directory_patterns": unexpected_directory_patterns,
+        "unexpected_file_patterns": unexpected_file_patterns,
     }
     kwargs_that_differ_from_defaults = {}
     for k, v in kwargs.items():
@@ -131,6 +158,10 @@ def check(  # pylint: disable=too-many-arguments
         _FileCountCheck(max_allowed_files=config.max_allowed_files),
         _FilesOnlyDifferByCaseCheck(),
         _SpacesInPathCheck(),
+        _UnexpectedFilesCheck(
+            unexpected_directory_patterns=unexpected_directory_patterns.split(","),
+            unexpected_file_patterns=unexpected_file_patterns.split(","),
+        ),
         _NonAsciiCharacterCheck(),
     ]
 

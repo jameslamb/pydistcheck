@@ -45,7 +45,11 @@ Yields something like the following.
 4. [path-contains-spaces] File paths with spaces are not portable. Found path with spaces: 'problematic-package-0.1.0/problematic_package/bad code/__init__.py'
 5. [path-contains-spaces] File paths with spaces are not portable. Found path with spaces: 'problematic-package-0.1.0/problematic_package/bad code/ship-it.py'
 6. [path-contains-non-ascii-characters] Found file path containing non-ASCII characters: 'problematic-package-0.1.0/problematic_package/?veryone-loves-python.py'
-errors found while checking: 6
+7. [unexpected-files] Found unexpected directory 'problematic-package-0.1.0/.git/'.
+8. [unexpected-files] Found unexpected file 'problematic-package-0.1.0/.gitignore'.
+9. [unexpected-files] Found unexpected file 'problematic-package-0.1.0/.hadolint.yaml'.
+10. [unexpected-files] Found unexpected file 'problematic-package-0.1.0/problematic_package/.gitignore'.
+errors found while checking: 10
 ```
 
 See https://pydistcheck.readthedocs.io/en/latest/ to learn more.

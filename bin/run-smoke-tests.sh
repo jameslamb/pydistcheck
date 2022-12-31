@@ -21,6 +21,7 @@ pydistcheck ./smoke-tests/*
 # package where source distro is a .zip
 get-files numpy
 pydistcheck \
+    --ignore 'unexpected-files' \
     --max-allowed-files 3000 \
     --max-allowed-size-uncompressed '150M' \
     ./smoke-tests/*
@@ -38,7 +39,9 @@ get-files bokeh
 pydistcheck ./smoke-tests/*
 
 get-files Flask
-pydistcheck ./smoke-tests/*
+pydistcheck \
+    --ignore 'unexpected-files' \
+    ./smoke-tests/*
 
 # package that isn't actually Python code
 get-files cmake
