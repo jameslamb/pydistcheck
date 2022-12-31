@@ -1,8 +1,9 @@
 #include <baseballmetrics/c_api.h>
 
-double BattingAverage(
+void BattingAverage(
     const int hits,
-    const int at_bats
+    const int at_bats,
+    double* ret
 ) {
-    return static_cast<float>(hits) / static_cast<float>(at_bats);
+    *ret = static_cast<double>(hits) / static_cast<double>(at_bats);
 }
