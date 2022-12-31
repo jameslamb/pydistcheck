@@ -164,11 +164,7 @@ class _UnexpectedFilesCheck(_CheckProtocol):
         for file_path in distro_summary.file_paths:
             for pattern in self.unexpected_file_patterns:
                 if fnmatchcase(file_path, pattern):
-                    msg = (
-                        f"[{self.check_name}] Found file '{file_path}'. "
-                        "This type of file is unlikely to be necessary in a Python "
-                        "package distribution. Consider removing it."
-                    )
+                    msg = f"[{self.check_name}] Found unexpected file '{file_path}'."
                     out.append(msg)
 
         for directory_path in distro_summary.directory_paths:
@@ -178,10 +174,6 @@ class _UnexpectedFilesCheck(_CheckProtocol):
                 if fnmatchcase(directory_path, pattern) or fnmatchcase(
                     directory_path, pattern + "/"
                 ):
-                    msg = (
-                        f"[{self.check_name}] Found directory '{directory_path}'. "
-                        "This type of directory is unlikely to be necessary in a Python "
-                        "package distribution. Consider removing it."
-                    )
+                    msg = f"[{self.check_name}] Found unexpected directory '{directory_path}'."
                     out.append(msg)
         return out
