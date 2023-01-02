@@ -17,9 +17,9 @@ check-test-packages:
 .PHONY: clean
 clean:
 	rm -rf ./tmp-dir
-	rm -rf ./tests/data/baseballmetriics/dist
-	rm -rf ./tests/data/baseballmetriics/baseballmetrics.egg-info
-	rm -rf ./tests/data/baseballmetriics/_skbuild
+	rm -rf ./tests/data/baseballmetrics/dist
+	rm -rf ./tests/data/baseballmetrics/baseballmetrics.egg-info
+	rm -rf ./tests/data/baseballmetrics/_skbuild
 
 .PHONY: format
 format:
