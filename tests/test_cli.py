@@ -8,6 +8,9 @@ from pydistcheck.cli import check
 
 BASE_PACKAGES = ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"]
 PROBLEMATIC_PACKAGES = ["problematic-package-0.1.0.tar.gz", "problematic-package-0.1.0.zip"]
+BASE_WHEELS = [
+    "baseballmetrics-0.1.0-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_28_x86_64.whl"
+]
 TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
 
@@ -22,7 +25,7 @@ def _assert_log_matches_pattern(result: Result, pattern: str, num_times: int = 1
     assert num_matches_found == num_times, msg
 
 
-@pytest.mark.parametrize("distro_file", BASE_PACKAGES)
+@pytest.mark.parametrize("distro_file", BASE_PACKAGES + BASE_WHEELS)
 def test_check_runs_without_error(distro_file):
     runner = CliRunner()
     result = runner.invoke(check, [os.path.join(TEST_DATA_DIR, distro_file)])

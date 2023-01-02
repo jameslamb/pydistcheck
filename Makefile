@@ -11,12 +11,15 @@ check-test-packages:
 		-v "$${PWD}/tests/data":/opt/test-packages:ro \
 		-v "$${PWD}/bin":/ci-scripts \
 		--workdir /ci-scripts \
-		-it python:3.10 \
+		-it python:3.11 \
 		./check-test-packages.sh /opt/test-packages
 
 .PHONY: clean
 clean:
-	rm -r ./tmp-dir
+	rm -rf ./tmp-dir
+	rm -rf ./tests/data/baseballmetriics/dist
+	rm -rf ./tests/data/baseballmetriics/baseballmetrics.egg-info
+	rm -rf ./tests/data/baseballmetriics/_skbuild
 
 .PHONY: format
 format:
@@ -52,6 +55,16 @@ test-data:
 		--entrypoint="" \
 		-it python:3.10 \
 		bash -c "apt-get update && apt-get install -y --no-install-recommends ca-certificates curl zip && bin/create-test-data.sh"
+
+.PHONY: test-data-bdist
+test-data-bdist:
+	docker run \
+		--rm \
+		-v $$(pwd):/usr/local/src \
+		--workdir /usr/local/src \
+		--entrypoint="" \
+		-it quay.io/pypa/manylinux_2_28_x86_64 \
+		bin/create-test-data-bdist.sh
 
 .PHONY: test
 test:
