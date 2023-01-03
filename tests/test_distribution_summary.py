@@ -11,10 +11,6 @@ TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 def test_distribution_summary_basically_works(distro_file):
     ds = _DistributionSummary.from_file(os.path.join(TEST_DATA_DIR, distro_file))
 
-    # size should basically make sense
-    assert ds.compressed_size_bytes > 0
-    assert ds.compressed_size_bytes < 1e8
-
     # should correctly capture the contents:
     #   * 3 directories
     #   * 11 files
@@ -58,6 +54,7 @@ def test_distribution_summary_basically_works(distro_file):
 
     # total archive sizes should make sense
     assert ds.compressed_size_bytes > 0
+    assert ds.compressed_size_bytes < 1e8
     assert ds.uncompressed_size_bytes > 0
     assert ds.uncompressed_size_bytes > ds.compressed_size_bytes
 

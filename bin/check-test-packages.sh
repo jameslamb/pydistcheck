@@ -10,8 +10,10 @@ check_distro() {
     test_code=${2}
     echo ""
     echo "checking '${distro_file}'"
-    pip uninstall --yes base-package problematic-package || true
-    pip install "${distro_file}"
+    pip uninstall -qq --yes \
+        base-package \
+        problematic-package || true
+    pip install -qq "${distro_file}"
     python -c "${test_code}" || exit 1
     echo "success"
 }
