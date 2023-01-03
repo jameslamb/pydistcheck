@@ -10,10 +10,8 @@
 #endif
 
 #ifdef _MSC_VER
-    // #define BASEBALLMETRICS_EXPORT __declspec(dllexport)
     #define BASEBALLMETRICS_C_EXPORT BASEBALLMETRICS_EXTERN_C __declspec(dllexport)
 #else
-    // #define BASEBALLMETRICS_EXPORT __attribute__ ((__visibility__("default")))
     #define BASEBALLMETRICS_C_EXPORT BASEBALLMETRICS_EXTERN_C
 #endif
 
