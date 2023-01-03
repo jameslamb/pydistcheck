@@ -11,7 +11,7 @@ check-test-packages:
 		-v "$${PWD}/tests/data":/opt/test-packages:ro \
 		-v "$${PWD}/bin":/ci-scripts \
 		--workdir /ci-scripts \
-		-it python:3.10 \
+		-it python:3.11 \
 		./check-test-packages.sh /opt/test-packages
 
 .PHONY: clean
@@ -43,8 +43,8 @@ lint:
 smoke-tests:
 	@bash ./bin/run-smoke-tests.sh
 
-.PHONY: test-data
-test-data:
+.PHONY: test-data-sdist
+test-data-sdist:
 	docker run \
 		--rm \
 		-v $$(pwd):/usr/local/src \
