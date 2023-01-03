@@ -46,8 +46,8 @@ lint:
 smoke-tests:
 	@bash ./bin/run-smoke-tests.sh
 
-.PHONY: test-data
-test-data:
+.PHONY: test-data-sdist
+test-data-sdist:
 	docker run \
 		--rm \
 		-v $$(pwd):/usr/local/src \
