@@ -11,6 +11,8 @@ from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
 from typing import List
 
+_COMPILED_OBJECT_EXTENSIONS = {".dll", ".dylib", ".o", ".so"}
+
 
 @dataclass
 class _DirectoryInfo:
@@ -44,9 +46,11 @@ class _FileInfo:
 
 @dataclass
 class _DistributionSummary:
+    compiled_objects: List[_FileInfo]
     compressed_size_bytes: int
     directories: List[_DirectoryInfo]
     files: List[_FileInfo]
+    original_file: str
 
     @classmethod
     def from_file(cls, filename: str) -> "_DistributionSummary":
@@ -68,8 +72,18 @@ class _DistributionSummary:
                         files.append(_FileInfo.from_zipfile_member(zip_info))
                     else:
                         directories.append(_DirectoryInfo(name=zip_info.filename))
+        compiled_objects = [
+            file_info
+            for file_info in files
+            if file_info.file_extension in _COMPILED_OBJECT_EXTENSIONS
+        ]
+
         return cls(
-            compressed_size_bytes=compressed_size_bytes, directories=directories, files=files
+            compiled_objects=compiled_objects,
+            compressed_size_bytes=compressed_size_bytes,
+            directories=directories,
+            files=files,
+            original_file=filename,
         )
 
     @property

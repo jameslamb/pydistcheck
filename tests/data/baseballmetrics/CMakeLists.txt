@@ -1,9 +1,21 @@
+option(USE_DEBUG "Set to ON to compile with debug symbols" OFF)
+
 cmake_minimum_required(VERSION 3.10)
 
 project(
     baseballmetrics
     LANGUAGES C CXX
 )
+
+if(UNIX OR MINGW OR CYGWIN)
+  if(USE_DEBUG)
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
+  endif()
+elseif(MSVC)
+    if(USE_DEBUG)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Od")
+    endif()
+endif()
 
 file(GLOB SOURCES src/*.cpp)
 

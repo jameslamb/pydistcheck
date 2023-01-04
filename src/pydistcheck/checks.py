@@ -8,12 +8,14 @@ from fnmatch import fnmatchcase
 from typing import List, Protocol
 
 from pydistcheck.distribution_summary import _DistributionSummary
+from pydistcheck.shared_lib_utils import _tar_member_has_debug_symbols
 from pydistcheck.utils import _FileSize
 
 # ALL_CHECKS constant is used to validate configuration options like '--ignore' that reference
 # check names. It's a set literal so it doesn't need to be recomputed at runtime, and this project
 # relies on unit tests to ensure that it's updated as the list of checks changes.
 ALL_CHECKS = {
+    "compiled-objects-have-debug-symbols",
     "distro-too-large-compressed",
     "distro-too-large-uncompressed",
     "too-many-files",
@@ -29,6 +31,25 @@ class _CheckProtocol(Protocol):
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:  # pragma: no cover
         ...
+
+
+class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
+
+    check_name = "compiled-objects-have-debug-symbols"
+
+    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
+        out: List[str] = []
+        for file_info in distro_summary.compiled_objects:
+            file_name = file_info.name
+            if _tar_member_has_debug_symbols(
+                archive_file=distro_summary.original_file, member=file_name
+            ):
+                msg = (
+                    f"[{self.check_name}] Found compiled object containing debug symbols: "
+                    f"'{file_name}'. These are rarely necessary in distributions."
+                )
+                out.append(msg)
+        return out
 
 
 class _DistroTooLargeCompressedCheck(_CheckProtocol):
