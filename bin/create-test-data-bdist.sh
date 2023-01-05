@@ -33,6 +33,6 @@ pushd tests/data/baseballmetrics
     clean_build_artifacts
     build_wheel 'cp311-cp311'
     mv \
-        ./dist/baseballmetrics-0.1.0-cp311-cp311-manylinux_*.whl \
+        ./dist/*.whl \
         ../
 popd

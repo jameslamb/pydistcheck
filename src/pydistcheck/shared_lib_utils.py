@@ -1,3 +1,7 @@
+"""
+functions used to analyze compiled objects
+"""
+
 import os
 import subprocess
 import zipfile

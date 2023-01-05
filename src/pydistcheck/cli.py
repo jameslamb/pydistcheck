@@ -9,6 +9,7 @@ import click
 
 from pydistcheck.checks import (
     ALL_CHECKS,
+    _CompiledObjectsDebugSymbolCheck,
     _DistroTooLargeCompressedCheck,
     _DistroTooLargeUnCompressedCheck,
     _FileCountCheck,
@@ -145,6 +146,7 @@ def check(  # pylint: disable=too-many-arguments
         sys.exit(1)
 
     checks = [
+        _CompiledObjectsDebugSymbolCheck(),
         _DistroTooLargeCompressedCheck(
             max_allowed_size_bytes=_FileSize.from_string(
                 size_str=config.max_allowed_size_compressed
