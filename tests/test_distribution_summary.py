@@ -77,7 +77,7 @@ def test_distribution_summary_basically_works(distro_file):
 def test_distribution_summary_correctly_reads_contents_of_wheels():
     wheel_file = (
         "baseballmetrics-0.1.0-"
-        "cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_28_x86_64.whl"
+        "py3-none-manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl"
     )
     ds = _DistributionSummary.from_file(os.path.join(TEST_DATA_DIR, wheel_file))
 
