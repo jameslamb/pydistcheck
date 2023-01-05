@@ -18,6 +18,8 @@ add_library(
 add_library(_baseballmetrics SHARED)
 target_link_libraries(_baseballmetrics PUBLIC baseballmetrics_objs)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
+
 if(DEFINED SKBUILD)
     if(APPLE)
       set_target_properties(

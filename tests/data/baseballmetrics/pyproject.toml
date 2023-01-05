@@ -1,9 +1,37 @@
+[project]
+name = "baseballmetrics"
+version = "0.1.0"
+
 [build-system]
 
-requires = [
-  "cmake",
-  "ninja; platform_system!='Windows'",
-  "scikit-build",
-  "setuptools>=65"
-]
-build-backend = "setuptools.build_meta"
+requires = ["scikit-build-core"]
+build-backend = "scikit_build_core.build"
+
+[tool.scikit-build]
+
+# The PEP 517 build hooks will add ninja and/or cmake if the versions on the
+# system are not at least these versions. Disabled by an empty string.
+cmake.minimum-version = "3.15"
+ninja.minimum-version = "1.5"
+
+# Fallback on gmake/make if available and ninja is missing (Unix). Will only
+# fallback on platforms without a known ninja wheel.
+ninja.make-fallback = true
+
+# Extra args for CMake. Pip, unlike build, does not support lists, so semicolon
+# can be used to separate. Setting this in config or envvar will override the
+# entire list. See also cmake.define.
+cmake.args = []
+cmake.verbose = true
+cmake.build-type = "Release"
+logging.level = "WARNING"
+sdist.reproducible = true
+
+# Setting py-api to "cp37" would build ABI3 wheels for Python 3.7+.  If CPython
+# is less than this value, or on PyPy, this will be ignored.  Setting the api to
+# "py3" or "py2.py3" would build wheels that don't depend on Python (ctypes,
+# etc).
+wheel.py-api = "py3"
+experimental = true
+strict-config = true
+minimum-version = "0.1.5"
