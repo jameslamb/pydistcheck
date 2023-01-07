@@ -93,17 +93,17 @@ def test_distribution_summary_correctly_reads_contents_of_wheels():
         "baseballmetrics-0.1.0.dist-info/",
         "baseballmetrics.libs/",
         "baseballmetrics/",
-        "baseballmetrics/lib/",
+        "lib/",
     ]
     expected_file_paths = [
         "baseballmetrics-0.1.0.dist-info/METADATA",
         "baseballmetrics-0.1.0.dist-info/RECORD",
         "baseballmetrics-0.1.0.dist-info/WHEEL",
-        "baseballmetrics-0.1.0.dist-info/top_level.txt",
+        "baseballmetrics-0.1.0.dist-info/entry_points.txt",
         "baseballmetrics/__init__.py",
         "baseballmetrics/_shared_lib.py",
-        "baseballmetrics/lib/lib_baseballmetrics.so",
         "baseballmetrics/metrics.py",
+        "lib/lib_baseballmetrics.so",
     ]
 
     expected_all_paths = expected_dir_paths + expected_file_paths
@@ -121,9 +121,9 @@ def test_distribution_summary_correctly_reads_contents_of_wheels():
     # size_by_file_extension should work as expected
     assert ds.size_by_file_extension == {
         ".so": 15616,
-        "no-extension": 1191,
+        "no-extension": 902,
         ".py": 414,
-        ".txt": 33,
+        ".txt": 0,
     }
 
     # size_by_file_extension should return results sorted from largest to smallest by file size
