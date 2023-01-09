@@ -8,7 +8,7 @@ from pydistcheck.cli import check
 
 BASE_PACKAGES = ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"]
 PROBLEMATIC_PACKAGES = ["problematic-package-0.1.0.tar.gz", "problematic-package-0.1.0.zip"]
-MANYLINUX_SUFFIX = "cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_28_x86_64.whl"
+MANYLINUX_SUFFIX = "py3-none-manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl"
 BASE_WHEELS = [f"baseballmetrics-0.1.0-{MANYLINUX_SUFFIX}"]
 TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
