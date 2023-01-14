@@ -22,11 +22,15 @@ build_wheel() {
     PIP="/opt/python/${1}/bin/pip"
     PLAT="manylinux_2_28_x86_64"
     ${PIP} install --upgrade --no-cache-dir pip
-    ${PIP} wheel -w ./dist .
-    auditwheel repair \
+    ${PIP} wheel \
+        --config-setting='cmake.build-type=Debug' \
+        --config-setting='logging.level=DEBUG' \
         -w ./dist \
-        --plat=${PLAT} \
-        ./dist/*.whl 
+        .
+    # auditwheel repair \
+    #     -w ./dist \
+    #     --plat=${PLAT} \
+    #     ./dist/*.whl 
 }
 
 pushd tests/data/baseballmetrics
