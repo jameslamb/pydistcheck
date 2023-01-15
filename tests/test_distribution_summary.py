@@ -4,10 +4,16 @@ import pytest
 
 from pydistcheck.distribution_summary import _DistributionSummary
 
+BASE_PACKAGE_SDISTS = ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"]
+BDIST_PREFIX = "baseballmetrics-0.1.0-py3-none-"
+BASEBALLMETRICS_BDISTS = [
+    f"{BDIST_PREFIX}manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl",
+    f"{BDIST_PREFIX}macosx_12_0_x86_64.whl",
+]
 TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
 
-@pytest.mark.parametrize("distro_file", ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"])
+@pytest.mark.parametrize("distro_file", BASE_PACKAGE_SDISTS)
 def test_distribution_summary_basically_works(distro_file):
     ds = _DistributionSummary.from_file(os.path.join(TEST_DATA_DIR, distro_file))
 
@@ -74,27 +80,37 @@ def test_distribution_summary_basically_works(distro_file):
         last_size_seen = size_in_bytes
 
 
-def test_distribution_summary_correctly_reads_contents_of_wheels():
-    wheel_file = (
-        "baseballmetrics-0.1.0-"
-        "py3-none-manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl"
-    )
-    ds = _DistributionSummary.from_file(os.path.join(TEST_DATA_DIR, wheel_file))
+@pytest.mark.parametrize("distro_file", BASEBALLMETRICS_BDISTS)
+def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
+    ds = _DistributionSummary.from_file(os.path.join(TEST_DATA_DIR, distro_file))
 
     # should correctly capture the contents:
     #   * 4 directories
     #   * 8 files
     assert len(ds.files) == 8
     assert ds.num_files == 8
-    assert len(ds.directories) == 4
-    assert ds.num_directories == 4
 
-    expected_dir_paths = [
-        "baseballmetrics-0.1.0.dist-info/",
-        "baseballmetrics.libs/",
-        "baseballmetrics/",
-        "lib/",
-    ]
+    # `pip wheel` seems to omit directory members from the archive,
+    # and `auditwheel repair` seems to restore them
+    #
+    # so this project's test macOS wheels don't have directory members
+    if "macosx" in distro_file:
+        expected_dir_paths = []
+        expected_num_directories = 0
+        shared_lib_ext = "dylib"
+    else:
+        expected_dir_paths = [
+            "baseballmetrics-0.1.0.dist-info/",
+            "baseballmetrics.libs/",
+            "baseballmetrics/",
+            "lib/",
+        ]
+        expected_num_directories = 4
+        shared_lib_ext = "so"
+
+    assert len(ds.directories) == expected_num_directories
+    assert ds.num_directories == expected_num_directories
+
     expected_file_paths = [
         "baseballmetrics-0.1.0.dist-info/METADATA",
         "baseballmetrics-0.1.0.dist-info/RECORD",
@@ -103,7 +119,7 @@ def test_distribution_summary_correctly_reads_contents_of_wheels():
         "baseballmetrics/__init__.py",
         "baseballmetrics/_shared_lib.py",
         "baseballmetrics/metrics.py",
-        "lib/lib_baseballmetrics.so",
+        f"lib/lib_baseballmetrics.{shared_lib_ext}",
     ]
 
     expected_all_paths = expected_dir_paths + expected_file_paths
