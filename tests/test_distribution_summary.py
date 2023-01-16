@@ -135,12 +135,20 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
     assert ds.uncompressed_size_bytes > ds.compressed_size_bytes
 
     # size_by_file_extension should work as expected
-    assert ds.size_by_file_extension == {
-        ".so": 15616,
-        "no-extension": 902,
-        ".py": 418,
-        ".txt": 0,
-    }
+    if "macosx" in distro_file:
+        assert ds.size_by_file_extension == {
+            ".dylib": 16504,
+            "no-extension": 824,
+            ".py": 418,
+            ".txt": 0,
+        }
+    else:
+        assert ds.size_by_file_extension == {
+            ".so": 15616,
+            "no-extension": 902,
+            ".py": 418,
+            ".txt": 0,
+        }
 
     # size_by_file_extension should return results sorted from largest to smallest by file size
     last_size_seen = float("inf")
