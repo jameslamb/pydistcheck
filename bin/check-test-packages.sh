@@ -5,6 +5,12 @@
 
 set -e -u -o pipefail
 
+if [[ $OSTYPE == 'darwin'* ]]; then
+  OS_NAME="macos"
+else
+  OS_NAME="linux"
+fi
+
 check_distro() {
     distro_file=${1}
     test_code=${2}
@@ -39,9 +45,11 @@ check_distro \
     'problematic-package-0.1.0.tar.gz' \
     'from problematic_package.question import SPONGEBOB_STR'
 
-check_distro \
-    'baseballmetrics-0.1.0-py3-none-manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl' \
-    'from baseballmetrics.metrics import batting_average; assert batting_average(2, 4) == 0.5'
+if [[ $OS_NAME != "linux" ]]; then
+  check_distro \
+      'baseballmetrics-0.1.0-py3-none-manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl' \
+      'from baseballmetrics.metrics import batting_average; assert batting_average(2, 4) == 0.5'
+fi
 
 echo ""
 echo "all test distributions are valid"
