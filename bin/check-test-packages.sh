@@ -39,7 +39,7 @@ check_distro \
 
 # NOTE: problematic-package doesn't work on macOS because of
 #       the problems like mixed case in filepaths, special characters, etc.
-if [[ $OS_NAME != "linux" ]]; then
+if [[ $OS_NAME == "linux" ]]; then
 
     check_distro \
         'problematic-package-0.1.0.zip' \
