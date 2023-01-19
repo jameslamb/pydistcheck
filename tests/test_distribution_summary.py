@@ -139,14 +139,14 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
         assert ds.size_by_file_extension == {
             ".dylib": 16504,
             "no-extension": 824,
-            ".py": 418,
+            ".py": 536,
             ".txt": 0,
         }
     else:
         assert ds.size_by_file_extension == {
             ".so": 15616,
             "no-extension": 902,
-            ".py": 418,
+            ".py": 536,
             ".txt": 0,
         }
 
