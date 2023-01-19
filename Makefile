@@ -71,7 +71,7 @@ test-data-sdist:
 		--workdir /usr/local/src \
 		--entrypoint="" \
 		-it python:3.10 \
-		bash -c "apt-get update && apt-get install -y --no-install-recommends ca-certificates curl zip && bin/create-test-data.sh"
+		bash -c "apt-get update && apt-get install -y --no-install-recommends ca-certificates curl zip && bin/create-test-data-sdist.sh"
 
 .PHONY: test-data-bdist
 test-data-bdist: \
