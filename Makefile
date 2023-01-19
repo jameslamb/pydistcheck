@@ -54,10 +54,7 @@ linux-wheel:
 
 .PHONY: mac-wheel
 mac-wheel:
-	cd ./tests/data/baseballmetrics && \
-	pip wheel -w ./dist . && \
-	mv ./dist/baseballmetrics-0.1.0-py3-none-macosx_*.whl ../
-
+	bin/create-test-data-bdist.sh
 
 .PHONY: smoke-tests
 smoke-tests:

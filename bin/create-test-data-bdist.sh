@@ -45,6 +45,10 @@ pushd tests/data/baseballmetrics
           ../
     elif [[ $OS_NAME == "macos" ]]; then
       echo "building macOS wheels"
+      pip wheel -w ./dist .
+      mv \
+        ./dist/baseballmetrics-0.1.0-py3-none-macosx_*.whl \
+        ../
     fi
     echo "done building wheels"
 popd
