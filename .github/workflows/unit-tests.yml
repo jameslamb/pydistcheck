@@ -104,7 +104,6 @@ jobs:
         with:
           python-version: "${{ matrix.python_version}}"
       - name: run tests
-        shell: bash -l {0}
         run: |
           bin/check-test-packages.sh ${GITHUB_WORKSPACE}/tests/data
   all-unit-tests-successful:

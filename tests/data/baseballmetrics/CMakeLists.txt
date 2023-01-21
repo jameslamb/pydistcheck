@@ -33,9 +33,6 @@ else()
     set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 endif()
 
-# ensure that the library is a .so on mac
-set(CMAKE_SHARED_LIBRARY_SUFFIX ".so")
-
 # install lib_baseballmetrics to 
 install(
   TARGETS _baseballmetrics

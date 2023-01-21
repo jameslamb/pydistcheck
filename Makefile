@@ -42,6 +42,20 @@ lint:
 	mypy .
 	pylint ./src
 
+.PHONY: linux-wheel
+linux-wheel:
+	docker run \
+		--rm \
+		-v $$(pwd):/usr/local/src \
+		--workdir /usr/local/src \
+		--entrypoint="" \
+		-it quay.io/pypa/manylinux_2_28_x86_64 \
+		bin/create-test-data-bdist.sh
+
+.PHONY: mac-wheel
+mac-wheel:
+	bin/create-test-data-bdist.sh
+
 .PHONY: smoke-tests
 smoke-tests:
 	@bash ./bin/run-smoke-tests.sh
@@ -57,14 +71,9 @@ test-data-sdist:
 		bash -c "apt-get update && apt-get install -y --no-install-recommends ca-certificates curl zip && bin/create-test-data-sdist.sh"
 
 .PHONY: test-data-bdist
-test-data-bdist:
-	docker run \
-		--rm \
-		-v $$(pwd):/usr/local/src \
-		--workdir /usr/local/src \
-		--entrypoint="" \
-		-it quay.io/pypa/manylinux_2_28_x86_64 \
-		bin/create-test-data-bdist.sh
+test-data-bdist: \
+	linux-wheel \
+	mac-wheel
 
 .PHONY: test
 test:
