@@ -54,8 +54,6 @@ if [[ $OS_NAME == "linux" ]]; then
         'from baseballmetrics.metrics import batting_average; assert batting_average(2, 4) == 0.5'
 else
 
-    echo "--- pip debug ---"
-    pip debug -v
     check_distro \
         'baseballmetrics-0.1.0-py3-none-macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl' \
         'from baseballmetrics.metrics import batting_average; assert batting_average(2, 4) == 0.5'
