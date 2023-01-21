@@ -10,6 +10,12 @@
 
 set -e -u -o pipefail
 
+if [[ $OSTYPE == 'darwin'* ]]; then
+  OS_NAME="macos"
+else
+  OS_NAME="linux"
+fi
+
 clean_build_artifacts() {
     rm -rf ./baseballmetrics.egg-info
     rm -rf ./dist
@@ -18,7 +24,7 @@ clean_build_artifacts() {
     rm -f ./*.whl
 }
 
-build_wheel() {
+build_linux_wheel() {
     PIP="/opt/python/${1}/bin/pip"
     PLAT="manylinux_2_28_x86_64"
     ${PIP} install --upgrade --no-cache-dir pip
@@ -35,8 +41,21 @@ build_wheel() {
 
 pushd tests/data/baseballmetrics
     clean_build_artifacts
-    build_wheel 'cp311-cp311'
-    mv \
-        ./dist/*.whl \
+    if [[ $OS_NAME == "linux" ]]; then
+      echo "building linux wheels"
+      build_linux_wheel 'cp311-cp311'
+      mv \
+          ./dist/baseballmetrics-0.1.0-py3-none-manylinux_*.whl \
+          ../
+    elif [[ $OS_NAME == "macos" ]]; then
+      echo "building macOS wheels"
+      pip wheel -w ./dist .
+      mv \
+        ./dist/baseballmetrics-0.1.0-py3-none-macosx_*.whl \
+        ./dist/baseballmetrics-0.1.0-py3-none-macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl
+      mv \
+        ./dist/baseballmetrics-0.1.0-py3-none-macosx_*.whl \
         ../
+    fi
+    echo "done building wheels"
 popd
