@@ -4,10 +4,10 @@ functions used to analyze compiled objects
 
 import os
 import subprocess
+import sys
 import zipfile
 from tempfile import TemporaryDirectory
-from typing import List
-import sys
+from typing import List, Optional
 
 LIB_FILE = sys.argv[1]
 
@@ -43,8 +43,7 @@ def _nm_reports_debug_symbols(lib_file: str):
 def _objdump_all_headers_reports_debug_symbols(lib_file: str) -> bool:
     stdout = _run_command(["objdump", "--all-headers", lib_file])
     contains_debug_lines = any(
-        bool(re.search(r"[\t ]+\.debug_line[\t ]+", x))
-        for x in stdout.split("\n")
+        bool(re.search(r"[\t ]+\.debug_line[\t ]+", x)) for x in stdout.split("\n")
     )
     return contains_debug_lines
 
@@ -52,8 +51,7 @@ def _objdump_all_headers_reports_debug_symbols(lib_file: str) -> bool:
 def _objdump_w_reports_debug_symbols(lib_file: str) -> bool:
     stdout = _run_command(["objdump", "-W", lib_file])
     contains_debug_lines = any(
-        x.strip().startswith("Contents of the .debug")
-        for x in stdout.split("\n")
+        x.strip().startswith("Contents of the .debug") for x in stdout.split("\n")
     )
     return contains_debug_lines
 
@@ -61,8 +59,7 @@ def _objdump_w_reports_debug_symbols(lib_file: str) -> bool:
 def _objdump_g_reports_debug_symbols(lib_file: str) -> bool:
     stdout = _run_command(["objdump", "-g", lib_file])
     contains_debug_lines = any(
-        x.strip().startswith("Contents of the .debug")
-        for x in stdout.split("\n")
+        x.strip().startswith("Contents of the .debug") for x in stdout.split("\n")
     )
     return contains_debug_lines
 
@@ -70,8 +67,7 @@ def _objdump_g_reports_debug_symbols(lib_file: str) -> bool:
 def _readelf_reports_debug_symbols(lib_file: str) -> bool:
     stdout = _run_command(["readelf", "--debug-dump", lib_file])
     contains_debug_lines = any(
-        x.strip().startswith("Contents of the .debug")
-        for x in stdout.split("\n")
+        x.strip().startswith("Contents of the .debug") for x in stdout.split("\n")
     )
     return contains_debug_lines
 

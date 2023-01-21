@@ -3,13 +3,13 @@ functions used to analyze compiled objects
 """
 
 import os
-import subprocess
-import zipfile
 import re
+import subprocess
+import sys
+import zipfile
 from dataclasses import dataclass
 from tempfile import TemporaryDirectory
 from typing import List, Optional, Tuple
-import sys
 
 LIB_FILE = sys.argv[1]
 
@@ -43,10 +43,7 @@ def _get_symbols(nm_args: List[str], lib_file: str) -> str:
 
 def _dsymutil_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
     stdout = _run_command(["dsymutil", "-s", lib_file])
-    contains_debug_lines = any(
-        bool(re.search(r"\(N_OSO[\t ]+\)", x))
-        for x in stdout.split("\n")
-    )
+    contains_debug_lines = any(bool(re.search(r"\(N_OSO[\t ]+\)", x)) for x in stdout.split("\n"))
     return contains_debug_lines, "desymutil -s"
 
 
@@ -57,31 +54,28 @@ def _nm_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
 
 
 def _objdump_all_headers_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
-    #stdout = subprocess.run(["objdump", "--all-headers", lib_file], capture_output=True, check=True).stdout
+    # stdout = subprocess.run(["objdump", "--all-headers", lib_file], capture_output=True, check=True).stdout
     stdout = _run_command(["objdump", "--all-headers", lib_file])
     contains_debug_lines = any(
-        bool(re.search(r"[\t ]+\.debug_line[\t ]+", x))
-        for x in stdout.split("\n")
+        bool(re.search(r"[\t ]+\.debug_line[\t ]+", x)) for x in stdout.split("\n")
     )
     return contains_debug_lines, "objdump --all-headers"
 
 
 def _objdump_w_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
     stdout = _run_command(["objdump", "-W", lib_file])
-    #stdout = subprocess.run(["objdump", "-W", lib_file], capture_output=True, check=True).stdout
+    # stdout = subprocess.run(["objdump", "-W", lib_file], capture_output=True, check=True).stdout
     contains_debug_lines = any(
-        x.strip().startswith("Contents of the .debug")
-        for x in stdout.split("\n")
+        x.strip().startswith("Contents of the .debug") for x in stdout.split("\n")
     )
     return contains_debug_lines, "objdump -W"
 
 
 def _objdump_g_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
-    #stdout = subprocess.run(["objdump", "-g", lib_file], capture_output=True, check=True).stdout
+    # stdout = subprocess.run(["objdump", "-g", lib_file], capture_output=True, check=True).stdout
     stdout = _run_command(["objdump", "-g", lib_file])
     contains_debug_lines = any(
-        x.strip().startswith("Contents of the .debug")
-        for x in stdout.split("\n")
+        x.strip().startswith("Contents of the .debug") for x in stdout.split("\n")
     )
     return contains_debug_lines, "objdump -g"
 
@@ -89,8 +83,7 @@ def _objdump_g_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
 def _readelf_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
     stdout = _run_command(["readelf", "-S", lib_file])
     contains_debug_lines = any(
-        bool(re.search(r"[\t ]+\.debug_[a-z]+[\t ]+", x))
-        for x in stdout.split("\n")
+        bool(re.search(r"[\t ]+\.debug_[a-z]+[\t ]+", x)) for x in stdout.split("\n")
     )
     return contains_debug_lines, "readelf -S"
 
@@ -106,7 +99,7 @@ def _tar_member_has_debug_symbols(archive_file: str, member: str) -> Tuple[bool,
             _objdump_all_headers_reports_debug_symbols,
             _objdump_g_reports_debug_symbols,
             _objdump_w_reports_debug_symbols,
-            _readelf_reports_debug_symbols
+            _readelf_reports_debug_symbols,
         ]
         for check_function in check_functions:
             found_debug_symbols, cmd_str = check_function(lib_file=full_path)
@@ -118,7 +111,7 @@ def _tar_member_has_debug_symbols(archive_file: str, member: str) -> Tuple[bool,
 
 if __name__ == "__main__":
 
-    res= _dsymutil_reports_debug_symbols(LIB_FILE)
+    res = _dsymutil_reports_debug_symbols(LIB_FILE)
     print(f"dsymutil -s: {res}")
 
     res = _nm_reports_debug_symbols(LIB_FILE)

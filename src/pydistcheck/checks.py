@@ -41,6 +41,8 @@ class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
         out: List[str] = []
         for file_info in distro_summary.compiled_objects:
             file_name = file_info.name
+            # TODO: include information about the commmand that determined there were
+            #       debug symbols
             if _tar_member_has_debug_symbols(
                 archive_file=distro_summary.original_file, member=file_name
             ):
