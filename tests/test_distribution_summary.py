@@ -8,7 +8,7 @@ BASE_PACKAGE_SDISTS = ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"]
 BDIST_PREFIX = "baseballmetrics-0.1.0-py3-none-"
 BASEBALLMETRICS_BDISTS = [
     f"{BDIST_PREFIX}manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl",
-    f"{BDIST_PREFIX}macosx_12_0_x86_64.whl",
+    f"{BDIST_PREFIX}macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl",
 ]
 TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 

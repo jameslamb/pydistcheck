@@ -55,7 +55,7 @@ if [[ $OS_NAME == "linux" ]]; then
 else
 
     check_distro \
-        'baseballmetrics-0.1.0-py3-none-macosx_12_0_x86_64.whl' \
+        'baseballmetrics-0.1.0-py3-none-macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl' \
         'from baseballmetrics.metrics import batting_average; assert batting_average(2, 4) == 0.5'
 
 fi

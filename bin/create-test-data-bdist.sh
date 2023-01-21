@@ -48,6 +48,9 @@ pushd tests/data/baseballmetrics
       pip wheel -w ./dist .
       mv \
         ./dist/baseballmetrics-0.1.0-py3-none-macosx_*.whl \
+        ./dist/baseballmetrics-0.1.0-py3-none-macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl
+      mv \
+        ./dist/baseballmetrics-0.1.0-py3-none-macosx_*.whl \
         ../
     fi
     echo "done building wheels"
