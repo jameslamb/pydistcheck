@@ -14,8 +14,11 @@ get-files() {
         ./smoke-tests
 }
 
-# wheel-only package
+# wheel-only packages
 get-files catboost
+pydistcheck ./smoke-tests/*
+
+get-files psycopg2-binary
 pydistcheck ./smoke-tests/*
 
 # package where source distro is a .zip

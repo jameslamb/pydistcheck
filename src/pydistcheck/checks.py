@@ -43,7 +43,7 @@ class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
             file_name = file_info.name
             # TODO: include information about the commmand that determined there were
             #       debug symbols
-            has_debug_symbols, cmd_str =_tar_member_has_debug_symbols(
+            has_debug_symbols, cmd_str = _tar_member_has_debug_symbols(
                 archive_file=distro_summary.original_file, member=file_name
             )
             if has_debug_symbols:

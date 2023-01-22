@@ -12,9 +12,6 @@ from typing import List, Optional, Tuple
 
 LIB_FILE = sys.argv[1]
 
-# https://stackoverflow.com/questions/35865099/python-extracting-specific-files-with-pattern-from-tar-gz-without-extracting-th
-# https://linux.die.net/man/1/nm
-
 _COMMAND_FAILED = "__command_failed__"
 _TOOL_NOT_AVAILABLE = "__tool_not_available__"
 
@@ -53,7 +50,6 @@ def _nm_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
 
 
 def _objdump_all_headers_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
-    # stdout = subprocess.run(["objdump", "--all-headers", lib_file], capture_output=True, check=True).stdout
     stdout = _run_command(["objdump", "--all-headers", lib_file])
     contains_debug_lines = any(
         bool(re.search(r"[\t ]+\.debug_line[\t ]+", x)) for x in stdout.split("\n")
@@ -63,7 +59,6 @@ def _objdump_all_headers_reports_debug_symbols(lib_file: str) -> Tuple[bool, str
 
 def _objdump_w_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
     stdout = _run_command(["objdump", "-W", lib_file])
-    # stdout = subprocess.run(["objdump", "-W", lib_file], capture_output=True, check=True).stdout
     contains_debug_lines = any(
         x.strip().startswith("Contents of the .debug") for x in stdout.split("\n")
     )
@@ -71,7 +66,6 @@ def _objdump_w_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
 
 
 def _objdump_g_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
-    # stdout = subprocess.run(["objdump", "-g", lib_file], capture_output=True, check=True).stdout
     stdout = _run_command(["objdump", "-g", lib_file])
     contains_debug_lines = any(
         x.strip().startswith("Contents of the .debug") for x in stdout.split("\n")
@@ -106,24 +100,3 @@ def _tar_member_has_debug_symbols(archive_file: str, member: str) -> Tuple[bool,
                 return True, cmd_str
         # at this point, none of the checks found debug symbols
         return False, ""
-
-
-if __name__ == "__main__":
-
-    res = _dsymutil_reports_debug_symbols(LIB_FILE)
-    print(f"dsymutil -s: {res}")
-
-    res = _nm_reports_debug_symbols(LIB_FILE)
-    print(f"nm: {res}")
-
-    res = _objdump_all_headers_reports_debug_symbols(LIB_FILE)
-    print(f"objdump --all-headers: {res}")
-
-    res = _objdump_g_reports_debug_symbols(LIB_FILE)
-    print(f"objdump -g: {res}")
-
-    res = _objdump_w_reports_debug_symbols(LIB_FILE)
-    print(f"objdump -W: {res}")
-
-    res = _readelf_reports_debug_symbols(LIB_FILE)
-    print(f"readelf -S: {res}")
