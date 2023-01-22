@@ -43,12 +43,13 @@ class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
             file_name = file_info.name
             # TODO: include information about the commmand that determined there were
             #       debug symbols
-            if _tar_member_has_debug_symbols(
+            has_debug_symbols, cmd_str =_tar_member_has_debug_symbols(
                 archive_file=distro_summary.original_file, member=file_name
-            ):
+            )
+            if has_debug_symbols:
                 msg = (
                     f"[{self.check_name}] Found compiled object containing debug symbols: "
-                    f"'{file_name}'. These are rarely necessary in distributions."
+                    f"'{file_name}'. These are rarely necessary in distributions. Used '{cmd_str}'."
                 )
                 out.append(msg)
         return out

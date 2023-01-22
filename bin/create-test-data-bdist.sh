@@ -14,7 +14,10 @@ if [[ $OSTYPE == 'darwin'* ]]; then
   OS_NAME="macos"
 else
   OS_NAME="linux"
+  export PATH="/opt/python/cp311-cp311/bin:${PATH}"
 fi
+
+pip install --upgrade --no-cache-dir pip
 
 clean_build_artifacts() {
     rm -rf ./baseballmetrics.egg-info
@@ -24,24 +27,21 @@ clean_build_artifacts() {
     rm -f ./*.whl
 }
 
-build_linux_wheel() {
-    PIP="/opt/python/${1}/bin/pip"
-    ${PIP} install --upgrade --no-cache-dir pip
-    ${PIP} wheel \
-        --config-setting='cmake.build-type=${2}' \
-        -w ./dist \
-        .
-}
-
 pushd tests/data/baseballmetrics
     clean_build_artifacts
     if [[ $OS_NAME == "linux" ]]; then
       echo "building linux wheels"
-      build_linux_wheel 'cp311-cp311' 'Debug'
+      pip wheel \
+          -w ./dist \
+          --config-setting='cmake.build-type=Debug' \
+          .
       mv \
           ./dist/baseballmetrics-0.1.0-py3-none-manylinux_2_28_x86_64.whl \
           ./dist/debug-baseballmetrics-0.1.0-py3-none-manylinux_2_28_x86_64.whl
-      build_linux_wheel 'cp311-cp311' 'Release'
+      pip wheel \
+          -w ./dist \
+          --config-setting='cmake.build-type=Release' \
+          .
       auditwheel repair \
           -w ./dist \
           --plat='manylinux_2_28_x86_64' \
