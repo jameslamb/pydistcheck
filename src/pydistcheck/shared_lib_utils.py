@@ -8,7 +8,7 @@ import subprocess
 import sys
 import zipfile
 from tempfile import TemporaryDirectory
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
 LIB_FILE = sys.argv[1]
 
@@ -16,7 +16,7 @@ _COMMAND_FAILED = "__command_failed__"
 _TOOL_NOT_AVAILABLE = "__tool_not_available__"
 
 
-def _run_command(args: List[str]) -> Optional[str]:
+def _run_command(args: List[str]) -> str:
     try:
         stdout = subprocess.run(args, capture_output=True, check=True).stdout
         return stdout.decode("utf-8")
