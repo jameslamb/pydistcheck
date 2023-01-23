@@ -44,7 +44,7 @@ pushd tests/data/baseballmetrics
           .
       auditwheel repair \
           -w ./dist \
-          --plat='manylinux_2_28_x86_64' \
+           --plat='manylinux_2_28_x86_64' \
           ./dist/*.whl
     elif [[ $OS_NAME == "macos" ]]; then
       echo "building macOS wheels"
