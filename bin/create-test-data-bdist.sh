@@ -14,7 +14,10 @@ if [[ $OSTYPE == 'darwin'* ]]; then
   OS_NAME="macos"
 else
   OS_NAME="linux"
+  export PATH="/opt/python/cp311-cp311/bin:${PATH}"
 fi
+
+pip install --upgrade --no-cache-dir pip
 
 clean_build_artifacts() {
     rm -rf ./baseballmetrics.egg-info
@@ -24,22 +27,17 @@ clean_build_artifacts() {
     rm -f ./*.whl
 }
 
-build_linux_wheel() {
-    PIP="/opt/python/${1}/bin/pip"
-    PLAT="manylinux_2_28_x86_64"
-    ${PIP} install --upgrade --no-cache-dir pip
-    ${PIP} wheel -w ./dist .
-    auditwheel repair \
-        -w ./dist \
-        --plat=${PLAT} \
-        ./dist/*.whl 
-}
-
 pushd tests/data/baseballmetrics
     clean_build_artifacts
     if [[ $OS_NAME == "linux" ]]; then
       echo "building linux wheels"
-      build_linux_wheel 'cp311-cp311'
+      pip wheel \
+          -w ./dist \
+          .
+      audithweel repair \
+          -w ./dist \
+           --plat='manylinux_2_28_x86_64' \
+          ./dist/*.whl
     elif [[ $OS_NAME == "macos" ]]; then
       echo "building macOS wheels"
       pip wheel -w ./dist .
