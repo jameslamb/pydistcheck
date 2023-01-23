@@ -5,10 +5,11 @@ import pytest
 from pydistcheck.distribution_summary import _DistributionSummary
 
 BASE_PACKAGE_SDISTS = ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"]
-BDIST_PREFIX = "baseballmetrics-0.1.0-py3-none-"
-BASEBALLMETRICS_BDISTS = [
-    f"{BDIST_PREFIX}manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl",
-    f"{BDIST_PREFIX}macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl",
+MACOS_SUFFIX = "macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl"
+MANYLINUX_SUFFIX = "manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl"
+BASE_WHEELS = [
+    f"baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
+    f"baseballmetrics-0.1.0-py3-none-{MANYLINUX_SUFFIX}",
 ]
 TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
@@ -80,7 +81,7 @@ def test_distribution_summary_basically_works(distro_file):
         last_size_seen = size_in_bytes
 
 
-@pytest.mark.parametrize("distro_file", BASEBALLMETRICS_BDISTS)
+@pytest.mark.parametrize("distro_file", BASE_WHEELS)
 def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
     ds = _DistributionSummary.from_file(os.path.join(TEST_DATA_DIR, distro_file))
 
