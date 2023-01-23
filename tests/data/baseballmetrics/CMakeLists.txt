@@ -1,5 +1,3 @@
-# option(USE_DEBUG "Set to ON to compile with debug symbols" OFF)
-
 cmake_minimum_required(VERSION 3.10)
 
 project(

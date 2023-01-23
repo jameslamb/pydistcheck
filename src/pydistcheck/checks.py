@@ -48,8 +48,9 @@ class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
             )
             if has_debug_symbols:
                 msg = (
-                    f"[{self.check_name}] Found compiled object containing debug symbols: "
-                    f"'{file_name}'. These are rarely necessary in distributions. Used '{cmd_str}'."
+                    f"[{self.check_name}] Found compiled object containing debug symbols. "
+                    "For details, extract the distribution contents and run "
+                    f"'{cmd_str} {file_name}'."
                 )
                 out.append(msg)
         return out
