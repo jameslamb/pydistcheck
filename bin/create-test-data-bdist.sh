@@ -34,7 +34,7 @@ pushd tests/data/baseballmetrics
       pip wheel \
           -w ./dist \
           .
-      audithweel repair \
+      auditwheel repair \
           -w ./dist \
            --plat='manylinux_2_28_x86_64' \
           ./dist/*.whl
