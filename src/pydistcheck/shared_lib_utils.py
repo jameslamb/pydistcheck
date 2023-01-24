@@ -27,11 +27,11 @@ def _run_command(args: List[str]) -> str:
 
 
 def _get_symbols(nm_args: List[str], lib_file: str) -> str:
-    syms = subprocess.run(["nm", *nm_args, *[lib_file]], capture_output=True, check=True).stdout
+    syms = _run_command(args=["nm", *nm_args, lib_file])
     return "\n".join(
         [
             line
-            for line in syms.decode("utf-8").split("\n")
+            for line in syms.split("\n")
             if not (" a " in line or "\ta\t" in line)
         ]
     )

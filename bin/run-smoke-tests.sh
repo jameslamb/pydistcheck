@@ -19,7 +19,9 @@ get-files catboost
 pydistcheck ./smoke-tests/*
 
 get-files psycopg2-binary
-pydistcheck ./smoke-tests/*
+pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
+    ./smoke-tests/*
 
 # package where source distro is a .zip
 get-files numpy
