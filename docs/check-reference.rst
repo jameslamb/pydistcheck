@@ -13,7 +13,7 @@ compiled-objects-have-debug-symbols
 
 The distribution contains compiled objects, like C/C++ shared libraries, with debug symbols.
 
-Compilers for language like C, C++, Fortran, and Rust can optionally include additional information like source code file names and line numbers, and other information useful for printing stack traces or enabling interactive debugging.
+Compilers for languages like C, C++, Fortran, and Rust can optionally include additional information like source code file names and line numbers, and other information useful for printing stack traces or enabling interactive debugging.
 
 The inclusion of such information can increase the size of built objects substantially.
 It's ``pydistcheck``'s position that the inclusion of such debug symbols in a shared library distributed as part of Python wheel is rarely desirable, and that by default wheels shouldn't include that type of information.
