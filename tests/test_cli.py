@@ -486,7 +486,7 @@ def test_debug_symbols_check_works(distro_file):
         check,
         [os.path.join(TEST_DATA_DIR, distro_file)],
     )
-    assert result.exit_code == 1
+    assert result.exit_code == 1, result.output
     if "macosx" in distro_file:
         debug_cmd = r"'dsymutil \-s lib/lib_baseballmetrics\.dylib'\."
     else:
