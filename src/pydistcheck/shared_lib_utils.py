@@ -5,12 +5,9 @@ functions used to analyze compiled objects
 import os
 import re
 import subprocess
-import sys
 import zipfile
 from tempfile import TemporaryDirectory
 from typing import List, Tuple
-
-LIB_FILE = sys.argv[1]
 
 _COMMAND_FAILED = "__command_failed__"
 _TOOL_NOT_AVAILABLE = "__tool_not_available__"
@@ -80,6 +77,7 @@ def _tar_member_has_debug_symbols(archive_file: str, member: str) -> Tuple[bool,
         with zipfile.ZipFile(archive_file, mode="r") as zf:
             zf.extractall(path=tmp_dir, members=[member])
         full_path = os.path.join(tmp_dir, member)
+        # TODO: check if it's in mach-o format
         check_functions = [
             _dsymutil_reports_debug_symbols,
             _nm_reports_debug_symbols,

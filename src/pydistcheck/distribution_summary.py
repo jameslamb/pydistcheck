@@ -11,6 +11,10 @@ from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
 from typing import List
 
+# TODO: detect file format without relying on file extension?
+#
+# https://www.netspi.com/blog/technical/web-application-penetration-testing/magic-bytes-identifying-common-file-formats-at-a-glance/
+# https://www.garykessler.net/library/file_sigs.html
 _COMPILED_OBJECT_EXTENSIONS = {".dll", ".dylib", ".o", ".so"}
 
 
