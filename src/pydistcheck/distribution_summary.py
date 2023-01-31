@@ -93,11 +93,9 @@ def _archive_member_is_compiled_object(
         with archive_file.open(name=member_name, mode="r") as f:
             header = f.read(4)
     else:
-        tar_info = archive_file.getmember(member_name)
-        # if the file is less than 250MB, extract it in-memory,
-        # otherwise write it to a temporary file
-        if tar_info.size <= _MAX_TAR_MEMBER_SIZE_BYTES:
-            buf = io.BytesIO()
+        with TemporaryFile() as f:
+            archive_file.extract(member=member_name, path=f)
+            header = f.read(4)
 
 
 
