@@ -9,13 +9,47 @@ import tarfile
 import zipfile
 from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
+from tempfile import TemporaryFile
 from typing import List
+from _vendored_delocate import _is_macho_file
 
 # TODO: detect file format without relying on file extension?
 #
 # https://www.netspi.com/blog/technical/web-application-penetration-testing/magic-bytes-identifying-common-file-formats-at-a-glance/
 # https://www.garykessler.net/library/file_sigs.html
 _COMPILED_OBJECT_EXTENSIONS = {".dll", ".dylib", ".o", ".so"}
+
+
+# ref: https://en.wikipedia.org/wiki/List_of_file_signatures
+_ELF_MAGIC = {
+    0x7F454C46.to_bytes(4, "little"),
+    0x7F454C46.to_bytes(4, "big"),
+}
+def _is_elf_file(filename: str) -> bool:
+    """detect ELF files (.so, .o)"""
+    try:
+        with open(filename, "rb") as f:
+            header = f.read(4)
+            return header in _ELF_MAGIC
+    except PermissionError:  # pragma: no cover
+        return False
+    except FileNotFoundError:  # pragma: no cover
+        return False
+
+
+_DOS_MZ_MAGIC = {
+    0x4D5A.to_bytes(4, "little"),
+}
+def _is_dos_mz_executable(filename: str) -> bool:
+    """detect Windows Portable Executable (e.g. .dll, .exe)"""
+    try:
+        with open(filename, "rb") as f:
+            header = f.read(4)
+            return header in _DOS_MZ_MAGIC
+    except PermissionError:  # pragma: no cover
+        return False
+    except FileNotFoundError:  # pragma: no cover
+        return False
 
 
 @dataclass
@@ -48,6 +82,26 @@ class _FileInfo:
         )
 
 
+_MAX_TAR_MEMBER_SIZE_BYTES = 250 * 1024 * 1024
+
+
+def _archive_member_is_compiled_object(
+    archive_file: Union[tarfile.TarFile, zipfile.ZipFile],
+    member_name: str
+) -> bool:
+    if isinstance(archive_file, zipfile.ZipFile):
+        with archive_file.open(name=member_name, mode="r") as f:
+            header = f.read(4)
+    else:
+        tar_info = archive_file.getmember(member_name)
+        # if the file is less than 250MB, extract it in-memory,
+        # otherwise write it to a temporary file
+        if tar_info.size <= _MAX_TAR_MEMBER_SIZE_BYTES:
+            buf = io.BytesIO()
+
+
+
+
 @dataclass
 class _DistributionSummary:
     compiled_objects: List[_FileInfo]
@@ -66,6 +120,7 @@ class _DistributionSummary:
                 for tar_info in tf.getmembers():
                     if tar_info.isfile():
                         files.append(_FileInfo.from_tarfile_member(tar_info))
+
                     else:
                         directories.append(_DirectoryInfo(name=tar_info.name))
         else:

@@ -77,7 +77,6 @@ def _tar_member_has_debug_symbols(archive_file: str, member: str) -> Tuple[bool,
         with zipfile.ZipFile(archive_file, mode="r") as zf:
             zf.extractall(path=tmp_dir, members=[member])
         full_path = os.path.join(tmp_dir, member)
-        # TODO: check if it's in mach-o format
         check_functions = [
             _dsymutil_reports_debug_symbols,
             _nm_reports_debug_symbols,
