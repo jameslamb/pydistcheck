@@ -5,7 +5,6 @@ performs on distributions.
 
 from collections import defaultdict
 from fnmatch import fnmatchcase
-from sys import platform
 from typing import List, Protocol
 
 from pydistcheck.distribution_summary import _DistributionSummary

@@ -9,47 +9,7 @@ import tarfile
 import zipfile
 from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
-from tempfile import TemporaryFile
-from typing import List
-from _vendored_delocate import _is_macho_file
-
-# TODO: detect file format without relying on file extension?
-#
-# https://www.netspi.com/blog/technical/web-application-penetration-testing/magic-bytes-identifying-common-file-formats-at-a-glance/
-# https://www.garykessler.net/library/file_sigs.html
-_COMPILED_OBJECT_EXTENSIONS = {".dll", ".dylib", ".o", ".so"}
-
-
-# ref: https://en.wikipedia.org/wiki/List_of_file_signatures
-_ELF_MAGIC = {
-    0x7F454C46.to_bytes(4, "little"),
-    0x7F454C46.to_bytes(4, "big"),
-}
-def _is_elf_file(filename: str) -> bool:
-    """detect ELF files (.so, .o)"""
-    try:
-        with open(filename, "rb") as f:
-            header = f.read(4)
-            return header in _ELF_MAGIC
-    except PermissionError:  # pragma: no cover
-        return False
-    except FileNotFoundError:  # pragma: no cover
-        return False
-
-
-_DOS_MZ_MAGIC = {
-    0x4D5A.to_bytes(4, "little"),
-}
-def _is_dos_mz_executable(filename: str) -> bool:
-    """detect Windows Portable Executable (e.g. .dll, .exe)"""
-    try:
-        with open(filename, "rb") as f:
-            header = f.read(4)
-            return header in _DOS_MZ_MAGIC
-    except PermissionError:  # pragma: no cover
-        return False
-    except FileNotFoundError:  # pragma: no cover
-        return False
+from typing import List, Union
 
 
 @dataclass
@@ -82,22 +42,44 @@ class _FileInfo:
         )
 
 
-_MAX_TAR_MEMBER_SIZE_BYTES = 250 * 1024 * 1024
+# references:
+#   * https://en.wikipedia.org/wiki/List_of_file_signatures
+#   * https://github.com/apple-oss-distributions/xnu/blob/5c2921b07a2480ab43ec66f5b9e41cb872bc554f/EXTERNAL_HEADERS/mach-o/loader.h#L65
+#   * https://github.com/apple-oss-distributions/cctools/blob/658da8c66b4e184458f9c810deca9f6428a773a5/include/mach-o/fat.h#L48
+#   * https://github.com/matthew-brett/delocate/blob/df86dddd7c94a93b5c03948b8c127ba0777e2a4d/delocate/tools.py#L166
+#
+# This approach was inspired by similar code in https://github.com/matthew-brett/delocate, so that
+# project's license is included here in LICENSES/DELOCATE_LICENSE
+_MAGIC_FIRST_2_BYTES_FOR_COMPILED_OBJECTS = {
+    0x4D5A.to_bytes(4, "little"),  # DOS MZ (.dll, .exe)
+}
+
+
+_MAGIC_FIRST_4_BYTES_FOR_COMPILED_OBJECTS = {
+    0x7F454C46.to_bytes(4, "little"),  # ELF (.so, .o)
+    0x7F454C46.to_bytes(4, "big"),  # ELF (.so, .o)
+    0xFEEDFACE.to_bytes(4, "little"),  # mach-o (.dylib)
+    0xFEEDFACE.to_bytes(4, "big"),  # mach-o (.dylib)
+    0xFEEDFACF.to_bytes(4, "little"),  # mach-o (.dylib)
+    0xFEEDFACF.to_bytes(4, "big"),  # mach-o (.dylib)
+    0xCAFEBABE.to_bytes(4, "big"),  # mach-o (.dylib)
+    0xCAFEBABF.to_bytes(4, "big"),  # mach-o (.dylib)
+}
 
 
 def _archive_member_is_compiled_object(
-    archive_file: Union[tarfile.TarFile, zipfile.ZipFile],
-    member_name: str
+    archive_file: Union[tarfile.TarFile, zipfile.ZipFile], member_name: str
 ) -> bool:
     if isinstance(archive_file, zipfile.ZipFile):
         with archive_file.open(name=member_name, mode="r") as f:
             header = f.read(4)
     else:
-        with TemporaryFile() as f:
-            archive_file.extract(member=member_name, path=f)
-            header = f.read(4)
+        header = archive_file.extractfile(member_name).read(4)
 
-
+    return (
+        header in _MAGIC_FIRST_4_BYTES_FOR_COMPILED_OBJECTS
+        or header[:2] in _MAGIC_FIRST_2_BYTES_FOR_COMPILED_OBJECTS
+    )
 
 
 @dataclass
@@ -113,12 +95,17 @@ class _DistributionSummary:
         compressed_size_bytes = os.path.getsize(filename)
         directories: List[_DirectoryInfo] = []
         files: List[_FileInfo] = []
+        compiled_objects: List[_FileInfo] = []
         if filename.endswith("gz"):
             with tarfile.open(filename, mode="r:gz") as tf:
                 for tar_info in tf.getmembers():
                     if tar_info.isfile():
-                        files.append(_FileInfo.from_tarfile_member(tar_info))
-
+                        file_info = _FileInfo.from_tarfile_member(tar_info)
+                        files.append(file_info)
+                        if _archive_member_is_compiled_object(
+                            archive_file=tf, member_name=tar_info.name
+                        ):
+                            compiled_objects.append(file_info)
                     else:
                         directories.append(_DirectoryInfo(name=tar_info.name))
         else:
@@ -126,14 +113,14 @@ class _DistributionSummary:
             with zipfile.ZipFile(filename, mode="r") as f:
                 for zip_info in f.infolist():
                     if not zip_info.is_dir():
-                        files.append(_FileInfo.from_zipfile_member(zip_info))
+                        file_info = _FileInfo.from_zipfile_member(zip_info)
+                        files.append(file_info)
+                        if _archive_member_is_compiled_object(
+                            archive_file=f, member_name=zip_info.filename
+                        ):
+                            compiled_objects.append(file_info)
                     else:
                         directories.append(_DirectoryInfo(name=zip_info.filename))
-        compiled_objects = [
-            file_info
-            for file_info in files
-            if file_info.file_extension in _COMPILED_OBJECT_EXTENSIONS
-        ]
 
         return cls(
             compiled_objects=compiled_objects,
