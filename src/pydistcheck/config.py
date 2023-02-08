@@ -77,7 +77,6 @@ class _Config:
         return self
 
     def update_from_toml(self, toml_file: str) -> "_Config":
-
         if not os.path.exists(toml_file):
             return self
 
