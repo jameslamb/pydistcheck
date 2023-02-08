@@ -73,8 +73,8 @@ _DOS_MZ_MAGIC_FIRST_2_BYTES = {
 
 # ELF (.so, .o)
 _ELF_MAGIC_FIRST_4_BYTES = {
-    0x7F454C46.to_bytes(4, "little"),  # ELF (.so, .o)
-    0x7F454C46.to_bytes(4, "big"),  # ELF (.so, .o)
+    0x7F454C46.to_bytes(4, "little"),
+    0x7F454C46.to_bytes(4, "big"),
 }
 
 # MACH-O (.dylib)
