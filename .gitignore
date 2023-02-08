@@ -62,5 +62,6 @@ wheels/
 !tests/data/baseballmetrics-0.1.0-py3-none-manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl
 !tests/data/base-package-0.1.0.tar.gz
 !tests/data/base-package-0.1.0.zip
+!tests/data/lightgbm-3.3.5-py3-none-win_amd64.whl
 !tests/data/problematic-package-0.1.0.tar.gz
 !tests/data/problematic-package-0.1.0.zip
