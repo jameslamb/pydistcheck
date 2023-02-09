@@ -23,6 +23,7 @@ max-line-length = 100
 
 disable = [
   "invalid-name",
+  "line-too-long",
   "missing-function-docstring",
   "too-few-public-methods",
   "too-many-locals"

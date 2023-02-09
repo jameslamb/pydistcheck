@@ -1,8 +1,9 @@
 import os
+import zipfile
 
 import pytest
 
-from pydistcheck.distribution_summary import _DistributionSummary
+from pydistcheck.distribution_summary import _DistributionSummary, _FileInfo
 
 BASE_PACKAGE_SDISTS = ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"]
 MACOS_SUFFIX = "macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl"
@@ -11,6 +12,7 @@ BASE_WHEELS = [
     f"baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
     f"baseballmetrics-0.1.0-py3-none-{MANYLINUX_SUFFIX}",
 ]
+WINDOWS_WHEELS = ["lightgbm-3.3.5-py3-none-win_amd64.whl"]
 TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
 
@@ -56,6 +58,7 @@ def test_distribution_summary_basically_works(distro_file):
     expected_all_paths = expected_dir_paths + expected_file_paths
 
     assert sorted(ds.all_paths) == sorted(expected_all_paths)
+    assert ds.compiled_objects == []
     assert sorted(ds.directory_paths) == sorted(expected_dir_paths)
     assert sorted(ds.file_paths) == sorted(expected_file_paths)
 
@@ -126,6 +129,7 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
     expected_all_paths = expected_dir_paths + expected_file_paths
 
     assert sorted(ds.all_paths) == sorted(expected_all_paths)
+    assert ds.compiled_objects == [f"lib/lib_baseballmetrics.{shared_lib_ext}"]
     assert sorted(ds.directory_paths) == sorted(expected_dir_paths)
     assert sorted(ds.file_paths) == sorted(expected_file_paths)
 
@@ -156,3 +160,22 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
     for _, size_in_bytes in ds.size_by_file_extension.items():
         assert size_in_bytes < last_size_seen
         last_size_seen = size_in_bytes
+
+
+@pytest.mark.parametrize("distro_file", [*BASE_WHEELS, *WINDOWS_WHEELS])
+def test_file_info_correctly_determines_file_type(distro_file):
+    full_path = os.path.join(TEST_DATA_DIR, distro_file)
+    if "macosx" in distro_file:
+        expected_file_format = "MACH-O"
+        shared_lib_file = "lib/lib_baseballmetrics.dylib"
+    elif "manylinux" in distro_file:
+        expected_file_format = "ELF"
+        shared_lib_file = "lib/lib_baseballmetrics.so"
+    else:
+        expected_file_format = "WINDOWS-PE"
+        shared_lib_file = "lightgbm/lib_lightgbm.dll"
+    with zipfile.ZipFile(full_path, mode="r") as zf:
+        zip_info = zf.getinfo(shared_lib_file)
+        file_info = _FileInfo.from_zipfile_member(archive_file=zf, zip_info=zip_info)
+        assert file_info.is_compiled is True
+        assert file_info.file_format == expected_file_format
