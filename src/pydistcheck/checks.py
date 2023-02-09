@@ -34,21 +34,19 @@ class _CheckProtocol(Protocol):
 
 
 class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
-
     check_name = "compiled-objects-have-debug-symbols"
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
-        for file_info in distro_summary.compiled_objects:
-            file_name = file_info.name
+        for file_path in distro_summary.compiled_objects:
             has_debug_symbols, cmd_str = _tar_member_has_debug_symbols(
-                archive_file=distro_summary.original_file, member=file_name
+                archive_file=distro_summary.original_file, member=file_path
             )
             if has_debug_symbols:
                 msg = (
                     f"[{self.check_name}] Found compiled object containing debug symbols. "
                     "For details, extract the distribution contents and run "
-                    f"'{cmd_str} {file_name}'."
+                    f"'{cmd_str} \"{file_path}\"'."
                 )
                 out.append(msg)
         return out

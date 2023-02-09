@@ -121,7 +121,6 @@ def _guess_archive_member_file_format(
 
 @dataclass
 class _DistributionSummary:
-    compiled_objects: List[_FileInfo]
     compressed_size_bytes: int
     directories: List[_DirectoryInfo]
     files: List[_FileInfo]
@@ -132,7 +131,6 @@ class _DistributionSummary:
         compressed_size_bytes = os.path.getsize(filename)
         directories: List[_DirectoryInfo] = []
         files: List[_FileInfo] = []
-        compiled_objects: List[_FileInfo] = []
         if filename.endswith("gz"):
             with tarfile.open(filename, mode="r:gz") as tf:
                 for tar_info in tf.getmembers():
@@ -157,6 +155,7 @@ class _DistributionSummary:
             compressed_size_bytes=compressed_size_bytes,
             directories=directories,
             files=files,
+            original_file=filename,
         )
 
     @property

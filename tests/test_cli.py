@@ -488,9 +488,9 @@ def test_debug_symbols_check_works(distro_file):
     )
     assert result.exit_code == 1, result.output
     if "macosx" in distro_file:
-        debug_cmd = r"'dsymutil \-s lib/lib_baseballmetrics\.dylib'\."
+        debug_cmd = r"'dsymutil \-s \"lib/lib_baseballmetrics\.dylib\"'\."
     else:
-        debug_cmd = r"'objdump \-\-all\-headers lib/lib_baseballmetrics\.so'\."
+        debug_cmd = r"'objdump \-\-all\-headers \"lib/lib_baseballmetrics\.so\"'\."
 
     expected_msg = (
         r"^1\. \[compiled\-objects\-have\-debug\-symbols\] "
