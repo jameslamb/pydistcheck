@@ -8,7 +8,7 @@ from fnmatch import fnmatchcase
 from typing import List, Protocol
 
 from pydistcheck.distribution_summary import _DistributionSummary
-from pydistcheck.shared_lib_utils import _tar_member_has_debug_symbols
+from pydistcheck.shared_lib_utils import _archive_member_has_debug_symbols
 from pydistcheck.utils import _FileSize
 
 # ALL_CHECKS constant is used to validate configuration options like '--ignore' that reference
@@ -38,15 +38,15 @@ class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
-        for file_path in distro_summary.compiled_objects:
-            has_debug_symbols, cmd_str = _tar_member_has_debug_symbols(
-                archive_file=distro_summary.original_file, member=file_path
+        for file_info in distro_summary.compiled_objects:
+            has_debug_symbols, warnings, cmd_str = _archive_member_has_debug_symbols(
+                archive_file=distro_summary.original_file, file_info=file_info
             )
             if has_debug_symbols:
                 msg = (
                     f"[{self.check_name}] Found compiled object containing debug symbols. "
                     "For details, extract the distribution contents and run "
-                    f"'{cmd_str} \"{file_path}\"'."
+                    f"'{cmd_str} \"{file_info.name}\"'."
                 )
                 out.append(msg)
         return out

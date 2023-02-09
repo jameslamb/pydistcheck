@@ -88,6 +88,13 @@ _MACH_O_MAGIC_FIRST_4_BYTES = {
 }
 
 
+class _FileFormat:
+    ELF = "ELF"
+    MACH_O = "Mach-O"
+    OTHER = "Other"
+    WINDOWS_PE = "Windows PE"
+
+
 def _guess_archive_member_file_format(
     archive_file: Union[tarfile.TarFile, zipfile.ZipFile], member_name: str
 ) -> Tuple[str, bool]:
@@ -110,13 +117,13 @@ def _guess_archive_member_file_format(
         header = fileobj.read(4)
 
     if header in _ELF_MAGIC_FIRST_4_BYTES:
-        return "ELF", True
+        return _FileFormat.ELF, True
     if header in _MACH_O_MAGIC_FIRST_4_BYTES:
-        return "MACH-O", True
+        return _FileFormat.MACH_O, True
     if header[:2] in _DOS_MZ_MAGIC_FIRST_2_BYTES:
-        return "WINDOWS-PE", True
+        return _FileFormat.WINDOWS_PE, True
 
-    return "OTHER", False
+    return _FileFormat.OTHER, False
 
 
 @dataclass
@@ -163,8 +170,8 @@ class _DistributionSummary:
         return self.file_paths + self.directory_paths
 
     @property
-    def compiled_objects(self) -> List[str]:
-        return [f.name for f in self.files if f.is_compiled is True]
+    def compiled_objects(self) -> List[_FileInfo]:
+        return [f for f in self.files if f.is_compiled is True]
 
     @property
     def directory_paths(self) -> List[str]:

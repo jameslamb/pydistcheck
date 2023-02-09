@@ -6,8 +6,11 @@ import os
 import re
 import subprocess
 import zipfile
+from sys import platform
 from tempfile import TemporaryDirectory
 from typing import List, Tuple
+
+from pydistcheck.distribution_summary import _FileFormat, _FileInfo
 
 _COMMAND_FAILED = "__command_failed__"
 _TOOL_NOT_AVAILABLE = "__tool_not_available__"
@@ -72,11 +75,25 @@ def _readelf_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
     return contains_debug_lines, "readelf -S"
 
 
-def _tar_member_has_debug_symbols(archive_file: str, member: str) -> Tuple[bool, str]:
+def _archive_member_has_debug_symbols(
+    archive_file: str, file_info: _FileInfo
+) -> Tuple[bool, List[str], str]:
+    warnings: List[str] = []
+
+    if (platform.startswith("linux") and file_info.file_format != _FileFormat.ELF) or (
+        platform in ("win32", "cygwin") and file_info.file_format != _FileFormat.WINDOWS_PE
+    ):
+        msg = (
+            f"Cannot determine if '{file_info.name}' contains debug symbols. "
+            f"pydistcheck cannot inspect '{file_info.file_format}' files when "
+            f"run on platform '{platform}'."
+        )
+        warnings.append(msg)
+
     with TemporaryDirectory() as tmp_dir:
         with zipfile.ZipFile(archive_file, mode="r") as zf:
-            zf.extractall(path=tmp_dir, members=[member])
-        full_path = os.path.join(tmp_dir, member)
+            zf.extractall(path=tmp_dir, members=[file_info.name])
+        full_path = os.path.join(tmp_dir, file_info.name)
         check_functions = [
             _dsymutil_reports_debug_symbols,
             _nm_reports_debug_symbols,
@@ -88,6 +105,6 @@ def _tar_member_has_debug_symbols(archive_file: str, member: str) -> Tuple[bool,
         for check_function in check_functions:
             found_debug_symbols, cmd_str = check_function(lib_file=full_path)
             if found_debug_symbols:
-                return True, cmd_str
-        # at this point, none of the checks found debug symbols
-        return False, ""
+                return True, warnings, cmd_str
+    # at this point, none of the checks found debug symbols
+    return False, warnings, ""
