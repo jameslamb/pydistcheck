@@ -13,6 +13,7 @@ from typing import List, Tuple
 from pydistcheck.distribution_summary import _FileFormat, _FileInfo
 
 _COMMAND_FAILED = "__command_failed__"
+_NO_DEBUG_SYMBOLS = "__no_debug_symbols_found__"
 _TOOL_NOT_AVAILABLE = "__tool_not_available__"
 
 
@@ -26,53 +27,48 @@ def _run_command(args: List[str]) -> str:
         return _TOOL_NOT_AVAILABLE
 
 
-def _get_symbols(nm_args: List[str], lib_file: str) -> str:
-    syms = _run_command(args=["nm", *nm_args, lib_file])
+# commands to dump symbol information, and regular expressions which, if they match
+# any lines in the output, indicate that debug symbols have been found
+# fmt: off
+_COMMANDS_TO_PATTERNS = [
+    (["dsymutil", "-s"], r"\(N_OSO[\t ]+\)"),
+    (["objdump", "--all-headers"], r"[\t ]+\.debug_line[\t ]+"),
+    (["objdump", "--macho", "--all-headers"], r"[\t ]+\.debug_line[\t ]+"),
+    (["objdump", "-W"], r"^Contents of the \.debug"),
+    (["objdump", "--macho", "-W"], r"^Contents of the \.debug"),
+    (["objdump", "-g"], r"^Contents of the \.debug"),
+    (["objdump", "--macho", "-g"], r"^Contents of the \.debug"),
+    (["llvm-objdump", "--all-headers"], r"[\t ]+\.debug_line[\t ]+"),
+    (["llvm-objdump", "--macho", "--all-headers"], r"[\t ]+\.debug_line[\t ]+"),
+    (["llvm-objdump", "-W"], r"^Contents of the \.debug"),
+    (["llvm-objdump", "--macho", "-W"], r"^Contents of the \.debug"),
+    (["llvm-objdump", "-g"], r"^Contents of the \.debug"),
+    (["llvm-objdump", "--macho", "-g"], r"^Contents of the \.debug"),
+    (["readelf", "-S"], r"[\t ]+\.debug_[a-z]+[\t ]+")
+]
+# fmt: on
+
+
+def _look_for_debug_symbols(lib_file: str) -> Tuple[bool, str]:
+    for cmd_args, pattern in _COMMANDS_TO_PATTERNS:
+        print(f"running {' '.join(cmd_args)} {lib_file}")
+        stdout = _run_command(args=[*cmd_args, lib_file])
+        contains_debug_symbols = any(bool(re.search(pattern, x)) for x in stdout.split("\n"))
+        if contains_debug_symbols:
+            return True, " ".join(cmd_args)
+    # if you get here, no debug symbols were found by any tools
+    return False, _NO_DEBUG_SYMBOLS
+
+
+def _get_symbols(cmd_args: List[str], lib_file: str) -> str:
+    syms = _run_command(args=[*cmd_args, lib_file])
     return "\n".join([line for line in syms.split("\n") if not (" a " in line or "\ta\t" in line)])
 
 
-def _dsymutil_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
-    stdout = _run_command(["dsymutil", "-s", lib_file])
-    contains_debug_lines = any(bool(re.search(r"\(N_OSO[\t ]+\)", x)) for x in stdout.split("\n"))
-    return contains_debug_lines, "dsymutil -s"
-
-
-def _nm_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
-    exported_symbols = _get_symbols(nm_args=[], lib_file=lib_file)
-    all_symbols = _get_symbols(nm_args=["--debug-syms"], lib_file=lib_file)
-    return exported_symbols != all_symbols, "nm --debug-syms"
-
-
-def _objdump_all_headers_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
-    stdout = _run_command(["objdump", "--all-headers", lib_file])
-    contains_debug_lines = any(
-        bool(re.search(r"[\t ]+\.debug_line[\t ]+", x)) for x in stdout.split("\n")
-    )
-    return contains_debug_lines, "objdump --all-headers"
-
-
-def _objdump_w_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
-    stdout = _run_command(["objdump", "-W", lib_file])
-    contains_debug_lines = any(
-        x.strip().startswith("Contents of the .debug") for x in stdout.split("\n")
-    )
-    return contains_debug_lines, "objdump -W"
-
-
-def _objdump_g_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
-    stdout = _run_command(["objdump", "-g", lib_file])
-    contains_debug_lines = any(
-        x.strip().startswith("Contents of the .debug") for x in stdout.split("\n")
-    )
-    return contains_debug_lines, "objdump -g"
-
-
-def _readelf_reports_debug_symbols(lib_file: str) -> Tuple[bool, str]:
-    stdout = _run_command(["readelf", "-S", lib_file])
-    contains_debug_lines = any(
-        bool(re.search(r"[\t ]+\.debug_[a-z]+[\t ]+", x)) for x in stdout.split("\n")
-    )
-    return contains_debug_lines, "readelf -S"
+def _nm_reports_debug_symbols(tool_name: str, lib_file: str) -> Tuple[bool, str]:
+    exported_symbols = _get_symbols(cmd_args=[tool_name], lib_file=lib_file)
+    all_symbols = _get_symbols(cmd_args=[tool_name, "--debug-syms"], lib_file=lib_file)
+    return exported_symbols != all_symbols, f"{tool_name} --debug-syms"
 
 
 def _archive_member_has_debug_symbols(
@@ -80,31 +76,37 @@ def _archive_member_has_debug_symbols(
 ) -> Tuple[bool, List[str], str]:
     warnings: List[str] = []
 
-    if (platform.startswith("linux") and file_info.file_format != _FileFormat.ELF) or (
-        platform in ("win32", "cygwin") and file_info.file_format != _FileFormat.WINDOWS_PE
-    ):
-        msg = (
-            f"Cannot determine if '{file_info.name}' contains debug symbols. "
-            f"pydistcheck cannot inspect '{file_info.file_format}' files when "
-            f"run on platform '{platform}'."
-        )
-        warnings.append(msg)
+    # if (platform.startswith("linux") and file_info.file_format != _FileFormat.ELF) or (
+    #     platform in ("win32", "cygwin") and file_info.file_format != _FileFormat.WINDOWS_PE
+    # ):
+    #     msg = (
+    #         f"Cannot determine if '{file_info.name}' contains debug symbols. "
+    #         f"pydistcheck cannot inspect '{file_info.file_format}' files when "
+    #         f"run on platform '{platform}'."
+    #     )
+    #     warnings.append(msg)
 
     with TemporaryDirectory() as tmp_dir:
         with zipfile.ZipFile(archive_file, mode="r") as zf:
             zf.extractall(path=tmp_dir, members=[file_info.name])
         full_path = os.path.join(tmp_dir, file_info.name)
-        check_functions = [
-            _dsymutil_reports_debug_symbols,
-            _nm_reports_debug_symbols,
-            _objdump_all_headers_reports_debug_symbols,
-            _objdump_g_reports_debug_symbols,
-            _objdump_w_reports_debug_symbols,
-            _readelf_reports_debug_symbols,
-        ]
-        for check_function in check_functions:
-            found_debug_symbols, cmd_str = check_function(lib_file=full_path)
-            if found_debug_symbols:
-                return True, warnings, cmd_str
+
+        # test with tools that produce debug symbols that can be matched with a regex
+        has_debug_symbols, cmd_str = _look_for_debug_symbols(lib_file=full_path)
+        if has_debug_symbols:
+            return True, [], cmd_str
+
+        # "nm"'s test is like "check if the output is different when a flag is supplied",
+        # instead of "test if this tool produces output matching this regex",
+        # so it runs separately here
+        for nm_tool in ["nm", "llvm-nm"]:
+            has_debug_symbols, cmd_str = _nm_reports_debug_symbols(
+                tool_name=nm_tool,
+                lib_file=full_path,
+            )
+            if has_debug_symbols:
+                return True, [], cmd_str
+
+        return has_debug_symbols, [], cmd_str
     # at this point, none of the checks found debug symbols
     return False, warnings, ""
