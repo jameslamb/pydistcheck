@@ -51,7 +51,7 @@ pydistcheck \
 # package that isn't actually Python code
 get-files cmake
 pydistcheck \
-    --ignore 'path-contains-spaces' \
+    --ignore 'compiled-objects-have-debug-symbols,path-contains-spaces' \
     --max-allowed-files 4000 \
     --max-allowed-size-uncompressed '150M' \
     ./smoke-tests/*

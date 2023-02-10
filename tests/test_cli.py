@@ -1,5 +1,6 @@
 import os
 import re
+from sys import platform
 
 import pytest
 from click.testing import CliRunner, Result
@@ -488,7 +489,10 @@ def test_debug_symbols_check_works(distro_file):
     )
     assert result.exit_code == 1, result.output
     if "macosx" in distro_file:
-        debug_cmd = r"'dsymutil \-s \"lib/lib_baseballmetrics\.dylib\"'\."
+        if platform.startswith("darwin"):
+            debug_cmd = r"'dsymutil \-s \"lib/lib_baseballmetrics\.dylib\"'\."
+        else:
+            debug_cmd = r"'llvm\-nm \-\-debug\-syms \"lib/lib_baseballmetrics\.dylib\"'\."
     else:
         debug_cmd = r"'objdump \-\-all\-headers \"lib/lib_baseballmetrics\.so\"'\."
 
