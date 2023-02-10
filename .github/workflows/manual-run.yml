@@ -19,8 +19,8 @@ jobs:
           fetch-depth: 1
       - name: check '${{ inputs.package_name }}'
         run: |
-          apt-get update -y
-          apt-get install -y \
+          sudo apt-get update -y
+          sudo apt-get install -y \
             llvm
           export PATH="/usr/share/miniconda/bin:${PATH}"
           conda install \
