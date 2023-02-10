@@ -108,6 +108,5 @@ def _archive_member_has_debug_symbols(
             if has_debug_symbols:
                 return True, [], cmd_str
 
-        return has_debug_symbols, [], cmd_str
     # at this point, none of the checks found debug symbols
-    return False, warnings, ""
+    return False, [], cmd_str
