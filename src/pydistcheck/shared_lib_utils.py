@@ -50,7 +50,6 @@ _COMMANDS_TO_PATTERNS = [
 
 def _look_for_debug_symbols(lib_file: str) -> Tuple[bool, str]:
     for cmd_args, pattern in _COMMANDS_TO_PATTERNS:
-        print(f"running {' '.join(cmd_args)} {lib_file}")
         stdout = _run_command(args=[*cmd_args, lib_file])
         contains_debug_symbols = any(bool(re.search(pattern, x)) for x in stdout.split("\n"))
         if contains_debug_symbols:
@@ -65,7 +64,6 @@ def _get_symbols(cmd_args: List[str], lib_file: str) -> str:
 
 
 def _nm_reports_debug_symbols(tool_name: str, lib_file: str) -> Tuple[bool, str]:
-    print(f"running {tool_name} --debug-syms {lib_file}")
     exported_symbols = _get_symbols(cmd_args=[tool_name], lib_file=lib_file)
     all_symbols = _get_symbols(cmd_args=[tool_name, "--debug-syms"], lib_file=lib_file)
     return exported_symbols != all_symbols, f"{tool_name} --debug-syms"
