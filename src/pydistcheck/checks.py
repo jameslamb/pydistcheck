@@ -39,11 +39,9 @@ class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
         for file_info in distro_summary.compiled_objects:
-            has_debug_symbols, warnings, cmd_str = _archive_member_has_debug_symbols(
+            has_debug_symbols, cmd_str = _archive_member_has_debug_symbols(
                 archive_file=distro_summary.original_file, file_info=file_info
             )
-            for warning_msg in warnings:
-                warnings.warn(warning_msg)
             if has_debug_symbols:
                 msg = (
                     f"[{self.check_name}] Found compiled object containing debug symbols. "

@@ -6,11 +6,10 @@ import os
 import re
 import subprocess
 import zipfile
-from sys import platform
 from tempfile import TemporaryDirectory
 from typing import List, Tuple
 
-from pydistcheck.distribution_summary import _FileFormat, _FileInfo
+from pydistcheck.distribution_summary import _FileInfo
 
 _COMMAND_FAILED = "__command_failed__"
 _NO_DEBUG_SYMBOLS = "__no_debug_symbols_found__"
@@ -72,21 +71,7 @@ def _nm_reports_debug_symbols(tool_name: str, lib_file: str) -> Tuple[bool, str]
     return exported_symbols != all_symbols, f"{tool_name} --debug-syms"
 
 
-def _archive_member_has_debug_symbols(
-    archive_file: str, file_info: _FileInfo
-) -> Tuple[bool, List[str], str]:
-    warnings: List[str] = []
-
-    # if (platform.startswith("linux") and file_info.file_format != _FileFormat.ELF) or (
-    #     platform in ("win32", "cygwin") and file_info.file_format != _FileFormat.WINDOWS_PE
-    # ):
-    #     msg = (
-    #         f"Cannot determine if '{file_info.name}' contains debug symbols. "
-    #         f"pydistcheck cannot inspect '{file_info.file_format}' files when "
-    #         f"run on platform '{platform}'."
-    #     )
-    #     warnings.append(msg)
-
+def _archive_member_has_debug_symbols(archive_file: str, file_info: _FileInfo) -> Tuple[bool, str]:
     with TemporaryDirectory() as tmp_dir:
         with zipfile.ZipFile(archive_file, mode="r") as zf:
             zf.extractall(path=tmp_dir, members=[file_info.name])
@@ -95,7 +80,7 @@ def _archive_member_has_debug_symbols(
         # test with tools that produce debug symbols that can be matched with a regex
         has_debug_symbols, cmd_str = _look_for_debug_symbols(lib_file=full_path)
         if has_debug_symbols:
-            return True, [], cmd_str
+            return True, cmd_str
 
         # "nm"'s test is like "check if the output is different when a flag is supplied",
         # instead of "test if this tool produces output matching this regex",
@@ -106,7 +91,7 @@ def _archive_member_has_debug_symbols(
                 lib_file=full_path,
             )
             if has_debug_symbols:
-                return True, [], cmd_str
+                return True, cmd_str  # pragma: no cover
 
     # at this point, none of the checks found debug symbols
-    return False, [], cmd_str
+    return False, cmd_str
