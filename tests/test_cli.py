@@ -489,11 +489,11 @@ def test_debug_symbols_check_works(distro_file):
     )
     assert result.exit_code == 1, result.output
     if "macosx" in distro_file:
-        if platform.startswith("darwin"):
-            # TODO: dsymutil gets bundled in LLVM so I guess it exists on Linux too?
-            debug_cmd = r"'dsymutil \-s \"lib/lib_baseballmetrics\.dylib\"'\."
-        else:
+        if platform.startswith("cygwin") or platform.startswith("win"):
             debug_cmd = r"'llvm\-nm \-\-debug\-syms \"lib/lib_baseballmetrics\.dylib\"'\."
+        else:
+            # dsymutil works on both macOS and Linux
+            debug_cmd = r"'dsymutil \-s \"lib/lib_baseballmetrics\.dylib\"'\."
     else:
         debug_cmd = r"'objdump \-\-all\-headers \"lib/lib_baseballmetrics\.so\"'\."
 
