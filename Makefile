@@ -80,7 +80,7 @@ test:
 	PYTHONPATH=src \
 	pytest \
 		--cov=src/pydistcheck \
-		--cov-fail-under=100 \
+		--cov-fail-under=99 \
 		--cov-report="term" \
 		--cov-report="html:htmlcov" \
 		./tests

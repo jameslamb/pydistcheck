@@ -15,6 +15,7 @@ pydistcheck
 - *should not be larger than* ``n`` *MB uncompressed*
 - *should not contain more than* ``x`` *files*
 - *should not contain non-portable filepaths*
+- *should not contain compiled code with debugging symbols*
 
 .. code-block:: shell
 

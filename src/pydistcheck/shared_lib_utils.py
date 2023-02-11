@@ -91,7 +91,7 @@ def _archive_member_has_debug_symbols(archive_file: str, file_info: _FileInfo) -
                 lib_file=full_path,
             )
             if has_debug_symbols:
-                return True, cmd_str  # pragma: no cover
+                return True, cmd_str
 
     # at this point, none of the checks found debug symbols
     return False, cmd_str

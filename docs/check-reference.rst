@@ -18,6 +18,21 @@ Compilers for languages like C, C++, Fortran, and Rust can optionally include ad
 The inclusion of such information can increase the size of built objects substantially.
 It's ``pydistcheck``'s position that the inclusion of such debug symbols in a shared library distributed as part of Python wheel is rarely desirable, and that by default wheels shouldn't include that type of information.
 
+This check attempts to run the following tools with ``subprocess.run()``.
+
+* ``dsymutil``
+* ``llvm-nm``
+* ``llvm-objdump``
+* ``nm``
+* ``objdump``
+* ``readelf``
+
+Installing more of these in the environment where you run ``pydistcheck`` improves its ability to detect debug symbols.
+
+.. warning::
+    If ``pydistcheck`` invoking these other tools with ``subprocess.run()`` is a concern for you (for example, if it causes permissions-related issues),
+    turn this check off by passing it to ``--ignore``.
+
 For a LOT more information about this topic, see these discussions in other open source projects.
 
 * `"(auditwheel) Add --strip option to 'repair'" <https://github.com/pypa/auditwheel/pull/255>`_
