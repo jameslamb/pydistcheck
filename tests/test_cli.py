@@ -1,5 +1,6 @@
 import os
 import re
+from sys import platform
 
 import pytest
 from click.testing import CliRunner, Result
@@ -13,6 +14,10 @@ MANYLINUX_SUFFIX = "manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64
 BASE_WHEELS = [
     f"baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
     f"baseballmetrics-0.1.0-py3-none-{MANYLINUX_SUFFIX}",
+]
+WHEELS_WITH_DEBUG_SYMBOLS = [
+    f"debug-baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
+    f"debug-baseballmetrics-py3-none-{MANYLINUX_SUFFIX}",
 ]
 TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
@@ -473,6 +478,32 @@ def test_unexpected_files_check_works(distro_file):
     )
 
     _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: [0-9]{1}")
+
+
+@pytest.mark.parametrize("distro_file", WHEELS_WITH_DEBUG_SYMBOLS)
+def test_debug_symbols_check_works(distro_file):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [os.path.join(TEST_DATA_DIR, distro_file)],
+    )
+    assert result.exit_code == 1, result.output
+    if "macosx" in distro_file:
+        if platform.startswith("cygwin") or platform.startswith("win"):
+            debug_cmd = r"'llvm\-nm \-\-debug\-syms \"lib/lib_baseballmetrics\.dylib\"'\."
+        else:
+            # dsymutil works on both macOS and Linux
+            debug_cmd = r"'dsymutil \-s \"lib/lib_baseballmetrics\.dylib\"'\."
+    else:
+        debug_cmd = r"'objdump \-\-all\-headers \"lib/lib_baseballmetrics\.so\"'\."
+
+    expected_msg = (
+        r"^1\. \[compiled\-objects\-have\-debug\-symbols\] "
+        r"Found compiled object containing debug symbols\. "
+        r"For details, extract the distribution contents and run "
+    )
+    expected_msg += debug_cmd
+    _assert_log_matches_pattern(result=result, pattern=expected_msg)
 
 
 # --------------------- #

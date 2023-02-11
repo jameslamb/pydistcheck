@@ -8,6 +8,45 @@ The section headings correspond to the error codes printed in ``pydistcheck``'s 
    :maxdepth: 2
    :caption: Contents:
 
+compiled-objects-have-debug-symbols
+***********************************
+
+The distribution contains compiled objects, like C/C++ shared libraries, with debug symbols.
+
+Compilers for languages like C, C++, Fortran, and Rust can optionally include additional information like source code file names and line numbers, and other information useful for printing stack traces or enabling interactive debugging.
+
+The inclusion of such information can increase the size of built objects substantially.
+It's ``pydistcheck``'s position that the inclusion of such debug symbols in a shared library distributed as part of Python wheel is rarely desirable, and that by default wheels shouldn't include that type of information.
+
+This check attempts to run the following tools with ``subprocess.run()``.
+
+* ``dsymutil``
+* ``llvm-nm``
+* ``llvm-objdump``
+* ``nm``
+* ``objdump``
+* ``readelf``
+
+Installing more of these in the environment where you run ``pydistcheck`` improves its ability to detect debug symbols.
+
+.. warning::
+    If ``pydistcheck`` invoking these other tools with ``subprocess.run()`` is a concern for you (for example, if it causes permissions-related issues),
+    turn this check off by passing it to ``--ignore``.
+
+For a LOT more information about this topic, see these discussions in other open source projects.
+
+* `"(auditwheel) Add --strip option to 'repair'" <https://github.com/pypa/auditwheel/pull/255>`_
+* `"(cibuildwheel) Strip debug symbols of wheels" <https://github.com/pypa/cibuildwheel/issues/331>`_
+* `"(numpy) ENH:Distutils Remove debugging symbols by default" <https://github.com/numpy/numpy/pull/16110>`_
+* `"(psycopg2) Excessive size of wheel packages" <https://github.com/psycopg/psycopg/issues/142>`_
+* `"(scikit-image) Add linker flags to strip debug symbols during wheel building " <https://github.com/scikit-image/scikit-image/pull/6109>`_
+* `"(scylladb/python-driver) scylla-driver is 100 times larger than cassandra-driver" <https://github.com/scylladb/python-driver/issues/132>`_
+
+And these other resources.
+
+* `"Adding debugging information to your native extension" (memray docs) <https://bloomberg.github.io/memray/native_mode.html#adding-debugging-information-to-your-native-extension>`_
+* `"How can I tell if a binary was compiled with debug symbols?" (vscode-lldb docs) <https://github.com/vadimcn/vscode-lldb/wiki/How-can-I-tell-if-a-binary-was-compiled-with-debug-symbols%3F>`_
+
 distro-too-large-compressed
 ***************************
 

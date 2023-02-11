@@ -19,12 +19,14 @@ get-files catboost
 pydistcheck ./smoke-tests/*
 
 get-files psycopg2-binary
-pydistcheck ./smoke-tests/*
+pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
+    ./smoke-tests/*
 
 # package where source distro is a .zip
 get-files numpy
 pydistcheck \
-    --ignore 'unexpected-files' \
+    --ignore 'compiled-objects-have-debug-symbols,unexpected-files' \
     --max-allowed-files 3000 \
     --max-allowed-size-uncompressed '150M' \
     ./smoke-tests/*
@@ -49,7 +51,7 @@ pydistcheck \
 # package that isn't actually Python code
 get-files cmake
 pydistcheck \
-    --ignore 'path-contains-spaces' \
+    --ignore 'compiled-objects-have-debug-symbols,path-contains-spaces' \
     --max-allowed-files 4000 \
     --max-allowed-size-uncompressed '150M' \
     ./smoke-tests/*

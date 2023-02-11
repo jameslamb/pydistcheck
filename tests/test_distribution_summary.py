@@ -100,6 +100,7 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
     # so this project's test macOS wheels don't have directory members
     if "macosx" in distro_file:
         expected_dir_paths = []
+        expected_file_format = "Mach-O"
         expected_num_directories = 0
         shared_lib_ext = "dylib"
     else:
@@ -109,6 +110,7 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
             "baseballmetrics/",
             "lib/",
         ]
+        expected_file_format = "ELF"
         expected_num_directories = 4
         shared_lib_ext = "so"
 
@@ -129,7 +131,16 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
     expected_all_paths = expected_dir_paths + expected_file_paths
 
     assert sorted(ds.all_paths) == sorted(expected_all_paths)
-    assert ds.compiled_objects == [f"lib/lib_baseballmetrics.{shared_lib_ext}"]
+
+    # pulling this _FileInfo object out and comparing attribute-by-attribute,
+    # to avoid needing to change the test when the library size changes
+    assert len(ds.compiled_objects) == 1
+    lib_file_info = ds.compiled_objects[0]
+    assert lib_file_info.name == f"lib/lib_baseballmetrics.{shared_lib_ext}"
+    assert lib_file_info.file_format == expected_file_format
+    assert lib_file_info.file_extension == f".{shared_lib_ext}"
+    assert lib_file_info.is_compiled is True
+
     assert sorted(ds.directory_paths) == sorted(expected_dir_paths)
     assert sorted(ds.file_paths) == sorted(expected_file_paths)
 
@@ -166,13 +177,13 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
 def test_file_info_correctly_determines_file_type(distro_file):
     full_path = os.path.join(TEST_DATA_DIR, distro_file)
     if "macosx" in distro_file:
-        expected_file_format = "MACH-O"
+        expected_file_format = "Mach-O"
         shared_lib_file = "lib/lib_baseballmetrics.dylib"
     elif "manylinux" in distro_file:
         expected_file_format = "ELF"
         shared_lib_file = "lib/lib_baseballmetrics.so"
     else:
-        expected_file_format = "WINDOWS-PE"
+        expected_file_format = "Windows PE"
         shared_lib_file = "lightgbm/lib_lightgbm.dll"
     with zipfile.ZipFile(full_path, mode="r") as zf:
         zip_info = zf.getinfo(shared_lib_file)

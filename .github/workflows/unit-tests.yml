@@ -55,6 +55,12 @@ jobs:
           miniforge-variant: Mambaforge
           use-mamba: true
           python-version: ${{ matrix.python_version }}
+      - name: Install extra tools on Linux
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y \
+            llvm
       - name: run tests
         shell: bash -l {0}
         run: |
@@ -78,6 +84,12 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: 'pypy${{ matrix.python_version}}'
+      - name: Install extra tools on Linux
+        if: startsWith(matrix.os, 'ubuntu')
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y \
+            llvm
       - name: run tests
         shell: bash -l {0}
         run: |
