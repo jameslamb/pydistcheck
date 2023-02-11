@@ -30,20 +30,20 @@ def _run_command(args: List[str]) -> str:
 # any lines in the output, indicate that debug symbols have been found
 # fmt: off
 _COMMANDS_TO_PATTERNS = [
-    (["dsymutil", "-s"], r"\(N_OSO[\t ]+\)"),
-    (["objdump", "--all-headers"], r"[\t ]+\.debug_line[\t ]+"),
-    (["objdump", "--macho", "--all-headers"], r"[\t ]+\.debug_line[\t ]+"),
-    (["objdump", "-W"], r"^Contents of the \.debug"),
-    (["objdump", "--macho", "-W"], r"^Contents of the \.debug"),
-    (["objdump", "-g"], r"^Contents of the \.debug"),
-    (["objdump", "--macho", "-g"], r"^Contents of the \.debug"),
-    (["llvm-objdump", "--all-headers"], r"[\t ]+\.debug_line[\t ]+"),
+    (["dsymutil", "-s"],                           r"\(N_OSO[\t ]+\)"),
+    (["objdump", "--all-headers"],                 r"[\t ]+\.debug_line[\t ]+"),
+    (["objdump", "--macho", "--all-headers"],      r"[\t ]+\.debug_line[\t ]+"),
+    (["objdump", "-W"],                            r"^Contents of the \.debug"),
+    (["objdump", "--macho", "-W"],                 r"^Contents of the \.debug"),
+    (["objdump", "-g"],                            r"^Contents of the \.debug"),
+    (["objdump", "--macho", "-g"],                 r"^Contents of the \.debug"),
+    (["llvm-objdump", "--all-headers"],            r"[\t ]+\.debug_line[\t ]+"),
     (["llvm-objdump", "--macho", "--all-headers"], r"[\t ]+\.debug_line[\t ]+"),
-    (["llvm-objdump", "-W"], r"^Contents of the \.debug"),
-    (["llvm-objdump", "--macho", "-W"], r"^Contents of the \.debug"),
-    (["llvm-objdump", "-g"], r"^Contents of the \.debug"),
-    (["llvm-objdump", "--macho", "-g"], r"^Contents of the \.debug"),
-    (["readelf", "-S"], r"[\t ]+\.debug_[a-z]+[\t ]+")
+    (["llvm-objdump", "-W"],                       r"^Contents of the \.debug"),
+    (["llvm-objdump", "--macho", "-W"],            r"^Contents of the \.debug"),
+    (["llvm-objdump", "-g"],                       r"^Contents of the \.debug"),
+    (["llvm-objdump", "--macho", "-g"],            r"^Contents of the \.debug"),
+    (["readelf", "-S"],                            r"[\t ]+\.debug_[a-z]+[\t ]+")
 ]
 # fmt: on
 
