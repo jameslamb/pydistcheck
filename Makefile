@@ -1,6 +1,5 @@
 .PHONY: build
 build:
-	pipx install cibuildwheel
 	rm -r ./dist || true
 	pipx run build --sdist --wheel
 

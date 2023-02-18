@@ -64,7 +64,7 @@ jobs:
       - name: run tests
         shell: bash -l {0}
         run: |
-          pip install '.[tests]'
+          pip install -r ./requirements-tests.txt
           make test
   test-pypy:
     name: unit-tests (${{ matrix.os }}, Python-PyPy ${{ matrix.python_version }})

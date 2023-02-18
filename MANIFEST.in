@@ -1,5 +1,4 @@
 include LICENSE
-recursive-include LICENSES
+recursive-include LICENSES *
 include README.md
 include requirements.txt
-include VERSION.txt
