@@ -1,6 +1,5 @@
 .PHONY: build
 build:
-	pipx install cibuildwheel
 	rm -r ./dist || true
 	pipx run build --sdist --wheel
 
@@ -77,6 +76,13 @@ test-data-bdist: \
 
 .PHONY: test
 test:
+	pytest \
+		--cov pydistcheck \
+		--cov-fail-under=99 \
+		./tests
+
+.PHONY: test-local
+test-local:
 	PYTHONPATH=src \
 	pytest \
 		--cov=src/pydistcheck \

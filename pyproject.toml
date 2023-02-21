@@ -1,3 +1,43 @@
+[project]
+
+authors = [
+  {name = "James Lamb", email = "jaylamb20@gmail.com"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX",
+    "Operating System :: Unix",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Topic :: Software Development",
+    "Topic :: Utilities"
+]
+description = "Inspect Python package distributions and raise warnings on common problems."
+license = {file = "LICENSE"}
+maintainers = [
+  {name = "James Lamb", email = "jaylamb20@gmail.com"}
+]
+name = "pydistcheck"
+readme = "README.md"
+requires-python = ">=3.8"
+version = "0.3.0.99"
+
+[project.scripts]
+pydistcheck = "pydistcheck.cli:check"
+
+[project.urls]
+homepage = "https://pydistcheck.readthedocs.io/en/latest/"
+documentation = "https://pydistcheck.readthedocs.io/en/latest/"
+repository = "https://github.com/jameslamb/pydistcheck"
+changelog = "https://github.com/jameslamb/pydistcheck/releases"
+
 [build-system]
 
 requires = [

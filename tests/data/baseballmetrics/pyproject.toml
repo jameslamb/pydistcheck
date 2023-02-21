@@ -1,6 +1,21 @@
 [project]
+
+authors = [
+  {name = "James Lamb", email = "jaylamb20@gmail.com"}
+]
+classifiers = [
+    "Operating System :: Unix",
+    "Programming Language :: Python :: 3"
+]
+description = "test C++ package for pydistcheck"
+maintainers = [
+  {name = "James Lamb", email = "jaylamb20@gmail.com"}
+]
 name = "baseballmetrics"
 version = "0.1.0"
+
+[project.urls]
+repository = "https://github.com/jameslamb/pydistcheck"
 
 [build-system]
 
