@@ -76,10 +76,13 @@ test-data-bdist: \
 
 .PHONY: test
 test:
-	PYTHONPATH=src \
 	pytest \
 		--cov=src/pydistcheck \
 		--cov-fail-under=99 \
 		--cov-report="term" \
 		--cov-report="html:htmlcov" \
 		./tests
+
+.PHONY: test-local
+test-local:
+	PYTHONPATH=src make test

@@ -65,6 +65,8 @@ jobs:
         shell: bash -l {0}
         run: |
           pip install -r ./requirements-tests.txt
+          make build
+          pip install dist/*.whl
           make test
   test-pypy:
     name: unit-tests (${{ matrix.os }}, Python-PyPy ${{ matrix.python_version }})
@@ -93,7 +95,9 @@ jobs:
       - name: run tests
         shell: bash -l {0}
         run: |
-          pip install '.[tests]'
+          pip install -r ./requirements-tests.txt
+          make build
+          pip install dist/*.whl
           make test
   check-test-packages:
     name: check-test-packages (${{ matrix.os }}, Python ${{ matrix.python_version }})
