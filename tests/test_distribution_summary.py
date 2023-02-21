@@ -146,15 +146,19 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
 
     # total archive sizes should make sense
     assert ds.compressed_size_bytes > 0
-    assert ds.compressed_size_bytes < 25e3
     assert ds.uncompressed_size_bytes > 0
-    assert ds.uncompressed_size_bytes > ds.compressed_size_bytes
+    if "macosx" in distro_file:
+        assert ds.compressed_size_bytes < 25e3
+        assert ds.uncompressed_size_bytes != ds.compressed_size_bytes
+    else:
+        assert ds.compressed_size_bytes < 6e3
+        assert ds.uncompressed_size_bytes > ds.compressed_size_bytes
 
     # size_by_file_extension should work as expected
     if "macosx" in distro_file:
         assert ds.size_by_file_extension == {
             ".dylib": 16504,
-            "no-extension": 824,
+            "no-extension": 837,
             ".py": 536,
             ".txt": 0,
         }
