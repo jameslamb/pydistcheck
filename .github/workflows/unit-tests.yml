@@ -61,12 +61,22 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y \
             llvm
-      - name: run tests
+      - name: Install extra tools on Windows
+        if: startsWith(matrix.os, 'windows')
+        run: |
+          choco install zip
+      - name: build and check dists
         shell: bash -l {0}
         run: |
           pip install -r ./requirements-tests.txt
-          make build
+          make build check-dists
+      - name: install
+        shell: bash -l {0}
+        run: |
           pip install dist/*.whl
+      - name: test
+        shell: bash -l {0}
+        run: |
           make test
   test-pypy:
     name: unit-tests (${{ matrix.os }}, Python-PyPy ${{ matrix.python_version }})
@@ -92,12 +102,18 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y \
             llvm
-      - name: run tests
+      - name: build and check dists
         shell: bash -l {0}
         run: |
           pip install -r ./requirements-tests.txt
-          make build
+          make build check-dists
+      - name: install
+        shell: bash -l {0}
+        run: |
           pip install dist/*.whl
+      - name: test
+        shell: bash -l {0}
+        run: |
           make test
   check-test-packages:
     name: check-test-packages (${{ matrix.os }}, Python ${{ matrix.python_version }})
