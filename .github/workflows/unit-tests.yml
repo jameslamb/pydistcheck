@@ -61,6 +61,10 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y \
             llvm
+      - name: Install extra tools on Windows
+        if: startsWith(matrix.os, 'windows')
+        run: |
+          choco install zip
       - name: build and check dists
         shell: bash -l {0}
         run: |
@@ -98,10 +102,6 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y \
             llvm
-      - name: Install extra tools on Windows
-        if: startsWith(matrix.os, 'windows')
-        run: |
-          choco install zip
       - name: build and check dists
         shell: bash -l {0}
         run: |
