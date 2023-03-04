@@ -20,6 +20,11 @@ classifiers = [
     "Topic :: Utilities"
 ]
 description = "Inspect Python package distributions and raise warnings on common problems."
+keywords = [
+    "linter",
+    "python-packaging",
+    "testing"
+]
 license = {file = "LICENSE"}
 maintainers = [
   {name = "James Lamb", email = "jaylamb20@gmail.com"}
@@ -43,7 +48,6 @@ changelog = "https://github.com/jameslamb/pydistcheck/releases"
 requires = [
     "setuptools>=63",
 ]
-
 build-backend = "setuptools.build_meta"
 
 [tool.black]
@@ -60,7 +64,6 @@ ignore_missing_imports = true
 [tool.pylint.messages_control]
 
 max-line-length = 100
-
 disable = [
   "invalid-name",
   "line-too-long",

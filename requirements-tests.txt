@@ -1,4 +1,6 @@
+check-wheel-contents
 pytest
 pytest-cov
 requests
+twine
 types-requests

@@ -13,6 +13,14 @@ check-test-packages:
 		-it python:3.11 \
 		./check-test-packages.sh /opt/test-packages
 
+.PHONY: check-wheels
+check-dists:
+	gunzip -t dist/*.tar.gz
+	zip -T dist/*.whl
+	check-wheel-contents dist/*.whl
+	pyroma --min=10 dist/*.tar.gz
+	twine check --strict dist/*
+
 .PHONY: clean
 clean:
 	rm -rf ./tmp-dir
