@@ -353,7 +353,6 @@ def test_files_only_differ_by_case_works(distro_file):
         result=result,
         pattern=(
             r"^1\. \[files\-only\-differ\-by\-case\] Found files which differ only by case\. "
-            r"Such files are not portable, since some filesystems are case-insensitive\. "
             r"Files\: problematic\-package\-0\.1\.0/problematic_package/Question\.py"
             r",problematic\-package\-0\.1\.0/problematic_package/question\.PY"
             r",problematic\-package\-0\.1\.0/problematic_package/question\.py"
@@ -375,7 +374,7 @@ def test_path_contains_spaces_works(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^3\. \[path\-contains\-spaces\] File paths with spaces are not portable\. "
+            r"^3\. \[path\-contains\-spaces\] "
             r"Found path with spaces\: 'problematic\-package\-0\.1\.0/beep boop\.ini"
         ),
     )
@@ -384,8 +383,7 @@ def test_path_contains_spaces_works(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^4\. \[path\-contains\-spaces\] File paths with spaces are not portable\. "
-            r"Found path with spaces\: "
+            r"^4\. \[path\-contains\-spaces\] Found path with spaces\: "
             r"'problematic\-package\-0\.1\.0/problematic_package/bad code[/]*"
         ),
     )
@@ -394,16 +392,14 @@ def test_path_contains_spaces_works(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^5\. \[path\-contains\-spaces\] File paths with spaces are not portable\. "
-            r"Found path with spaces\: "
+            r"^5\. \[path\-contains\-spaces\] Found path with spaces\: "
             r"'problematic\-package\-0\.1\.0/problematic_package/bad code/__init__\.py"
         ),
     )
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^6\. \[path\-contains\-spaces\] File paths with spaces are not portable\. "
-            r"Found path with spaces\: "
+            r"^6\. \[path\-contains\-spaces\] Found path with spaces\: "
             r"'problematic\-package\-0\.1\.0/problematic_package/bad code/ship\-it\.py"
         ),
     )
