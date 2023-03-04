@@ -1,4 +1,5 @@
 check-wheel-contents
+pyroma
 pytest
 pytest-cov
 requests
