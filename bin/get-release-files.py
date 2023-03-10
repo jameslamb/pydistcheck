@@ -28,12 +28,20 @@ class _ReleaseFile:
     url: str
 
 
+platform_tags = ["macosx", "manylinux", "musllinux", "win_amd", "win_arm"]
+
 files_by_type = defaultdict(list)
 for file_info in files:
-    files_by_type[file_info["packagetype"]].append(
+    file_name = file_info["filename"]
+    pkg_type = file_info["packagetype"]
+    for platform_tag in platform_tags:
+        if platform_tag in file_name:
+            pkg_type = f"{platform_tag}_{pkg_type}"
+
+    files_by_type[pkg_type].append(
         _ReleaseFile(
-            filename=file_info["filename"],
-            package_type=file_info["packagetype"],
+            filename=file_name,
+            package_type=pkg_type,
             url=file_info["url"],
         )
     )

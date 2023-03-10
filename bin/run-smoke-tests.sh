@@ -16,7 +16,11 @@ get-files() {
 
 # wheel-only packages
 get-files catboost
-pydistcheck ./smoke-tests/*
+pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
+    --max-allowed-size-compressed '100M' \
+    --max-allowed-size-uncompressed '215M' \
+    ./smoke-tests/*
 
 get-files psycopg2-binary
 pydistcheck \
