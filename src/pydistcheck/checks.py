@@ -126,7 +126,6 @@ class _FilesOnlyDifferByCaseCheck(_CheckProtocol):
             duplicates_str = ",".join(sorted(duplicates_list))
             msg = (
                 f"[{self.check_name}] Found files which differ only by case. "
-                "Such files are not portable, since some filesystems are case-insensitive. "
                 f"Files: {duplicates_str}"
             )
             out.append(msg)
@@ -156,10 +155,7 @@ class _SpacesInPathCheck(_CheckProtocol):
         out: List[str] = []
         for file_path in distro_summary.all_paths:
             if file_path != file_path.replace(" ", ""):
-                msg = (
-                    f"[{self.check_name}] File paths with spaces are not portable. "
-                    f"Found path with spaces: '{file_path}'"
-                )
+                msg = f"[{self.check_name}] Found path with spaces: '{file_path}'"
                 out.append(msg)
         return out
 
