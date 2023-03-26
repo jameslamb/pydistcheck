@@ -73,4 +73,63 @@ pydistcheck ./smoke-tests/*
 get-files kubernetes
 pydistcheck ./smoke-tests/*
 
+# other complex projects that do custom packaging stuff
+get-files apache-airflow
+pydistcheck ./smoke-tests/*
+
+get-files astropy
+pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols,unexpected-files' \
+    ./smoke-tests/*
+
+get-files datatable
+pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
+    --max-allowed-size-compressed '100M' \
+    --max-allowed-size-uncompressed '100M' \
+    ./smoke-tests/*
+
+get-files gensim
+pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
+    ./smoke-tests/*
+
+get-files opencv-python
+pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols,unexpected-files' \
+    --max-allowed-files 7200 \
+    --max-allowed-size-compressed '90M' \
+    --max-allowed-size-uncompressed '200M' \
+    ./smoke-tests/*
+
+get-files pandas
+pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
+    ./smoke-tests/*
+
+get-files Pillow
+pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
+    ./smoke-tests/*
+
+get-files pytest
+pydistcheck \
+    --ignore 'unexpected-files' \
+    ./smoke-tests/*
+
+get-files scikit-learn
+pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols,unexpected-files' \
+    ./smoke-tests/*
+
+get-files Shapely
+pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
+    ./smoke-tests/*
+
+get-files spacy
+pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
+    ./smoke-tests/*
+
 echo "done running smoke tests"
