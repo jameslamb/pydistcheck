@@ -90,7 +90,9 @@ pydistcheck \
     ./smoke-tests/*
 
 get-files gensim
-pydistcheck ./smoke-tests/*
+pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
+    ./smoke-tests/*
 
 get-files opencv-python
 pydistcheck \
@@ -101,7 +103,9 @@ pydistcheck \
     ./smoke-tests/*
 
 get-files pandas
-pydistcheck ./smoke-tests/*
+pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
+    ./smoke-tests/*
 
 get-files Pillow
 pydistcheck \
@@ -124,6 +128,8 @@ pydistcheck \
     ./smoke-tests/*
 
 get-files spacy
-pydistcheck ./smoke-tests/*
+pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
+    ./smoke-tests/*
 
 echo "done running smoke tests"
