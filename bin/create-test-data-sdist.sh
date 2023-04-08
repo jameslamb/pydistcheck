@@ -86,6 +86,25 @@ except ImportError:
 SPONGEBOB_STR = tospongebob("but does it scale?")
 EOF
 
+# different extensions
+cat << EOF > /tmp/problematic-package/config.yml
+do_stuff: true
+EOF
+cp \
+    /tmp/problematic-package/config.yml \
+    /tmp/problematic-package/config.yaml
+
+cat << EOF > /tmp/problematic-package/data.jsonl
+{"city": "Boston", "team": "Red Sox"}
+{"city": "Chicago", "team": "White Sox"}
+EOF
+cp \
+    /tmp/problematic-package/data.jsonl \
+    /tmp/problematic-package/other_data.NDJSON
+cp \
+    /tmp/problematic-package/data.jsonl \
+    /tmp/problematic-package/more_data.ndjson
+
 # only differs by one letter in name
 cp \
     /tmp/problematic-package/problematic_package/question.py \
@@ -120,9 +139,13 @@ cat << EOF > "/tmp/problematic-package/MANIFEST.in"
 include .git/*
 include *.gitignore
 include *.ini
+include *.jsonl
+include *.ndjson
+include *.NDJSON
 include problematic_package/.gitignore
 include problematic_package/*.PY
 include *.yaml
+include *.yml
 EOF
 
 # non-ASCII character in path

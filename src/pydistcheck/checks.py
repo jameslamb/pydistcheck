@@ -155,6 +155,7 @@ class _MixedFileExtensionCheck(_CheckProtocol):
     file_ext_groups = [
         {".cc", ".CC", ".cpp", ".CPP"},
         {".htm", ".HTM", ".html", ".HTML"},
+        {".jpg", ".JPG", ".jpeg", ".JPEG"},
         {".jsonl", ".JSONL", ".ndjson", ".NDJSON"},
         {".txt", ".TXT", ".text", ".TEXT"},
         {".yaml", ".YAML", ".yml", ".YML"},
