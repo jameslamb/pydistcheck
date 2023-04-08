@@ -38,6 +38,7 @@ pydistcheck \
 # package with so many files that `find -exec du -ch` has to batch results
 get-files tensorflow
 pydistcheck \
+    --ignore 'mixed-file-extensions' \
     --max-allowed-files 10000 \
     --max-allowed-size-compressed '300M' \
     --max-allowed-size-uncompressed '1G' \
@@ -75,11 +76,13 @@ pydistcheck ./smoke-tests/*
 
 # other complex projects that do custom packaging stuff
 get-files apache-airflow
-pydistcheck ./smoke-tests/*
+pydistcheck \
+    --ignore 'mixed-file-extensions' \
+    ./smoke-tests/*
 
 get-files astropy
 pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols,unexpected-files' \
+    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,unexpected-files' \
     ./smoke-tests/*
 
 get-files datatable
@@ -96,7 +99,7 @@ pydistcheck \
 
 get-files opencv-python
 pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols,unexpected-files' \
+    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,unexpected-files' \
     --max-allowed-files 7200 \
     --max-allowed-size-compressed '90M' \
     --max-allowed-size-uncompressed '200M' \
@@ -114,12 +117,12 @@ pydistcheck \
 
 get-files pytest
 pydistcheck \
-    --ignore 'unexpected-files' \
+    --ignore 'mixed-file-extensions,unexpected-files' \
     ./smoke-tests/*
 
 get-files scikit-learn
 pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols,unexpected-files' \
+    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,unexpected-files' \
     ./smoke-tests/*
 
 get-files Shapely

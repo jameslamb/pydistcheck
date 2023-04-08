@@ -68,6 +68,23 @@ The package distribution contains filepaths which are identical after lowercasin
 
 Such paths are not portable, as some filesystems (notably macOS), are case-insensitive.
 
+mixed-file-extensions
+*********************
+
+Filepaths in the package distribution use a mix of file extensions for the same type of file.
+
+For example, ``some_file.yaml`` and ``other_file.yml``.
+
+Some programs may use file extensions, instead of more reliable mechanisms like `magic bytes <https://en.wikipedia.org/wiki/List_of_file_signatures>`_ to detect file types, like this:
+
+.. code-block:: python
+
+    if filepath.endswith(".yaml"):
+
+In such cases, having a mix of file extensions can lead to only a subset of relevant files being matched.
+
+Standardizing on a single extension for files of the same type improves the probability of either catching or completely avoiding such bugs... either all intended files will be matched or none will.
+
 path-contains-non-ascii-characters
 **********************************
 

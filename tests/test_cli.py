@@ -330,17 +330,6 @@ def test_check_prefers_keyword_args_to_pyrpoject_toml_and_defaults(distro_file, 
 
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
-def test_cli_raises_exactly_the_expected_number_of_errors_for_the_problematic_package(distro_file):
-    runner = CliRunner()
-    result = runner.invoke(
-        check,
-        [os.path.join(TEST_DATA_DIR, distro_file)],
-    )
-    assert result.exit_code == 1
-    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: 10$")
-
-
-@pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
 def test_files_only_differ_by_case_works(distro_file):
     runner = CliRunner()
     result = runner.invoke(
@@ -362,7 +351,7 @@ def test_files_only_differ_by_case_works(distro_file):
 
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
-def test_path_contains_spaces_works(distro_file):
+def test_mixed_file_extension_use_works(distro_file):
     runner = CliRunner()
     result = runner.invoke(
         check,
@@ -370,37 +359,18 @@ def test_path_contains_spaces_works(distro_file):
     )
     assert result.exit_code == 1
 
-    # should report a file with spaces in a directory without spaces
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^3\. \[path\-contains\-spaces\] "
-            r"Found path with spaces\: 'problematic\-package\-0\.1\.0/beep boop\.ini"
-        ),
-    )
-
-    # should report a directory with spaces
-    _assert_log_matches_pattern(
-        result=result,
-        pattern=(
-            r"^4\. \[path\-contains\-spaces\] Found path with spaces\: "
-            r"'problematic\-package\-0\.1\.0/problematic_package/bad code[/]*"
-        ),
-    )
-
-    # should report a file without spaces inside a directory with spaces
-    _assert_log_matches_pattern(
-        result=result,
-        pattern=(
-            r"^5\. \[path\-contains\-spaces\] Found path with spaces\: "
-            r"'problematic\-package\-0\.1\.0/problematic_package/bad code/__init__\.py"
+            r"^2\. \[mixed\-file\-extensions\] Found a mix of file extensions for the "
+            r"same file type\: \.NDJSON \(1\), \.jsonl \(1\), \.ndjson \(1\)"
         ),
     )
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^6\. \[path\-contains\-spaces\] Found path with spaces\: "
-            r"'problematic\-package\-0\.1\.0/problematic_package/bad code/ship\-it\.py"
+            r"^3\. \[mixed\-file\-extensions\] Found a mix of file extensions for the "
+            r"same file type\: \.yaml \(2\), \.yml \(1\)"
         ),
     )
 
@@ -421,9 +391,55 @@ def test_path_contains_non_ascii_characters_works(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^2\. \[path\-contains\-non\-ascii\-characters\] Found file path containing non-ASCII "
+            r"^4\. \[path\-contains\-non\-ascii\-characters\] Found file path containing non-ASCII "
             r"characters\: "
             r"'problematic\-package\-0\.1\.0/problematic_package/\?+veryone-loves-python\.py'"
+        ),
+    )
+
+    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: [0-9]{1}")
+
+
+@pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
+def test_path_contains_spaces_works(distro_file):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [os.path.join(TEST_DATA_DIR, distro_file)],
+    )
+    assert result.exit_code == 1
+
+    # should report a file with spaces in a directory without spaces
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^5\. \[path\-contains\-spaces\] "
+            r"Found path with spaces\: 'problematic\-package\-0\.1\.0/beep boop\.ini"
+        ),
+    )
+
+    # should report a directory with spaces
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^6\. \[path\-contains\-spaces\] Found path with spaces\: "
+            r"'problematic\-package\-0\.1\.0/problematic_package/bad code[/]*"
+        ),
+    )
+
+    # should report a file without spaces inside a directory with spaces
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^7\. \[path\-contains\-spaces\] Found path with spaces\: "
+            r"'problematic\-package\-0\.1\.0/problematic_package/bad code/__init__\.py"
+        ),
+    )
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^8\. \[path\-contains\-spaces\] Found path with spaces\: "
+            r"'problematic\-package\-0\.1\.0/problematic_package/bad code/ship\-it\.py"
         ),
     )
 
@@ -443,7 +459,7 @@ def test_unexpected_files_check_works(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^7\. \[unexpected\-files\] Found unexpected directory "
+            r"^9\. \[unexpected\-files\] Found unexpected directory "
             r"'problematic\-package\-0\.1\.0/\.git[/]{0,1}'\."
         ),
     )
@@ -452,14 +468,14 @@ def test_unexpected_files_check_works(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^8\. \[unexpected\-files\] Found unexpected file "
+            r"^10\. \[unexpected\-files\] Found unexpected file "
             r"'problematic\-package\-0\.1\.0/\.gitignore'\."
         ),
     )
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^9\. \[unexpected\-files\] Found unexpected file "
+            r"^11\. \[unexpected\-files\] Found unexpected file "
             r"'problematic\-package\-0\.1\.0/\.hadolint\.yaml'\."
         ),
     )
@@ -468,12 +484,23 @@ def test_unexpected_files_check_works(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^10\. \[unexpected\-files\] Found unexpected file "
+            r"^12\. \[unexpected\-files\] Found unexpected file "
             r"'problematic\-package\-0\.1\.0/problematic_package/\.gitignore'\."
         ),
     )
 
     _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: [0-9]{1}")
+
+
+@pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
+def test_cli_raises_exactly_the_expected_number_of_errors_for_the_problematic_package(distro_file):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [os.path.join(TEST_DATA_DIR, distro_file)],
+    )
+    assert result.exit_code == 1
+    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: 12$")
 
 
 @pytest.mark.parametrize("distro_file", WHEELS_WITH_DEBUG_SYMBOLS)

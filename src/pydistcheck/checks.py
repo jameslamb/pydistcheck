@@ -20,6 +20,7 @@ ALL_CHECKS = {
     "distro-too-large-uncompressed",
     "too-many-files",
     "files-only-differ-by-case",
+    "mixed-file-extensions",
     "path-contains-non-ascii-characters",
     "path-contains-spaces",
     "unexpected-files",
@@ -143,6 +144,36 @@ class _NonAsciiCharacterCheck(_CheckProtocol):
                 msg = (
                     f"[{self.check_name}] Found file path containing non-ASCII characters: "
                     f"'{ascii_converted_str}'"
+                )
+                out.append(msg)
+        return out
+
+
+class _MixedFileExtensionCheck(_CheckProtocol):
+    check_name = "mixed-file-extensions"
+
+    file_ext_groups = [
+        {".cc", ".CC", ".cpp", ".CPP"},
+        {".htm", ".HTM", ".html", ".HTML"},
+        {".jpg", ".JPG", ".jpeg", ".JPEG"},
+        {".jsonl", ".JSONL", ".ndjson", ".NDJSON"},
+        {".txt", ".TXT", ".text", ".TEXT"},
+        {".yaml", ".YAML", ".yml", ".YML"},
+    ]
+
+    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
+        out: List[str] = []
+        file_extensions_in_distro = set(distro_summary.files_by_extension.keys())
+        for file_ext_group in self.file_ext_groups:
+            extensions_found = file_ext_group.intersection(file_extensions_in_distro)
+            if len(extensions_found) >= 2:
+                count_str = ", ".join(
+                    f"{ext} ({distro_summary.count_by_file_extension[ext]})"
+                    for ext in sorted(extensions_found)
+                )
+                msg = (
+                    f"[{self.check_name}] Found a mix of file extensions for "
+                    f"the same file type: {count_str}"
                 )
                 out.append(msg)
         return out

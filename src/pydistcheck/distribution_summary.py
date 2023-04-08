@@ -9,7 +9,8 @@ import tarfile
 import zipfile
 from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
-from typing import List, Tuple, Union
+from functools import cached_property
+from typing import Dict, List, Tuple, Union
 
 
 @dataclass
@@ -173,9 +174,23 @@ class _DistributionSummary:
     def compiled_objects(self) -> List[_FileInfo]:
         return [f for f in self.files if f.is_compiled is True]
 
+    @cached_property
+    def count_by_file_extension(self) -> Dict[str, int]:
+        return {
+            file_extension: len(file_list)
+            for file_extension, file_list in self.files_by_extension.items()
+        }
+
     @property
     def directory_paths(self) -> List[str]:
         return [d.name for d in self.directories]
+
+    @cached_property
+    def files_by_extension(self) -> Dict[str, List[_FileInfo]]:
+        out: Dict[str, List[_FileInfo]] = defaultdict(list)
+        for f in self.files:
+            out[f.file_extension].append(f)
+        return out
 
     @property
     def file_paths(self) -> List[str]:
@@ -202,9 +217,10 @@ class _DistributionSummary:
                  bytes occupied by such files in the distribution. Sorted in descending
                  order by size.
         """
-        summary_dict: defaultdict = defaultdict(int)
-        for f in self.files:
-            summary_dict[f.file_extension] += f.uncompressed_size_bytes
+        summary_dict = {
+            file_extension: sum(f.uncompressed_size_bytes for f in files)
+            for file_extension, files in self.files_by_extension.items()
+        }
         sorted_sizes = list(summary_dict.items())
         sorted_sizes.sort(key=lambda x: x[1], reverse=True)
         out = OrderedDict()
