@@ -68,8 +68,8 @@ The package distribution contains filepaths which are identical after lowercasin
 
 Such paths are not portable, as some filesystems (notably macOS), are case-insensitive.
 
-mixed-file-extension-use
-************************
+mixed-file-extensions
+*********************
 
 Filepaths in the package distribution use a mix of file extensions for the same type of file.
 

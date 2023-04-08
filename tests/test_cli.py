@@ -362,14 +362,14 @@ def test_mixed_file_extension_use_works(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^2\. \[mixed\-file\-extension\-use\] Found a mix of file extensions for the "
+            r"^2\. \[mixed\-file\-extensions\] Found a mix of file extensions for the "
             r"same file type\: \.jsonl \(1\), \.ndjson \(1\), \.NDJSON \(1\)"
         ),
     )
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^3\. \[mixed\-file\-extension\-use\] Found a mix of file extensions for the "
+            r"^3\. \[mixed\-file\-extensions\] Found a mix of file extensions for the "
             r"same file type\: \.yaml \(2\), \.yml \(1\)"
         ),
     )

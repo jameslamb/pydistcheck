@@ -20,7 +20,7 @@ ALL_CHECKS = {
     "distro-too-large-uncompressed",
     "too-many-files",
     "files-only-differ-by-case",
-    "mixed-file-extension-use",
+    "mixed-file-extensions",
     "path-contains-non-ascii-characters",
     "path-contains-spaces",
     "unexpected-files",
@@ -150,7 +150,7 @@ class _NonAsciiCharacterCheck(_CheckProtocol):
 
 
 class _MixedFileExtensionCheck(_CheckProtocol):
-    check_name = "mixed-file-extension-use"
+    check_name = "mixed-file-extensions"
 
     file_ext_groups = [
         {".cc", ".CC", ".cpp", ".CPP"},
