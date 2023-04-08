@@ -169,7 +169,7 @@ class _MixedFileExtensionCheck(_CheckProtocol):
             if len(extensions_found) >= 2:
                 count_str = ", ".join(
                     f"{ext} ({distro_summary.count_by_file_extension[ext]})"
-                    for ext in extensions_found
+                    for ext in sorted(extensions_found)
                 )
                 msg = (
                     f"[{self.check_name}] Found a mix of file extensions for "

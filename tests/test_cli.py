@@ -363,7 +363,7 @@ def test_mixed_file_extension_use_works(distro_file):
         result=result,
         pattern=(
             r"^2\. \[mixed\-file\-extensions\] Found a mix of file extensions for the "
-            r"same file type\: \.jsonl \(1\), \.ndjson \(1\), \.NDJSON \(1\)"
+            r"same file type\: \.NDJSON \(1\), \.jsonl \(1\), \.ndjson \(1\)"
         ),
     )
     _assert_log_matches_pattern(
