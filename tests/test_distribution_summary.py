@@ -77,6 +77,10 @@ def test_distribution_summary_basically_works(distro_file):
         ".txt": 11603,
     }
 
+    # files_by_extension makes sense
+    assert ds.files_by_extension.keys() == ds.size_by_file_extension.keys()
+    assert sum(len(file_list) for file_list in ds.files_by_extension.values()) == ds.num_files
+
     # size_by_file_extension should return results sorted from largest to smallest by file size
     last_size_seen = float("inf")
     for _, size_in_bytes in ds.size_by_file_extension.items():
