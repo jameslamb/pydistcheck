@@ -21,7 +21,7 @@ jobs:
           # Linux #
           #########
           - os: ubuntu-latest
-            python_version: '3.8'
+            python_version: '3.7'
           - os: ubuntu-latest
             python_version: '3.9'
           - os: ubuntu-latest
