@@ -1,7 +1,7 @@
 .PHONY: build
 build:
 	rm -r ./dist || true
-	pipx run build --sdist --wheel
+	pipx run build --wheel
 
 .PHONY: check-test-packages
 check-test-packages:
@@ -15,10 +15,8 @@ check-test-packages:
 
 .PHONY: check-wheels
 check-dists:
-	gunzip -t dist/*.tar.gz
 	zip -T dist/*.whl
 	check-wheel-contents dist/*.whl
-	pyroma --min=10 dist/*.tar.gz
 	twine check --strict dist/*
 
 .PHONY: clean
