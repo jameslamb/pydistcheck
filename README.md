@@ -29,27 +29,49 @@ pipx install pydistcheck
 
 ## Quickstart
 
-Try it out on the test data in this project!
+Try it out on the test data in this project ...
 
 ```shell
 pydistcheck tests/data/problematic-package-*
 ```
 
-Yields something like the following.
+... to see the types of issues it checks for.
 
 ```text
 ------------ check results -----------
-1. [files-only-differ-by-case] Found files which differ only by case. Such files are not portable, since some filesystems are case-insensitive. Files: problematic-package-0.1.0/problematic_package/Question.py,problematic-package-0.1.0/problematic_package/question.PY,problematic-package-0.1.0/problematic_package/question.py
-2. [path-contains-spaces] File paths with spaces are not portable. Found path with spaces: 'problematic-package-0.1.0/beep boop.ini'
-3. [path-contains-spaces] File paths with spaces are not portable. Found path with spaces: 'problematic-package-0.1.0/problematic_package/bad code'
-4. [path-contains-spaces] File paths with spaces are not portable. Found path with spaces: 'problematic-package-0.1.0/problematic_package/bad code/__init__.py'
-5. [path-contains-spaces] File paths with spaces are not portable. Found path with spaces: 'problematic-package-0.1.0/problematic_package/bad code/ship-it.py'
-6. [path-contains-non-ascii-characters] Found file path containing non-ASCII characters: 'problematic-package-0.1.0/problematic_package/?veryone-loves-python.py'
-7. [unexpected-files] Found unexpected directory 'problematic-package-0.1.0/.git/'.
-8. [unexpected-files] Found unexpected file 'problematic-package-0.1.0/.gitignore'.
-9. [unexpected-files] Found unexpected file 'problematic-package-0.1.0/.hadolint.yaml'.
-10. [unexpected-files] Found unexpected file 'problematic-package-0.1.0/problematic_package/.gitignore'.
-errors found while checking: 10
+1. [files-only-differ-by-case] Found files which differ only by case. Files: problematic-package-0.1.0/problematic_package/Question.py,problematic-package-0.1.0/problematic_package/question.PY,problematic-package-0.1.0/problematic_package/question.py
+2. [mixed-file-extensions] Found a mix of file extensions for the same file type: .NDJSON (1), .jsonl (1), .ndjson (1)
+3. [mixed-file-extensions] Found a mix of file extensions for the same file type: .yaml (2), .yml (1)
+4. [path-contains-non-ascii-characters] Found file path containing non-ASCII characters: 'problematic-package-0.1.0/problematic_package/?veryone-loves-python.py'
+5. [path-contains-spaces] Found path with spaces: 'problematic-package-0.1.0/beep boop.ini'
+6. [path-contains-spaces] Found path with spaces: 'problematic-package-0.1.0/problematic_package/bad code/'
+7. [path-contains-spaces] Found path with spaces: 'problematic-package-0.1.0/problematic_package/bad code/__init__.py'
+8. [path-contains-spaces] Found path with spaces: 'problematic-package-0.1.0/problematic_package/bad code/ship-it.py'
+9. [unexpected-files] Found unexpected directory 'problematic-package-0.1.0/.git/'.
+10. [unexpected-files] Found unexpected file 'problematic-package-0.1.0/.gitignore'.
+11. [unexpected-files] Found unexpected file 'problematic-package-0.1.0/.hadolint.yaml'.
+12. [unexpected-files] Found unexpected file 'problematic-package-0.1.0/problematic_package/.gitignore'.
+errors found while checking: 12
+```
+
+And on a built distribution containing compiled objects ...
+
+```shell
+pydistcheck tests/data/debug-baseballmmetrics*.whl
+```
+
+... `pydistcheck` can detect the inclusion of debug symbols (which increase distribution size).
+
+```text
+checking 'tests/data/debug-baseballmetrics-0.1.0-py3-none-macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl'
+------------ check results -----------
+1. [compiled-objects-have-debug-symbols] Found compiled object containing debug symbols. For details, extract the distribution contents and run 'dsymutil -s "lib/lib_baseballmetrics.dylib"'.
+errors found while checking: 1
+
+checking 'tests/data/debug-baseballmetrics-py3-none-manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl'
+------------ check results -----------
+1. [compiled-objects-have-debug-symbols] Found compiled object containing debug symbols. For details, extract the distribution contents and run 'objdump --all-headers "lib/lib_baseballmetrics.so"'.
+errors found while checking: 1
 ```
 
 See https://pydistcheck.readthedocs.io/en/latest/ to learn more.
