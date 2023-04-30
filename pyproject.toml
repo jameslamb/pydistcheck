@@ -32,7 +32,7 @@ maintainers = [
 name = "pydistcheck"
 readme = "README.md"
 requires-python = ">=3.8"
-version = "0.4.0"
+version = "0.4.0.99"
 
 [project.scripts]
 pydistcheck = "pydistcheck.cli:check"
