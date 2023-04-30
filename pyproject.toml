@@ -4,7 +4,7 @@ authors = [
   {name = "James Lamb", email = "jaylamb20@gmail.com"}
 ]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: BSD License",
     "Operating System :: MacOS",
@@ -32,7 +32,7 @@ maintainers = [
 name = "pydistcheck"
 readme = "README.md"
 requires-python = ">=3.8"
-version = "0.3.0.99"
+version = "0.4.0"
 
 [project.scripts]
 pydistcheck = "pydistcheck.cli:check"
