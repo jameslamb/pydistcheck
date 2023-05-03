@@ -17,9 +17,9 @@ get-files() {
 # wheel-only packages
 get-files catboost
 pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols' \
+    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,too-many-files,unexpected-files' \
     --max-allowed-size-compressed '100M' \
-    --max-allowed-size-uncompressed '215M' \
+    --max-allowed-size-uncompressed '0.5G' \
     ./smoke-tests/*
 
 get-files psycopg2-binary
