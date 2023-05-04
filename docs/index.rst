@@ -35,3 +35,4 @@ pydistcheck
    Installation <installation>
    Configuration <configuration>
    Check Reference <check-reference>
+   How to Test a Python Distribution <how-to-test-a-python-distribution>
