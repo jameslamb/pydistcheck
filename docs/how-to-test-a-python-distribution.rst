@@ -1,6 +1,9 @@
 How to Test a Python Distribution
 =================================
 
+Introduction
+************
+
 Your code is good. Really good.
 
 You enforced consistent style with ``black``, ``isort``, and ``pydocstyle``.
