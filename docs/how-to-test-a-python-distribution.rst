@@ -1,10 +1,6 @@
 How to Test a Python Distribution
 =================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
 Your code is good. Really good.
 
 You enforced consistent style with ``black``, ``isort``, and ``pydocstyle``.
