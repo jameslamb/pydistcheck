@@ -17,7 +17,9 @@
 
 It's inspired by R's `R CMD check`.
 
-For more background on the value of such a tool, see the SciPY 2022 talk "Does that CSV Belong on PyPI? Probably Not" ([video link](https://www.youtube.com/watch?v=1a7g5l_g_U8)).
+See ["How to Test a Python Distribution"](https://pydistcheck.readthedocs.io/en/latest/how-to-test-a-python-distribution.html) to see how it and simmilar tools like [`auditwheel`](https://github.com/pypa/auditwheel), [`check-wheel-contents`](https://github.com/jwodder/check-wheel-contents), and [`twine check`](https://twine.readthedocs.io/en/stable/#twine-check) fit into Python development workflows.
+
+For more background on the value of such a tool, see the SciPy 2022 talk "Does that CSV Belong on PyPI? Probably Not" ([video link](https://www.youtube.com/watch?v=1a7g5l_g_U8)).
 
 ## Installation
 
@@ -75,11 +77,6 @@ errors found while checking: 1
 ```
 
 See https://pydistcheck.readthedocs.io/en/latest/ to learn more.
-
-## Related Projects
-
-* https://pypi.org/project/inspect4py/
-* https://github.com/regebro/pyroma
 
 ## References
 
