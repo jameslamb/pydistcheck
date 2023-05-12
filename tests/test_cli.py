@@ -308,7 +308,7 @@ def test_check_handles_ignore_list_in_pyproject_toml_correctly(distro_file, tmp_
 
 
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES)
-def test_check_prefers_keyword_args_to_pyrpoject_toml_and_defaults(distro_file, tmp_path):
+def test_check_prefers_keyword_args_to_pyproject_toml_and_defaults(distro_file, tmp_path):
     runner = CliRunner()
     with runner.isolated_filesystem(temp_dir=tmp_path):
         with open("pyproject.toml", "w") as f:
@@ -324,6 +324,33 @@ def test_check_prefers_keyword_args_to_pyrpoject_toml_and_defaults(distro_file, 
         (
             r"^1\. \[distro\-too\-large\-uncompressed\] Uncompressed size [0-9]+\.[0-9]+K is "
             r"larger than the allowed size \(0\.1K\)\.$"
+        ),
+    )
+    _assert_log_matches_pattern(result, "errors found while checking\\: 1")
+
+
+@pytest.mark.parametrize("distro_file", BASE_PACKAGES)
+def test_check_prefers_custom_toml_file_to_root_pyproject_toml(distro_file, tmp_path):
+    runner = CliRunner()
+    with runner.isolated_filesystem(temp_dir=tmp_path):
+        with open("pyproject.toml", "w") as f:
+            f.write("[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '10GB'\n")
+        other_dir = os.path.join(tmp_path, "cool-files")
+        other_config = os.path.join(other_dir, "stuff.toml")
+        os.mkdir(other_dir)
+        with open(other_config, "w") as f:
+            f.write("[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '7B'\n")
+        result = runner.invoke(
+            check,
+            [os.path.join(TEST_DATA_DIR, distro_file), f"--config={other_config}"],
+        )
+
+    assert result.exit_code == 1
+    _assert_log_matches_pattern(
+        result,
+        (
+            r"^1\. \[distro\-too\-large\-uncompressed\] Uncompressed size [0-9]+\.[0-9]+K is "
+            r"larger than the allowed size \(7\.0B\)\.$"
         ),
     )
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")

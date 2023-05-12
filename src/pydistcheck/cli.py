@@ -32,6 +32,15 @@ from pydistcheck.utils import _FileSize
     nargs=-1,
 )
 @click.option(
+    "--config",
+    type=click.Path(exists=True),
+    default=None,
+    help=(
+        "Path to a TOML file containing a [tool.pydistcheck] table. "
+        "If provided, pyproject.toml will be ignored."
+    ),
+)
+@click.option(
     "--ignore",
     type=str,
     default=_Config.ignore,
@@ -106,6 +115,7 @@ from pydistcheck.utils import _FileSize
 )
 def check(  # pylint: disable=too-many-arguments
     filepaths: str,
+    config: str,
     ignore: str,
     inspect: bool,
     max_allowed_files: int,
@@ -120,7 +130,7 @@ def check(  # pylint: disable=too-many-arguments
     """
     print("==================== running pydistcheck ====================")
     filepaths_to_check = [click.format_filename(f) for f in filepaths]
-    config = _Config()
+    conf = _Config()
     kwargs = {
         "ignore": ignore,
         "inspect": inspect,
@@ -132,12 +142,15 @@ def check(  # pylint: disable=too-many-arguments
     }
     kwargs_that_differ_from_defaults = {}
     for k, v in kwargs.items():
-        if v != getattr(config, k):
+        if v != getattr(conf, k):
             kwargs_that_differ_from_defaults[k] = v
-    config.update_from_toml(toml_file="pyproject.toml")
-    config.update_from_dict(input_dict=kwargs_that_differ_from_defaults)
+    if config is not None:
+        conf.update_from_toml(toml_file=click.format_filename(config))
+    else:
+        conf.update_from_toml(toml_file="pyproject.toml")
+    conf.update_from_dict(input_dict=kwargs_that_differ_from_defaults)
 
-    checks_to_ignore = {x for x in config.ignore.split(",") if x.strip() != ""}
+    checks_to_ignore = {x for x in conf.ignore.split(",") if x.strip() != ""}
     unrecognized_checks = checks_to_ignore - ALL_CHECKS
     if unrecognized_checks:
         # converting to list + sorting here so outputs are deterministic
@@ -150,15 +163,15 @@ def check(  # pylint: disable=too-many-arguments
         _CompiledObjectsDebugSymbolCheck(),
         _DistroTooLargeCompressedCheck(
             max_allowed_size_bytes=_FileSize.from_string(
-                size_str=config.max_allowed_size_compressed
+                size_str=conf.max_allowed_size_compressed
             ).total_size_bytes
         ),
         _DistroTooLargeUnCompressedCheck(
             max_allowed_size_bytes=_FileSize.from_string(
-                size_str=config.max_allowed_size_uncompressed
+                size_str=conf.max_allowed_size_uncompressed
             ).total_size_bytes
         ),
-        _FileCountCheck(max_allowed_files=config.max_allowed_files),
+        _FileCountCheck(max_allowed_files=conf.max_allowed_files),
         _FilesOnlyDifferByCaseCheck(),
         _MixedFileExtensionCheck(),
         _SpacesInPathCheck(),
@@ -176,7 +189,7 @@ def check(  # pylint: disable=too-many-arguments
     for filepath in filepaths_to_check:
         print(f"\nchecking '{filepath}'")
 
-        if config.inspect:
+        if conf.inspect:
             print("----- package inspection summary -----")
             inspect_distribution(filepath=filepath)
 
