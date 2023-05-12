@@ -29,6 +29,8 @@ pyproject.toml
 
 If a file ``pyproject.toml`` exists in the working directory ``pydistcheck`` is run from, ``pydistcheck`` will look there for configuration.
 
+Alternatively, a path to a TOML file can be provided via CLI argument ``--config``.
+
 Put configuration in a ``[tool.pydistcheck]`` section.
 
 The example below contains all of the configuration options for ``pydistcheck``, set to their default values.
