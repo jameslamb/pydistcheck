@@ -32,7 +32,10 @@ maintainers = [
 name = "pydistcheck"
 readme = "README.md"
 requires-python = ">=3.8"
-version = "0.4.0.99"
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "pydistcheck.__version__"}
 
 [project.scripts]
 pydistcheck = "pydistcheck.cli:check"
@@ -46,7 +49,7 @@ changelog = "https://github.com/jameslamb/pydistcheck/releases"
 [build-system]
 
 requires = [
-    "setuptools>=63",
+    "setuptools>=67",
 ]
 build-backend = "setuptools.build_meta"
 

@@ -40,6 +40,23 @@ def test_check_runs_without_error(distro_file):
     assert result.exit_code == 0
 
 
+def test_version_flag_works():
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [
+            "--version",
+        ],
+    )
+    assert result.exit_code == 0
+
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(r"^pydistcheck [0-9]{1}\.[0-9]{1,2}\.[0-9]{1,2}\.*[0-9]*$"),
+        num_times=1,
+    )
+
+
 def test_check_fails_with_informative_error_if_file_doesnt_exist():
     runner = CliRunner()
     result = runner.invoke(check, ["some-garbage.exe"])

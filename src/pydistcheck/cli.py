@@ -7,6 +7,7 @@ from typing import List
 
 import click
 
+from pydistcheck import __version__ as _VERSION
 from pydistcheck.checks import (
     ALL_CHECKS,
     _CompiledObjectsDebugSymbolCheck,
@@ -30,6 +31,13 @@ from pydistcheck.utils import _FileSize
     "filepaths",
     type=click.Path(exists=True),
     nargs=-1,
+)
+@click.option(
+    "--version",
+    is_flag=True,
+    show_default=False,
+    default=False,
+    help="Print the version of pydistcheck and exit.",
 )
 @click.option(
     "--config",
@@ -115,6 +123,7 @@ from pydistcheck.utils import _FileSize
 )
 def check(  # pylint: disable=too-many-arguments
     filepaths: str,
+    version: bool,
     config: str,
     ignore: str,
     inspect: bool,
@@ -128,6 +137,10 @@ def check(  # pylint: disable=too-many-arguments
     Run the contents of a distribution through a set of checks, and warn about
     any problematic characteristics that are detected.
     """
+    if version:
+        print(f"pydistcheck {_VERSION}")
+        sys.exit(0)
+
     print("==================== running pydistcheck ====================")
     filepaths_to_check = [click.format_filename(f) for f in filepaths]
     conf = _Config()

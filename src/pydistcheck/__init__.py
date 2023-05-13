@@ -2,3 +2,5 @@
 
 # no one should be importing from this package
 __all__ = []  # type: ignore
+
+__version__ = "0.4.0.99"
