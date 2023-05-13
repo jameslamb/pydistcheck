@@ -52,9 +52,7 @@ def test_version_flag_works():
 
     _assert_log_matches_pattern(
         result=result,
-        pattern=(
-            r"^pydistcheck [0-9]{1}\.[0-9]{1,2}\.[0-9]{1,2}\.*[0-9]*$"
-        ),
+        pattern=(r"^pydistcheck [0-9]{1}\.[0-9]{1,2}\.[0-9]{1,2}\.*[0-9]*$"),
         num_times=1,
     )
 
