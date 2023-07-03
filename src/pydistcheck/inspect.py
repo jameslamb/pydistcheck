@@ -2,8 +2,8 @@
 Code that prints diagnostic information about a distribution.
 """
 
-from pydistcheck.distribution_summary import _DistributionSummary
-from pydistcheck.utils import _FileSize
+from .distribution_summary import _DistributionSummary
+from .utils import _FileSize
 
 
 def inspect_distribution(filepath: str) -> None:

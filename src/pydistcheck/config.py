@@ -8,7 +8,7 @@ import os
 from dataclasses import dataclass
 from typing import Any, Dict
 
-from pydistcheck._compat import tomllib
+from ._compat import tomllib
 
 # putting this in a module-level set to save on the cost of re-computing it inside methods
 # in `_Config` that validate configuration.
