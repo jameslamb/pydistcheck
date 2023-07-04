@@ -19,6 +19,10 @@ classifiers = [
     "Topic :: Software Development",
     "Topic :: Utilities"
 ]
+dependencies = [
+    "click",
+    "tomli ; python_version < '3.11'"
+]
 description = "Inspect Python package distributions and raise warnings on common problems."
 keywords = [
     "linter",
