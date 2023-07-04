@@ -8,7 +8,8 @@ from typing import List
 import click
 
 from pydistcheck import __version__ as _VERSION
-from pydistcheck.checks import (
+
+from .checks import (
     ALL_CHECKS,
     _CompiledObjectsDebugSymbolCheck,
     _DistroTooLargeCompressedCheck,
@@ -20,10 +21,10 @@ from pydistcheck.checks import (
     _SpacesInPathCheck,
     _UnexpectedFilesCheck,
 )
-from pydistcheck.config import _Config
-from pydistcheck.distribution_summary import _DistributionSummary
-from pydistcheck.inspect import inspect_distribution
-from pydistcheck.utils import _FileSize
+from .config import _Config
+from .distribution_summary import _DistributionSummary
+from .inspect import inspect_distribution
+from .utils import _FileSize
 
 
 @click.command()

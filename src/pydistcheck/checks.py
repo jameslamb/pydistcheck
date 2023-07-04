@@ -7,9 +7,9 @@ from collections import defaultdict
 from fnmatch import fnmatchcase
 from typing import List, Protocol
 
-from pydistcheck.distribution_summary import _DistributionSummary
-from pydistcheck.shared_lib_utils import _archive_member_has_debug_symbols
-from pydistcheck.utils import _FileSize
+from .distribution_summary import _DistributionSummary
+from .shared_lib_utils import _archive_member_has_debug_symbols
+from .utils import _FileSize
 
 # ALL_CHECKS constant is used to validate configuration options like '--ignore' that reference
 # check names. It's a set literal so it doesn't need to be recomputed at runtime, and this project

@@ -45,7 +45,7 @@ lint:
 	black \
 		--check \
 		.
-	flake8 .
+	flake8 --max-line-length=100 .
 	mypy .
 	pylint ./src
 
