@@ -106,9 +106,7 @@ pydistcheck \
     ./smoke-tests/*
 
 get-files pandas
-pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols' \
-    ./smoke-tests/*
+pydistcheck ./smoke-tests/*
 
 get-files Pillow
 pydistcheck \
