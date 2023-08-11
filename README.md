@@ -59,7 +59,7 @@ errors found while checking: 12
 And on a built distribution containing compiled objects ...
 
 ```shell
-pydistcheck tests/data/debug-baseballmmetrics*.whl
+pydistcheck tests/data/debug-baseballmetrics*.whl
 ```
 
 ... `pydistcheck` can detect the inclusion of debug symbols (which increase distribution size).
