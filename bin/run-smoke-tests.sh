@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#set -e -u -o pipefail
+set -e -u -o pipefail
 
 echo "running smoke tests"
 
