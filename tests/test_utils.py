@@ -12,7 +12,7 @@ def test_file_size_comparisons_work():
     fs_5mb = _FileSize(num=5.6, unit_str="M")
     fs_6mb = _FileSize(num=4 * (1024**3), unit_str="B")
 
-    assert fs_5mb == fs_5mb
+    assert fs_5mb == fs_5mb  # noqa: PLR0124
     assert fs_5mb != fs_6mb
     assert fs_5mb != fs_6mb
     assert fs_5mb < fs_6mb

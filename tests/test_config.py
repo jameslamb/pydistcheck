@@ -77,13 +77,13 @@ def test_update_from_dict_works_when_changing_all_values(base_config):
 
 def test_update_from_toml_silently_returns_self_if_file_does_not_exist(base_config):
     original_config = deepcopy(base_config)
-    out = base_config.update_from_toml(toml_file=f"{str(uuid.uuid4())}.toml")
+    out = base_config.update_from_toml(toml_file=f"{uuid.uuid4().hex}.toml")
     assert out == original_config
 
 
 def test_update_from_toml_works_for_files_with_no_pydistcheck_configuration(base_config, tmpdir):
     original_config = deepcopy(base_config)
-    temp_file = os.path.join(tmpdir, f"{str(uuid.uuid4())}.toml")
+    temp_file = os.path.join(tmpdir, f"{uuid.uuid4().hex}.toml")
     with open(temp_file, "w") as f:
         f.write("""[tool.pylint]\n""")
     base_config.update_from_toml(toml_file=temp_file)
@@ -92,7 +92,7 @@ def test_update_from_toml_works_for_files_with_no_pydistcheck_configuration(base
 
 def test_update_from_toml_works_for_files_with_empty_pydistcheck_configuration(base_config, tmpdir):
     original_config = deepcopy(base_config)
-    temp_file = os.path.join(tmpdir, f"{str(uuid.uuid4())}.toml")
+    temp_file = os.path.join(tmpdir, f"{uuid.uuid4().hex}.toml")
     with open(temp_file, "w") as f:
         f.write("""\n[tool.pylint]\n[tool.pydistcheck]\n""")
     base_config.update_from_toml(toml_file=temp_file)
@@ -103,7 +103,7 @@ def test_update_from_toml_works_for_files_with_empty_pydistcheck_configuration(b
     "config_key", ["max_allowed_size_compressed", "max-allowed-size_compressed"]
 )
 def test_update_from_toml_works_with_underscores_and_hyphens(base_config, tmpdir, config_key):
-    temp_file = os.path.join(tmpdir, f"{str(uuid.uuid4())}.toml")
+    temp_file = os.path.join(tmpdir, f"{uuid.uuid4().hex}.toml")
     with open(temp_file, "w") as f:
         f.write(f"[tool.pylint]\n[tool.pydistcheck]\n{config_key} = '2.5G'\n")
     base_config.update_from_toml(toml_file=temp_file)
@@ -112,7 +112,7 @@ def test_update_from_toml_works_with_underscores_and_hyphens(base_config, tmpdir
 
 @pytest.mark.parametrize("use_hyphens", [True, False])
 def test_update_from_toml_works_with_all_config_values(base_config, tmpdir, use_hyphens):
-    temp_file = os.path.join(tmpdir, f"{str(uuid.uuid4())}.toml")
+    temp_file = os.path.join(tmpdir, f"{uuid.uuid4().hex}.toml")
     patch_dict = {
         "ignore": "[\n'path-contains-spaces',\n'too-many-files'\n]",
         "inspect": "true",
@@ -141,7 +141,7 @@ def test_update_from_toml_works_with_all_config_values(base_config, tmpdir, use_
 
 
 def test_update_from_toml_converts_lists_to_comma_delimited_string(base_config, tmpdir):
-    temp_file = os.path.join(tmpdir, f"{str(uuid.uuid4())}.toml")
+    temp_file = os.path.join(tmpdir, f"{uuid.uuid4().hex}.toml")
     with open(temp_file, "w") as f:
         f.write(
             "[tool.pylint]\n[tool.pydistcheck]\n"
