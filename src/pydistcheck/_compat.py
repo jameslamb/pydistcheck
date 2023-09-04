@@ -1,5 +1,3 @@
-# pylint: disable=unused-import
-
 """
 Central location for weird import stuff used to make the project compatible
 with a wide range of dependency versions.

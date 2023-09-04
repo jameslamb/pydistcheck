@@ -122,7 +122,7 @@ from .utils import _FileSize
         "by ``fnmatch.fnmatchcase()``. See https://docs.python.org/3/library/fnmatch.html."
     ),
 )
-def check(  # pylint: disable=too-many-arguments
+def check(  # noqa: PLR0913
     filepaths: str,
     version: bool,
     config: str,
@@ -164,7 +164,7 @@ def check(  # pylint: disable=too-many-arguments
         conf.update_from_toml(toml_file="pyproject.toml")
     conf.update_from_dict(input_dict=kwargs_that_differ_from_defaults)
 
-    checks_to_ignore = {x for x in conf.ignore.split(",") if x.strip() != ""}
+    checks_to_ignore = {x for x in conf.ignore.split(",") if x.strip()}
     unrecognized_checks = checks_to_ignore - ALL_CHECKS
     if unrecognized_checks:
         # converting to list + sorting here so outputs are deterministic
