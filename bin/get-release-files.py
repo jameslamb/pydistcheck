@@ -51,7 +51,7 @@ for file_type, release_files in files_by_type.items():
     print(f"  * {file_type} ({len(release_files)})")
 
 
-for file_type in files_by_type.keys():
+for file_type in files_by_type:
     sample_release = files_by_type[file_type][0]
     output_file = os.path.join(OUTPUT_DIR, sample_release.filename)
     print(f"Downloading '{sample_release.filename}'")

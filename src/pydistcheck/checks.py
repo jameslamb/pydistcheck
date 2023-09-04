@@ -152,14 +152,14 @@ class _NonAsciiCharacterCheck(_CheckProtocol):
 class _MixedFileExtensionCheck(_CheckProtocol):
     check_name = "mixed-file-extensions"
 
-    file_ext_groups = [
+    file_ext_groups = (
         {".cc", ".CC", ".cpp", ".CPP"},
         {".htm", ".HTM", ".html", ".HTML"},
         {".jpg", ".JPG", ".jpeg", ".JPEG"},
         {".jsonl", ".JSONL", ".ndjson", ".NDJSON"},
         {".txt", ".TXT", ".text", ".TEXT"},
         {".yaml", ".YAML", ".yml", ".YML"},
-    ]
+    )
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
