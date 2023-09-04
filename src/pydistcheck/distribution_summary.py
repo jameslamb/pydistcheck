@@ -209,7 +209,7 @@ class _DistributionSummary:
         return sum(f.uncompressed_size_bytes for f in self.files)
 
     @property
-    def size_by_file_extension(self) -> OrderedDict:
+    def size_by_file_extension(self) -> "OrderedDict[str, int]":
         """
         Aggregate file sizes in a distribution by extension.
 

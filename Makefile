@@ -46,7 +46,8 @@ lint:
 		--check \
 		.
 	ruff check .
-	mypy .
+	mypy ./src
+	mypy ./tests/data
 
 .PHONY: linux-wheel
 linux-wheel:

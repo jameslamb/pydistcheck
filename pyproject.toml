@@ -67,6 +67,7 @@ profile = "black"
 [tool.mypy]
 exclude = 'docs/conf\.py$|build/*'
 ignore_missing_imports = true
+strict = true
 
 [tool.ruff]
 exclude = [
