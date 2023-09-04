@@ -45,9 +45,8 @@ lint:
 	black \
 		--check \
 		.
-	flake8 --max-line-length=100 .
+	ruff check .
 	mypy .
-	pylint ./src
 
 .PHONY: linux-wheel
 linux-wheel:

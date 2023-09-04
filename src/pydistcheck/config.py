@@ -24,35 +24,39 @@ _ALLOWED_CONFIG_VALUES = {
     "unexpected_file_patterns",
 }
 
-_UNEXPECTED_DIRECTORIES = [
-    "*/.appveyor",
-    "*/.binder",
-    "*/.circleci",
-    "*/.git",
-    "*/.github",
-    "*/.idea",
-    "*/.pytest_cache",
-    "*/.mypy_cache",
-]
+_UNEXPECTED_DIRECTORIES = ",".join(
+    [
+        "*/.appveyor",
+        "*/.binder",
+        "*/.circleci",
+        "*/.git",
+        "*/.github",
+        "*/.idea",
+        "*/.pytest_cache",
+        "*/.mypy_cache",
+    ]
+)
 
-_UNEXPECTED_FILES = [
-    "*/appveyor.yml",
-    "*/.appveyor.yml",
-    "*/azure-pipelines.yml",
-    "*/.azure-pipelines.yml",
-    "*/.cirrus.star",
-    "*/.cirrus.yml",
-    "*/codecov.yml",
-    "*/.codecov.yml",
-    "*/.DS_Store",
-    "*/.gitignore",
-    "*/.gitpod.yml",
-    "*/.hadolint.yaml",
-    "*/.readthedocs.yaml",
-    "*/.travis.yml",
-    "*/vsts-ci.yml",
-    "*/.vsts-ci.yml",
-]
+_UNEXPECTED_FILES = ",".join(
+    [
+        "*/appveyor.yml",
+        "*/.appveyor.yml",
+        "*/azure-pipelines.yml",
+        "*/.azure-pipelines.yml",
+        "*/.cirrus.star",
+        "*/.cirrus.yml",
+        "*/codecov.yml",
+        "*/.codecov.yml",
+        "*/.DS_Store",
+        "*/.gitignore",
+        "*/.gitpod.yml",
+        "*/.hadolint.yaml",
+        "*/.readthedocs.yaml",
+        "*/.travis.yml",
+        "*/vsts-ci.yml",
+        "*/.vsts-ci.yml",
+    ]
+)
 
 
 @dataclass
@@ -62,8 +66,8 @@ class _Config:
     max_allowed_files: int = 2000
     max_allowed_size_compressed: str = "50M"
     max_allowed_size_uncompressed: str = "75M"
-    unexpected_directory_patterns: str = ",".join(_UNEXPECTED_DIRECTORIES)
-    unexpected_file_patterns: str = ",".join(_UNEXPECTED_FILES)
+    unexpected_directory_patterns: str = _UNEXPECTED_DIRECTORIES
+    unexpected_file_patterns: str = _UNEXPECTED_FILES
 
     def __setattr__(self, name: str, value: Any) -> None:
         attr_name = name.replace("-", "_")

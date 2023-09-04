@@ -24,15 +24,10 @@ jobs:
             --yes \
             -c conda-forge \
               black \
-              flake8 \
-              flake8-bugbear \
-              flake8-builtins \
-              flake8-comprehensions \
-              flake8-eradicate \
               isort \
               'mypy>=0.931' \
-              'pylint>=2.15.3' \
               requests \
+              ruff \
               shellcheck \
               types-requests
           make lint
