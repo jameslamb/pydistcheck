@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "pydistcheck"
-copyright = "2022-2023, James Lamb"
+copyright = "2022-2023, James Lamb"  # noqa: A001
 author = "James Lamb"
 
 # -- General configuration ---------------------------------------------------

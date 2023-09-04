@@ -88,12 +88,16 @@ ignore = [
     "SIM108"
 ]
 select = [
+    # flake8-builtins
+    "A",
     # flake8-bugbear
     "B",
     # flake8-comprehensions
     "C4",
     # pycodestyle
     "E",
+    # eradicate
+    "ERA",
     # pyflakes
     "F",
     # pygrep-hooks
