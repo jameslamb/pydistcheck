@@ -99,6 +99,19 @@ def test_distribution_summary_basically_works(distro_file):
     assert largest_files[1].name == "base-package-0.1.0/setup.cfg"
 
 
+def test_distribution_summary_get_largest_files_works():
+    ds = _DistributionSummary.from_file(os.path.join(TEST_DATA_DIR, BASE_PACKAGE_SDISTS[0]))
+
+    # get_largest_files() should return a non-empty list of _FileInfo objects
+    num_files = ds.num_files
+
+    # if you ask for more files than there are, you get however many there are
+    assert len(ds.get_largest_files(n=num_files + 1)) == num_files
+
+    # if you ask for less files than there are, you get exactly that many
+    assert len(ds.get_largest_files(n=num_files - 1)) == num_files - 1
+
+
 @pytest.mark.parametrize("distro_file", BASE_WHEELS)
 def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
     ds = _DistributionSummary.from_file(os.path.join(TEST_DATA_DIR, distro_file))
