@@ -204,6 +204,9 @@ class _DistributionSummary:
     def num_files(self) -> int:
         return len(self.files)
 
+    def get_largest_files(self, n: int) -> List[_FileInfo]:
+        return sorted(self.files, key=lambda f: f.uncompressed_size_bytes, reverse=True)[:n]
+
     @property
     def uncompressed_size_bytes(self) -> int:
         return sum(f.uncompressed_size_bytes for f in self.files)

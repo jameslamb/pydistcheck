@@ -87,6 +87,17 @@ def test_distribution_summary_basically_works(distro_file):
         assert size_in_bytes < last_size_seen
         last_size_seen = size_in_bytes
 
+    # get_largest_files() should return a non-empty list of _FileInfo objects
+    largest_files = ds.get_largest_files(n=2)
+    assert isinstance(largest_files, list)
+    assert len(largest_files) == 2
+    assert all(isinstance(x, _FileInfo) for x in largest_files)
+    assert all(x in ds.files for x in largest_files)
+
+    # should actually choose the 2 largest files
+    assert largest_files[0].name == "base-package-0.1.0/LICENSE.txt"
+    assert largest_files[1].name == "base-package-0.1.0/setup.cfg"
+
 
 @pytest.mark.parametrize("distro_file", BASE_WHEELS)
 def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
