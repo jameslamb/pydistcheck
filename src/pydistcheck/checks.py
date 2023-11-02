@@ -119,7 +119,7 @@ class _FilesOnlyDifferByCaseCheck(_CheckProtocol):
             path_lower_to_raw[file_path.lower()].append(file_path)
 
         duplicates_list: List[str] = []
-        for _, filepaths in path_lower_to_raw.items():
+        for filepaths in path_lower_to_raw.values():
             if len(filepaths) > 1:
                 duplicates_list += filepaths
 
