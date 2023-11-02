@@ -44,13 +44,13 @@ curl https://www.apache.org/licenses/LICENSE-2.0.txt \
     --output /tmp/base-package/LICENSE.txt
 
 pushd /tmp/base-package
-    python setup.py sdist \
-        --format=zip
-    rm -rf ./base-package.egg-info
+python setup.py sdist \
+    --format=zip
+rm -rf ./base-package.egg-info
 
-    python -m build \
-        --no-isolation \
-        --sdist
+python -m build \
+    --no-isolation \
+    --sdist
 popd
 
 mv \
@@ -155,21 +155,21 @@ EOF
 
 # files and directories that don't need to be in a Python distribution
 pushd /tmp/problematic-package
-    git init --initial-branch='main'
-    echo '*.csv' > ./.gitignore
-    echo 'ignored: [DL3008]' > ./.hadolint.yaml
-    # nested file
-    echo '*.csv' > ./problematic_package/.gitignore
+git init --initial-branch='main'
+echo '*.csv' > ./.gitignore
+echo 'ignored: [DL3008]' > ./.hadolint.yaml
+# nested file
+echo '*.csv' > ./problematic_package/.gitignore
 popd
 
 pushd /tmp/problematic-package
-    python setup.py sdist \
-        --format=zip
-    rm -rf ./problematic-package.egg-info
+python setup.py sdist \
+    --format=zip
+rm -rf ./problematic-package.egg-info
 
-    python -m build \
-        --no-isolation \
-        --sdist
+python -m build \
+    --no-isolation \
+    --sdist
 popd
 
 mv \

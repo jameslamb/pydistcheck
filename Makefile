@@ -30,6 +30,11 @@ clean:
 
 .PHONY: format
 format:
+	shfmt \
+		--write \
+		--indent 4 \
+		--space-redirects \
+		./bin
 	isort .
 	black .
 
@@ -39,6 +44,11 @@ install:
 
 .PHONY: lint
 lint:
+	shfmt \
+		-d \
+		-i 4 \
+		-sr \
+		./bin
 	shellcheck \
 		--exclude=SC2002 \
 		bin/*.sh

@@ -11,10 +11,10 @@
 set -e -u -o pipefail
 
 if [[ $OSTYPE == 'darwin'* ]]; then
-  OS_NAME="macos"
+    OS_NAME="macos"
 else
-  OS_NAME="linux"
-  export PATH="/opt/python/cp311-cp311/bin:${PATH}"
+    OS_NAME="linux"
+    export PATH="/opt/python/cp311-cp311/bin:${PATH}"
 fi
 
 pip install --upgrade --no-cache-dir pip
@@ -28,41 +28,44 @@ clean_build_artifacts() {
 }
 
 pushd tests/data/baseballmetrics
-    clean_build_artifacts
-    if [[ $OS_NAME == "linux" ]]; then
-      echo "building linux wheels"
-      pip wheel \
-          -w ./dist \
-          --config-setting='cmake.build-type=Debug' \
-          .
-      mv \
-          ./dist/baseballmetrics-0.1.0-py3-none-manylinux_2_28_x86_64.whl \
-          ./dist/debug-baseballmetrics-0.1.0-py3-none-manylinux_2_28_x86_64.whl
-      pip wheel \
-          -w ./dist \
-          --config-setting='cmake.build-type=Release' \
-          .
-      auditwheel repair \
-          -w ./dist \
-           --plat='manylinux_2_28_x86_64' \
-          ./dist/*.whl
-    elif [[ $OS_NAME == "macos" ]]; then
-      echo "building macOS wheels"
-      pip wheel \
-          -w ./dist \
-          --config-setting='cmake.build-type=Debug' \
-          .
-      mv \
-          ./dist/baseballmetrics-0.1.0-py3-none-macosx_*.whl \
-          ./dist/debug-baseballmetrics-0.1.0-py3-none-macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl
 
-      pip wheel -w ./dist .
-      mv \
+clean_build_artifacts
+
+if [[ $OS_NAME == "linux" ]]; then
+    echo "building linux wheels"
+    pip wheel \
+        -w ./dist \
+        --config-setting='cmake.build-type=Debug' \
+        .
+    mv \
+        ./dist/baseballmetrics-0.1.0-py3-none-manylinux_2_28_x86_64.whl \
+        ./dist/debug-baseballmetrics-0.1.0-py3-none-manylinux_2_28_x86_64.whl
+    pip wheel \
+        -w ./dist \
+        --config-setting='cmake.build-type=Release' \
+        .
+    auditwheel repair \
+        -w ./dist \
+        --plat='manylinux_2_28_x86_64' \
+        ./dist/*.whl
+elif [[ $OS_NAME == "macos" ]]; then
+    echo "building macOS wheels"
+    pip wheel \
+        -w ./dist \
+        --config-setting='cmake.build-type=Debug' \
+        .
+    mv \
+        ./dist/baseballmetrics-0.1.0-py3-none-macosx_*.whl \
+        ./dist/debug-baseballmetrics-0.1.0-py3-none-macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl
+
+    pip wheel -w ./dist .
+    mv \
         ./dist/baseballmetrics-0.1.0-py3-none-macosx_*.whl \
         ./dist/baseballmetrics-0.1.0-py3-none-macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl
-    fi
-    mv \
-        ./dist/*.whl \
-        ../
-    echo "done building wheels"
+fi
+
+mv \
+    ./dist/*.whl \
+    ../
+echo "done building wheels"
 popd
