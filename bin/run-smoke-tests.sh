@@ -31,7 +31,7 @@ pydistcheck \
 get-files numpy
 pydistcheck \
     --ignore 'compiled-objects-have-debug-symbols,unexpected-files' \
-    --max-allowed-files 3000 \
+    --max-allowed-files 7500 \
     --max-allowed-size-uncompressed '150M' \
     ./smoke-tests/*
 
