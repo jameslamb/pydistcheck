@@ -19,7 +19,8 @@ jobs:
           fetch-depth: 1
       - name: run linting
         run: |
-          export PATH="/usr/share/miniconda/bin:${PATH}"
+          GOPATH_BIN=$(go env GOPATH)/bin
+          export PATH="/usr/share/miniconda/bin:${GOPATH_BIN}:${PATH}"
           conda install \
             --yes \
             -c conda-forge \
