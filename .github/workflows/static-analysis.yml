@@ -1,12 +1,13 @@
+---
 name: static-analysis
 
 on:
   push:
     branches:
-    - main
+      - main
   pull_request:
     branches:
-    - main
+      - main
 
 jobs:
   lint:
@@ -29,7 +30,8 @@ jobs:
               requests \
               ruff \
               shellcheck \
-              types-requests
+              types-requests \
+              yamllint
           sudo apt-get update
           sudo apt-get install --no-install-recommends -y \
             shfmt

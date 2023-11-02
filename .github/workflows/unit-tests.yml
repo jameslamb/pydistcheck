@@ -1,12 +1,13 @@
+---
 name: unit-tests
 
 on:
   push:
     branches:
-    - main
+      - main
   pull_request:
     branches:
-    - main
+      - main
 
 jobs:
   test-cpython:
@@ -148,11 +149,11 @@ jobs:
     if: always()
     runs-on: ubuntu-latest
     needs:
-    - test-cpython
-    - test-pypy
-    - check-test-packages
+      - test-cpython
+      - test-pypy
+      - check-test-packages
     steps:
-    - name: Decide whether the needed jobs succeeded or failed
-      uses: re-actors/alls-green@v1.2.2
-      with:
-        jobs: ${{ toJSON(needs) }}
+      - name: Decide whether the needed jobs succeeded or failed
+        uses: re-actors/alls-green@v1.2.2
+        with:
+          jobs: ${{ toJSON(needs) }}

@@ -1,3 +1,4 @@
+---
 name: Request a new check
 description: Request that `pydistcheck` complain about something it doesn't complain about today.
 title: "[new check] "

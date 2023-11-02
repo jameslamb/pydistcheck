@@ -1,3 +1,4 @@
+---
 name: Report a bug
 description: Describe a situation where `pydistcheck` behaves differently than expected.
 title: "[bug] "
@@ -23,7 +24,8 @@ body:
       description: |
         Please provide enough information for others investigating this report
         to reproduce the behavior you observed.
-        For help, see the advice in ["How to Create a Minimal, Reproducible Example"](https://stackoverflow.com/help/minimal-reproducible-example).
+        For help, see the advice in
+        ["How to Create a Minimal, Reproducible Example"](https://stackoverflow.com/help/minimal-reproducible-example).
     validations:
       required: true
   - type: input
