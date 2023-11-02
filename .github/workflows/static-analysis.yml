@@ -19,8 +19,7 @@ jobs:
           fetch-depth: 1
       - name: run linting
         run: |
-          GOPATH_BIN=$(go env GOPATH)/bin
-          export PATH="/usr/share/miniconda/bin:${GOPATH_BIN}:${PATH}"
+          export PATH="/usr/share/miniconda/bin:${PATH}"
           conda install \
             --yes \
             -c conda-forge \
@@ -31,5 +30,7 @@ jobs:
               ruff \
               shellcheck \
               types-requests
-          go install mvdan.cc/sh/v3/cmd/shfmt@latest
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y \
+            shfmt
           make lint
