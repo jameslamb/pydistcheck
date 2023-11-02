@@ -30,7 +30,5 @@ jobs:
               ruff \
               shellcheck \
               types-requests
-          sudo apt-get update
-          sudo apt-get install --no-install-recommends -y \
-            shfmt
+          go install mvdan.cc/sh/v3/cmd/shfmt@latest
           make lint
