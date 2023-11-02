@@ -6,9 +6,9 @@
 set -e -u -o pipefail
 
 if [[ $OSTYPE == 'darwin'* ]]; then
-  OS_NAME="macos"
+    OS_NAME="macos"
 else
-  OS_NAME="linux"
+    OS_NAME="linux"
 fi
 
 check_distro() {

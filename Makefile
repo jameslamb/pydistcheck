@@ -30,6 +30,11 @@ clean:
 
 .PHONY: format
 format:
+	shfmt \
+		--write \
+		--indent 4 \
+		--space-redirects \
+		./bin
 	isort .
 	black .
 
@@ -39,6 +44,9 @@ install:
 
 .PHONY: lint
 lint:
+	shfmt \
+		--diff \
+		./bin || echo "shfmt found errors, re-run 'make format'" && exit 1
 	shellcheck \
 		--exclude=SC2002 \
 		bin/*.sh

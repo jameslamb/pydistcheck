@@ -30,4 +30,7 @@ jobs:
               ruff \
               shellcheck \
               types-requests
+          apt-get update
+          apt-get install --no-install-recommends -y \
+            shfmt
           make lint
