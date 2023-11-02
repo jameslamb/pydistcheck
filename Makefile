@@ -58,6 +58,10 @@ lint:
 	ruff check .
 	mypy ./src
 	mypy ./tests/data
+	yamllint \
+		--strict \
+		-d '{extends: default, rules: {truthy: {check-keys: false}, line-length: {max: 120}}}' \
+		.
 
 .PHONY: linux-wheel
 linux-wheel:
