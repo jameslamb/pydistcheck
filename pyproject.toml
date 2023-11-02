@@ -94,6 +94,8 @@ select = [
     "ERA",
     # pyflakes
     "F",
+    # perflint
+    "PERF",
     # pygrep-hooks
     "PGH",
     # pylint
@@ -106,7 +108,7 @@ select = [
     "SIM",
 ]
 
-# this should be set to the oldest version of python the project
+# this should be set to the oldest version of python the project supports
 target-version = "py38"
 
 [tool.ruff.per-file-ignores]
