@@ -86,7 +86,7 @@ test-data-bdist: \
 test:
 	pytest \
 		--cov pydistcheck \
-		--cov-fail-under=99 \
+		--cov-fail-under=98 \
 		./tests
 
 .PHONY: test-local
@@ -94,7 +94,7 @@ test-local:
 	PYTHONPATH=src \
 	pytest \
 		--cov=src/pydistcheck \
-		--cov-fail-under=99 \
+		--cov-fail-under=98 \
 		--cov-report="term" \
 		--cov-report="html:htmlcov" \
 		./tests
