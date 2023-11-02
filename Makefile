@@ -46,8 +46,8 @@ install:
 lint:
 	shfmt \
 		-d \
-		--indent 4 \
-		--space-redirects \
+		-i 4 \
+		-sr \
 		./bin || echo "shfmt found errors, re-run 'make format'" && exit 1
 	shellcheck \
 		--exclude=SC2002 \
