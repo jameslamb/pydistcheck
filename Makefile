@@ -45,7 +45,7 @@ install:
 .PHONY: lint
 lint:
 	shfmt \
-		--diff \
+		-d \
 		./bin || echo "shfmt found errors, re-run 'make format'" && exit 1
 	shellcheck \
 		--exclude=SC2002 \
