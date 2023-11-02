@@ -83,7 +83,7 @@ def test_distribution_summary_basically_works(distro_file):
 
     # size_by_file_extension should return results sorted from largest to smallest by file size
     last_size_seen = float("inf")
-    for _, size_in_bytes in ds.size_by_file_extension.items():
+    for size_in_bytes in ds.size_by_file_extension.values():
         assert size_in_bytes < last_size_seen
         last_size_seen = size_in_bytes
 
@@ -200,7 +200,7 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
 
     # size_by_file_extension should return results sorted from largest to smallest by file size
     last_size_seen = float("inf")
-    for _, size_in_bytes in ds.size_by_file_extension.items():
+    for size_in_bytes in ds.size_by_file_extension.values():
         assert size_in_bytes < last_size_seen
         last_size_seen = size_in_bytes
 
