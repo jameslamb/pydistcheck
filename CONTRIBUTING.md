@@ -13,7 +13,7 @@ make build install
 
 ## Releasing
 
-1. Open a pull request with title `release v{major}.{minor}.{patch}`, changing `version` in `src/pydistcheck/__init__.py` to the desired version.
+1. Merge a pull request with title `release v{major}.{minor}.{patch}`, changing `version` in `src/pydistcheck/__init__.py` to the desired version.
 2. navigate to https://github.com/jameslamb/pydistcheck/releases
 3. edit the draft release there
     - remove any changelog items that are just "changed the version number" PRs
