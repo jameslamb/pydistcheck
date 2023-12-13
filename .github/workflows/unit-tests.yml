@@ -114,6 +114,13 @@ jobs:
         run: |
           pip install -r ./requirements-tests.txt
           make build check-dists
+      - uses: actions/upload-artifact@v3
+        with:
+          name: distros
+          path: |
+            dist/*.tar.gz
+            dist/*.whl
+          retention-days: 3
       - name: install
         shell: bash -l {0}
         run: |
