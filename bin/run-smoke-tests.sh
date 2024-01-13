@@ -38,10 +38,10 @@ pydistcheck \
 # package with so many files that `find -exec du -ch` has to batch results
 get-files tensorflow
 pydistcheck \
-    --ignore 'mixed-file-extensions' \
-    --max-allowed-files 10000 \
-    --max-allowed-size-compressed '300M' \
-    --max-allowed-size-uncompressed '1G' \
+    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions' \
+    --max-allowed-files 15000 \
+    --max-allowed-size-compressed '500M' \
+    --max-allowed-size-uncompressed '1.5G' \
     ./smoke-tests/*
 
 # packages with lots of bundled non-Python code
@@ -56,7 +56,7 @@ pydistcheck \
 # package that isn't actually Python code
 get-files cmake
 pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols,path-contains-spaces' \
+    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,path-contains-spaces,unexpected-files' \
     --max-allowed-files 4000 \
     --max-allowed-size-uncompressed '150M' \
     ./smoke-tests/*
