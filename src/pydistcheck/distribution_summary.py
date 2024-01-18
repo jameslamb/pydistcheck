@@ -127,8 +127,14 @@ def _guess_archive_member_file_format(
     return _FileFormat.OTHER, False
 
 
+class _ArchiveFormat:
+    GZIP_TAR = ".tar.gz"
+    ZIP = ".zip"
+
+
 @dataclass
 class _DistributionSummary:
+    archive_format: str
     compressed_size_bytes: int
     directories: List[_DirectoryInfo]
     files: List[_FileInfo]
@@ -139,8 +145,16 @@ class _DistributionSummary:
         compressed_size_bytes = os.path.getsize(filename)
         directories: List[_DirectoryInfo] = []
         files: List[_FileInfo] = []
+
         if filename.endswith("gz"):
-            with tarfile.open(filename, mode="r:gz") as tf:
+            archive_format = _ArchiveFormat.GZIP_TAR
+            read_mode = "r:gz"
+        else:
+            archive_format = _ArchiveFormat.ZIP
+            read_mode = "r"
+
+        if archive_format == _ArchiveFormat.GZIP_TAR:
+            with tarfile.open(filename, mode=read_mode) as tf:
                 for tar_info in tf.getmembers():
                     if tar_info.isfile():
                         files.append(
@@ -148,9 +162,8 @@ class _DistributionSummary:
                         )
                     else:
                         directories.append(_DirectoryInfo(name=tar_info.name))
-        else:
-            # assume anything else can be opened with zipfile
-            with zipfile.ZipFile(filename, mode="r") as f:
+        elif archive_format == _ArchiveFormat.ZIP:
+            with zipfile.ZipFile(filename, mode=read_mode) as f:
                 for zip_info in f.infolist():
                     if not zip_info.is_dir():
                         files.append(
@@ -158,8 +171,15 @@ class _DistributionSummary:
                         )
                     else:
                         directories.append(_DirectoryInfo(name=zip_info.filename))
+        else:
+            raise ValueError(
+                f"File '{filename}' does not appear to be a Python package distribution in "
+                "one of the formats supported by 'pydistcheck'. "
+                "Supported formats: .tar.gz, .zip"
+            )
 
         return cls(
+            archive_format=archive_format,
             compressed_size_bytes=compressed_size_bytes,
             directories=directories,
             files=files,
