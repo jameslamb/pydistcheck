@@ -148,13 +148,11 @@ class _DistributionSummary:
 
         if filename.endswith("gz"):
             archive_format = _ArchiveFormat.GZIP_TAR
-            read_mode = "r:gz"
         else:
             archive_format = _ArchiveFormat.ZIP
-            read_mode = "r"
 
         if archive_format == _ArchiveFormat.GZIP_TAR:
-            with tarfile.open(filename, mode=read_mode) as tf:
+            with tarfile.open(filename, mode="r:gz") as tf:
                 for tar_info in tf.getmembers():
                     if tar_info.isfile():
                         files.append(
@@ -163,7 +161,7 @@ class _DistributionSummary:
                     else:
                         directories.append(_DirectoryInfo(name=tar_info.name))
         elif archive_format == _ArchiveFormat.ZIP:
-            with zipfile.ZipFile(filename, mode=read_mode) as f:
+            with zipfile.ZipFile(filename, mode="r") as f:
                 for zip_info in f.infolist():
                     if not zip_info.is_dir():
                         files.append(

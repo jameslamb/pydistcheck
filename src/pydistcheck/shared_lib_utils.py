@@ -65,8 +65,8 @@ def _get_symbols(cmd_args: List[str], lib_file: str) -> str:
 
 def _nm_reports_debug_symbols(tool_name: str, lib_file: str) -> Tuple[bool, str]:
     exported_symbols = _get_symbols(cmd_args=[tool_name], lib_file=lib_file)
-    all_symbols = _get_symbols(cmd_args=[tool_name, "--debug-syms"], lib_file=lib_file)
-    return exported_symbols != all_symbols, f"{tool_name} --debug-syms"
+    all_symbols = _get_symbols(cmd_args=[tool_name, "-a"], lib_file=lib_file)
+    return exported_symbols != all_symbols, f"{tool_name} -a"
 
 
 def _archive_member_has_debug_symbols(
