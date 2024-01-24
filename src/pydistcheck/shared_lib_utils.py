@@ -69,7 +69,9 @@ def _nm_reports_debug_symbols(tool_name: str, lib_file: str) -> Tuple[bool, str]
     return exported_symbols != all_symbols, f"{tool_name} --debug-syms"
 
 
-def _archive_member_has_debug_symbols(archive_file: str, file_info: _FileInfo) -> Tuple[bool, str]:
+def _archive_member_has_debug_symbols(
+    archive_file: str, archive_format: str, file_info: _FileInfo
+) -> Tuple[bool, str]:
     with TemporaryDirectory() as tmp_dir:
         with zipfile.ZipFile(archive_file, mode="r") as zf:
             zf.extractall(path=tmp_dir, members=[file_info.name])
