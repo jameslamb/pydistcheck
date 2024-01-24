@@ -30,7 +30,7 @@ pydistcheck \
 # package where source distro is a .zip
 get-files numpy
 pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,path-contains-spaces,unexpected-files' \
+    --ignore 'mixed-file-extensions,path-contains-spaces,unexpected-files' \
     --max-allowed-files 7500 \
     --max-allowed-size-uncompressed '150M' \
     ./smoke-tests/*
@@ -38,7 +38,7 @@ pydistcheck \
 # package with so many files that `find -exec du -ch` has to batch results
 get-files tensorflow
 pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions' \
+    --ignore 'mixed-file-extensions' \
     --max-allowed-files 15000 \
     --max-allowed-size-compressed '500M' \
     --max-allowed-size-uncompressed '1.5G' \
@@ -56,7 +56,7 @@ pydistcheck \
 # package that isn't actually Python code
 get-files cmake
 pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,path-contains-spaces,unexpected-files' \
+    --ignore 'mixed-file-extensions,path-contains-spaces,unexpected-files' \
     --max-allowed-files 4000 \
     --max-allowed-size-uncompressed '150M' \
     ./smoke-tests/*
@@ -82,24 +82,22 @@ pydistcheck \
 
 get-files astropy
 pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,unexpected-files' \
+    --ignore 'mixed-file-extensions,unexpected-files' \
     ./smoke-tests/*
 
 get-files datatable
 pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols' \
     --max-allowed-size-compressed '100M' \
     --max-allowed-size-uncompressed '100M' \
     ./smoke-tests/*
 
 get-files gensim
 pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols' \
     ./smoke-tests/*
 
 get-files opencv-python
 pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,unexpected-files' \
+    --ignore 'mixed-file-extensions,unexpected-files' \
     --max-allowed-files 7500 \
     --max-allowed-size-compressed '90M' \
     --max-allowed-size-uncompressed '200M' \
@@ -110,7 +108,6 @@ pydistcheck ./smoke-tests/*
 
 get-files Pillow
 pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols' \
     ./smoke-tests/*
 
 get-files pytest
@@ -120,17 +117,15 @@ pydistcheck \
 
 get-files scikit-learn
 pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,unexpected-files' \
+    --ignore 'mixed-file-extensions,unexpected-files' \
     ./smoke-tests/*
 
 get-files Shapely
 pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols' \
     ./smoke-tests/*
 
 get-files spacy
 pydistcheck \
-    --ignore 'compiled-objects-have-debug-symbols' \
     ./smoke-tests/*
 
 echo "done running smoke tests"
