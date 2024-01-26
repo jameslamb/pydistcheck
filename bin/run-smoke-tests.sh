@@ -77,7 +77,7 @@ pydistcheck ./smoke-tests/*
 # other complex projects that do custom packaging stuff
 get-files apache-airflow
 pydistcheck \
-    --ignore 'mixed-file-extensions' \
+    --ignore 'mixed-file-extensions,unexpected-files' \
     ./smoke-tests/*
 
 get-files astropy
