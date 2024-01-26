@@ -30,7 +30,7 @@ pydistcheck \
 # package where source distro is a .zip
 get-files numpy
 pydistcheck \
-    --ignore 'mixed-file-extensions,path-contains-spaces,unexpected-files' \
+    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,path-contains-spaces,unexpected-files' \
     --max-allowed-files 7500 \
     --max-allowed-size-uncompressed '150M' \
     ./smoke-tests/*
