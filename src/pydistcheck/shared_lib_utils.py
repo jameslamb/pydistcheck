@@ -9,7 +9,7 @@ import zipfile
 from tempfile import TemporaryDirectory
 from typing import List, Tuple
 
-from .distribution_summary import _FileInfo
+from .file_utils import _ArchiveFormat, _FileInfo
 
 _COMMAND_FAILED = "__command_failed__"
 _NO_DEBUG_SYMBOLS = "__no_debug_symbols_found__"
@@ -73,8 +73,11 @@ def _archive_member_has_debug_symbols(
     archive_file: str, archive_format: str, file_info: _FileInfo
 ) -> Tuple[bool, str]:
     with TemporaryDirectory() as tmp_dir:
-        with zipfile.ZipFile(archive_file, mode="r") as zf:
-            zf.extractall(path=tmp_dir, members=[file_info.name])
+        if archive_format == _ArchiveFormat.ZIP:
+            with zipfile.ZipFile(archive_file, mode="r") as zf:
+                zf.extractall(path=tmp_dir, members=[file_info.name])
+        else:
+            raise ValueError("need to fix this")
         full_path = os.path.join(tmp_dir, file_info.name)
 
         # test with tools that produce debug symbols that can be matched with a regex
