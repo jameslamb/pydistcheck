@@ -82,7 +82,7 @@ pydistcheck \
 
 get-files astropy
 pydistcheck \
-    --ignore 'mixed-file-extensions,unexpected-files' \
+    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,unexpected-files' \
     ./smoke-tests/*
 
 get-files datatable

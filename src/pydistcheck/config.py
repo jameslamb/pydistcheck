@@ -4,6 +4,7 @@ Manages configuration of ``pydistcheck` CLI, including:
   * validating configuration values
   * updating configuuration from files
 """
+
 import os
 from dataclasses import dataclass
 from typing import Any, Dict
