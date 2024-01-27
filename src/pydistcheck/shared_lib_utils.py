@@ -79,7 +79,7 @@ def _archive_member_has_debug_symbols(
                 zf.extractall(path=tmp_dir, members=[file_info.name])
         elif archive_format == _ArchiveFormat.BZIP2_TAR:
             with tarfile.open(archive_file, mode="r:bz2") as tf:
-                tf.extractall(path=tmp_dir, members=[file_info.name], filter='data')
+                tf.extractall(path=tmp_dir, members=[tf.getmember(file_info.name)], filter="data")
         else:
             raise ValueError("need to fix this")
         full_path = os.path.join(tmp_dir, file_info.name)

@@ -10,7 +10,7 @@ from pydistcheck.cli import check
 BASE_PACKAGES = [
     "base-package-0.1.0.tar.gz",
     "base-package-0.1.0.zip",
-    "linux-64_rmm-24.02.00a36-cuda12_py39_240127_g6c904f7b_36.tar.bz2"
+    "linux-64_rmm-24.02.00a36-cuda12_py39_240127_g6c904f7b_36.tar.bz2",
 ]
 PROBLEMATIC_PACKAGES = ["problematic-package-0.1.0.tar.gz", "problematic-package-0.1.0.zip"]
 MACOS_SUFFIX = "macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl"

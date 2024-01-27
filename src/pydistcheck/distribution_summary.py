@@ -6,11 +6,13 @@ source distributions and their contents
 import os
 import tarfile
 import zipfile
-import zstandard
 from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
 from functools import cached_property
+from tempfile import TemporaryDirectory
 from typing import Dict, List
+
+import zstandard
 
 from .file_utils import _ArchiveFormat, _FileInfo, _guess_archive_format
 
@@ -60,23 +62,34 @@ class _DistributionSummary:
             #   - 1 or more additional zstd-compressed tarfiles with the package contents
             #
             # ref: https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/packages.html#conda-file-format
-            with zipfile.ZipFile(filename, mode="r") as f:
+            with zipfile.ZipFile(filename, mode="r") as f, TemporaryDirectory() as tmp_dir:
                 for zip_info in f.infolist():
                     # .conda files contain multiple zstd-compressed inner tar files
                     if zip_info.filename.endswith("tar.zst"):
-                        with TemporaryDirectory() as tmp_dir:
-                            with zipfile.ZipFile(archive_file, mode="r") as zf:
-                                zf.extractall(path=tmp_dir, members=[zip_info.filename])
-                            
-                        with tarfile.open(os.path.join(tmp_dir, zip_info.filename), mode="r:bz2") as tf:
+                        full_path = os.path.join(tmp_dir, zip_info.filename)
+                        # ref: https://stackoverflow.com/a/55260983/3986677
+                        #
+                        # decompress and write to a regular tarfile
+                        with zipfile.ZipFile(filename, mode="r") as zf:
+                            zf.extractall(path=tmp_dir, members=[zip_info.filename])
+                            with open(full_path, "rb") as compressed:
+                                decompressor = zstandard.ZstdDecompressor()
+                                decompressed_tar_path = full_path.replace(".tar.zst", ".tar")
+                                with open(decompressed_tar_path, "wb") as destination:
+                                    decompressor.copy_stream(compressed, destination)
+
+                        # do tarfile things
+                        with tarfile.open(decompressed_tar_path, mode="r") as tf:
                             for tar_info in tf.getmembers():
                                 if tar_info.isfile():
                                     files.append(
-                                        _FileInfo.from_tarfile_member(archive_file=tf, tar_info=tar_info)
+                                        _FileInfo.from_tarfile_member(
+                                            archive_file=tf, tar_info=tar_info
+                                        )
                                     )
                                 else:
                                     directories.append(_DirectoryInfo(name=tar_info.name))
-                    if not zip_info.is_dir():
+                    elif not zip_info.is_dir():
                         files.append(
                             _FileInfo.from_zipfile_member(archive_file=f, zip_info=zip_info)
                         )

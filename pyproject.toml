@@ -48,6 +48,11 @@ version = {attr = "pydistcheck.__version__"}
 [project.scripts]
 pydistcheck = "pydistcheck.cli:check"
 
+[project.optional-dependencies]
+conda = [
+    "zstandard>=0.22.0"
+]
+
 [project.urls]
 homepage = "https://pydistcheck.readthedocs.io/en/latest/"
 documentation = "https://pydistcheck.readthedocs.io/en/latest/"
