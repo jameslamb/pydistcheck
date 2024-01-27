@@ -94,7 +94,7 @@ pydistcheck \
 
 get-files gensim
 pydistcheck \
-    --igore 'compiled-objects-have-debug-symbols' \
+    --ignore 'compiled-objects-have-debug-symbols' \
     ./smoke-tests/*
 
 get-files opencv-python
