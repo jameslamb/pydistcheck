@@ -6,6 +6,7 @@ source distributions and their contents
 import os
 import tarfile
 import zipfile
+import zstandard
 from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
 from functools import cached_property
@@ -53,6 +54,34 @@ class _DistributionSummary:
                         )
                     else:
                         directories.append(_DirectoryInfo(name=tar_info.name))
+        elif archive_format == _ArchiveFormat.CONDA:
+            # .conda files are a zip archive containing:
+            #   - an uncompresed file 'metadata.json' describing the contents
+            #   - 1 or more additional zstd-compressed tarfiles with the package contents
+            #
+            # ref: https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/packages.html#conda-file-format
+            with zipfile.ZipFile(filename, mode="r") as f:
+                for zip_info in f.infolist():
+                    # .conda files contain multiple zstd-compressed inner tar files
+                    if zip_info.filename.endswith("tar.zst"):
+                        with TemporaryDirectory() as tmp_dir:
+                            with zipfile.ZipFile(archive_file, mode="r") as zf:
+                                zf.extractall(path=tmp_dir, members=[zip_info.filename])
+                            
+                        with tarfile.open(os.path.join(tmp_dir, zip_info.filename), mode="r:bz2") as tf:
+                            for tar_info in tf.getmembers():
+                                if tar_info.isfile():
+                                    files.append(
+                                        _FileInfo.from_tarfile_member(archive_file=tf, tar_info=tar_info)
+                                    )
+                                else:
+                                    directories.append(_DirectoryInfo(name=tar_info.name))
+                    if not zip_info.is_dir():
+                        files.append(
+                            _FileInfo.from_zipfile_member(archive_file=f, zip_info=zip_info)
+                        )
+                    else:
+                        directories.append(_DirectoryInfo(name=zip_info.filename))
         elif archive_format == _ArchiveFormat.ZIP:
             with zipfile.ZipFile(filename, mode="r") as f:
                 for zip_info in f.infolist():
@@ -66,7 +95,7 @@ class _DistributionSummary:
             raise ValueError(
                 f"File '{filename}' does not appear to be a Python package distribution in "
                 "one of the formats supported by 'pydistcheck'. "
-                "Supported formats: .tar.gz, .zip"
+                "Supported formats: .conda, .tar.bz2, .tar.gz, .whl, .zip"
             )
 
         return cls(
