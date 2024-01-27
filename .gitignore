@@ -41,6 +41,7 @@ htmlcov/
 __pycache__/
 .pytest_cache/
 *.rsa
+scratch.md
 _skbuild/
 smoke-tests/
 *.snappy-*.tar.gz

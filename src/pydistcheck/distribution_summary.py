@@ -11,6 +11,7 @@ from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
 from functools import cached_property
 from typing import Dict, List, Tuple, Union
+from .file_utils import _ArchiveFormat, _guess_archive_format
 
 
 @dataclass
@@ -127,11 +128,6 @@ def _guess_archive_member_file_format(
     return _FileFormat.OTHER, False
 
 
-class _ArchiveFormat:
-    GZIP_TAR = ".tar.gz"
-    ZIP = ".zip"
-
-
 @dataclass
 class _DistributionSummary:
     archive_format: str
@@ -146,10 +142,7 @@ class _DistributionSummary:
         directories: List[_DirectoryInfo] = []
         files: List[_FileInfo] = []
 
-        if filename.endswith("gz"):
-            archive_format = _ArchiveFormat.GZIP_TAR
-        else:
-            archive_format = _ArchiveFormat.ZIP
+        archive_format = _guess_archive_format(filename)
 
         if archive_format == _ArchiveFormat.GZIP_TAR:
             with tarfile.open(filename, mode="r:gz") as tf:
