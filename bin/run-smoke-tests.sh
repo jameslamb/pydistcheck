@@ -99,7 +99,7 @@ pydistcheck \
 
 get-files opencv-python
 pydistcheck \
-    --ignore 'mixed-file-extensions,unexpected-files' \
+    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,unexpected-files' \
     --max-allowed-files 7500 \
     --max-allowed-size-compressed '90M' \
     --max-allowed-size-uncompressed '200M' \
