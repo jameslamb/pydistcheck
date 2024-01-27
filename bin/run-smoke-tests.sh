@@ -110,6 +110,7 @@ pydistcheck ./smoke-tests/*
 
 get-files Pillow
 pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
     ./smoke-tests/*
 
 get-files pytest
