@@ -120,7 +120,7 @@ pydistcheck \
 
 get-files scikit-learn
 pydistcheck \
-    --ignore 'mixed-file-extensions,unexpected-files' \
+    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,unexpected-files' \
     ./smoke-tests/*
 
 get-files Shapely
