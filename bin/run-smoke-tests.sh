@@ -38,7 +38,7 @@ pydistcheck \
 # package with so many files that `find -exec du -ch` has to batch results
 get-files tensorflow
 pydistcheck \
-    --ignore 'mixed-file-extensions' \
+    --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions' \
     --max-allowed-files 15000 \
     --max-allowed-size-compressed '500M' \
     --max-allowed-size-uncompressed '1.5G' \
