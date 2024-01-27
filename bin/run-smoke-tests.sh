@@ -87,6 +87,7 @@ pydistcheck \
 
 get-files datatable
 pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
     --max-allowed-size-compressed '100M' \
     --max-allowed-size-uncompressed '100M' \
     ./smoke-tests/*
