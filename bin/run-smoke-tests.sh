@@ -125,10 +125,12 @@ pydistcheck \
 
 get-files Shapely
 pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
     ./smoke-tests/*
 
 get-files spacy
 pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
     ./smoke-tests/*
 
 echo "done running smoke tests"
