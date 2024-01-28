@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from functools import cached_property
 from typing import Dict, List, Tuple, Union
 
-from .file_utils import _DirectoryInfo
+from .file_utils import _ArchiveFormat, _DirectoryInfo, _guess_archive_format
 
 
 @dataclass
@@ -126,6 +126,7 @@ def _guess_archive_member_file_format(
 
 @dataclass
 class _DistributionSummary:
+    archive_format: str
     compressed_size_bytes: int
     directories: List[_DirectoryInfo]
     files: List[_FileInfo]
@@ -133,10 +134,11 @@ class _DistributionSummary:
 
     @classmethod
     def from_file(cls, filename: str) -> "_DistributionSummary":
+        archive_format = _guess_archive_format(filename)
         compressed_size_bytes = os.path.getsize(filename)
         directories: List[_DirectoryInfo] = []
         files: List[_FileInfo] = []
-        if filename.endswith("gz"):
+        if archive_format == _ArchiveFormat.GZIP_TAR:
             with tarfile.open(filename, mode="r:gz") as tf:
                 for tar_info in tf.getmembers():
                     if tar_info.isfile():
@@ -157,6 +159,7 @@ class _DistributionSummary:
                         directories.append(_DirectoryInfo(name=zip_info.filename))
 
         return cls(
+            archive_format=archive_format,
             compressed_size_bytes=compressed_size_bytes,
             directories=directories,
             files=files,
