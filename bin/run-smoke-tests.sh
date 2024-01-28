@@ -22,6 +22,12 @@ get-conda-forge-files() {
         ./smoke-tests
 }
 
+# conda package where conda-forge only has the old .tar.bz2 format
+get-conda-forge-files librmm
+get-conda-forge-files rmm
+pydistcheck \
+    ./smoke-tests/*
+
 # wheel-only packages
 get-files catboost
 get-conda-forge-files catboost
@@ -141,12 +147,6 @@ pydistcheck \
 get-files spacy
 pydistcheck \
     --ignore 'compiled-objects-have-debug-symbols' \
-    ./smoke-tests/*
-
-# conda package where conda-forge only has the old .tar.bz2 format
-get-conda-forge-files librmm
-get-conda-forge-files rmm
-pydistcheck \
     ./smoke-tests/*
 
 echo "done running smoke tests"
