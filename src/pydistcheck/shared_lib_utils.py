@@ -9,7 +9,7 @@ import zipfile
 from tempfile import TemporaryDirectory
 from typing import List, Tuple
 
-from .distribution_summary import _FileInfo
+from .file_utils import _FileInfo
 
 _COMMAND_FAILED = "__command_failed__"
 _NO_DEBUG_SYMBOLS = "__no_debug_symbols_found__"
