@@ -15,10 +15,7 @@ res.raise_for_status()
 release_info = res.json()
 
 latest_version = release_info["versions"][-1]
-files = [
-    f for f in release_info["files"]
-    if f["version"] == latest_version
-]
+files = [f for f in release_info["files"] if f["version"] == latest_version]
 
 
 @dataclass

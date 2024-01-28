@@ -14,12 +14,7 @@ from typing import Dict, List
 
 import zstandard
 
-from .file_utils import _ArchiveFormat, _FileInfo, _guess_archive_format
-
-
-@dataclass
-class _DirectoryInfo:
-    name: str
+from .file_utils import _ArchiveFormat, _DirectoryInfo, _FileInfo, _guess_archive_format
 
 
 @dataclass

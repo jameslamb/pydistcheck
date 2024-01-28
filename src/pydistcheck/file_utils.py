@@ -5,6 +5,11 @@ from dataclasses import dataclass
 from typing import Tuple, Union
 
 
+@dataclass
+class _DirectoryInfo:
+    name: str
+
+
 class _ArchiveFormat:
     BZIP2_TAR = ".tar.bz2"
     CONDA = ".conda"
