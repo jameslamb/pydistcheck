@@ -31,8 +31,6 @@ pydistcheck \
     --max-allowed-size-uncompressed '0.5G' \
     ./smoke-tests/*
 
-exit 123
-
 get-files psycopg2-binary
 pydistcheck \
     --ignore 'compiled-objects-have-debug-symbols' \
@@ -40,6 +38,7 @@ pydistcheck \
 
 # package where source distro is a .zip
 get-files numpy
+get-conda-forge-files numpy
 pydistcheck \
     --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,path-contains-spaces,unexpected-files' \
     --max-allowed-files 7500 \
@@ -142,6 +141,12 @@ pydistcheck \
 get-files spacy
 pydistcheck \
     --ignore 'compiled-objects-have-debug-symbols' \
+    ./smoke-tests/*
+
+# conda package where conda-forge only has the old .tar.bz2 format
+get-conda-forge-files librmm
+get-conda-forge-files rmm
+pydistcheck \
     ./smoke-tests/*
 
 echo "done running smoke tests"
