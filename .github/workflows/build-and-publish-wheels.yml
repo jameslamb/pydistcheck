@@ -23,6 +23,7 @@ jobs:
         run: pipx run build --wheel
       - uses: actions/upload-artifact@v4
         with:
+          name: wheel
           path: dist/*.whl
 
   build_sdist:
@@ -34,6 +35,7 @@ jobs:
         run: pipx run build --sdist
       - uses: actions/upload-artifact@v4
         with:
+          name: sdist
           path: dist/*.tar.gz
 
   upload_pypi:
@@ -44,7 +46,11 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: artifact
+          name: sdist
+          path: dist
+      - uses: actions/download-artifact@v4
+        with:
+          name: wheel
           path: dist
       - uses: pypa/gh-action-pypi-publish@v1.8.11
         with:
