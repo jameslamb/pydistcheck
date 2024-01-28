@@ -25,7 +25,16 @@ class _ReleaseFile:
     url: str
 
 
-platform_tags = ["macosx", "manylinux", "musllinux", "win_amd", "win_arm", "win32"]
+platform_tags = [
+    "linux_i386",
+    "linux_x86_64",
+    "macosx",
+    "manylinux",
+    "musllinux",
+    "win_amd",
+    "win_arm",
+    "win32",
+]
 
 files_by_type = defaultdict(list)
 for file_info in files:
