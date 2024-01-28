@@ -14,13 +14,24 @@ get-files() {
         ./smoke-tests
 }
 
+get-conda-forge-files() {
+    pkg_name=$1
+    echo ""
+    python bin/get-conda-release-files.py \
+        "${pkg_name}" \
+        ./smoke-tests
+}
+
 # wheel-only packages
 get-files catboost
+get-conda-forge-files catboost
 pydistcheck \
     --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,too-many-files,unexpected-files' \
     --max-allowed-size-compressed '100M' \
     --max-allowed-size-uncompressed '0.5G' \
     ./smoke-tests/*
+
+exit 123
 
 get-files psycopg2-binary
 pydistcheck \
