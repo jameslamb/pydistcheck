@@ -30,7 +30,7 @@ jobs:
               pipx
           make install
           mkdir -p ./tmp-dir
-          python bin/get-release-files.py\
+          python bin/get-pypi-release-files.py\
             ${{ inputs.package_name }} \
             ./tmp-dir
           pydistcheck ./tmp-dir/*
