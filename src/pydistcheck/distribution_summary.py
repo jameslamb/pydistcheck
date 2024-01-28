@@ -12,10 +12,7 @@ from dataclasses import dataclass
 from functools import cached_property
 from typing import Dict, List, Tuple, Union
 
-
-@dataclass
-class _DirectoryInfo:
-    name: str
+from .file_utils import _DirectoryInfo
 
 
 @dataclass
