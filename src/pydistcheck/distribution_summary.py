@@ -136,12 +136,10 @@ class _DistributionSummary:
 
     @classmethod
     def from_file(cls, filename: str) -> "_DistributionSummary":
+        archive_format = _guess_archive_format(filename)
         compressed_size_bytes = os.path.getsize(filename)
         directories: List[_DirectoryInfo] = []
         files: List[_FileInfo] = []
-
-        archive_format = _guess_archive_format(filename)
-
         if archive_format == _ArchiveFormat.GZIP_TAR:
             with tarfile.open(filename, mode="r:gz") as tf:
                 for tar_info in tf.getmembers():
