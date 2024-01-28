@@ -9,9 +9,6 @@ PACKAGE_NAME = sys.argv[1]
 OUTPUT_DIR = sys.argv[2]
 PYPI_URL = "https://pypi.org"
 
-if os.path.isfile("out.json"):
-    raise RuntimeError("file './out.json' exists, not recreating it.")
-
 print(f"Getting PyPI details for package '{PACKAGE_NAME}'")
 res = requests.get(url=f"{PYPI_URL}/pypi/{PACKAGE_NAME}/json")
 res.raise_for_status()
@@ -28,7 +25,16 @@ class _ReleaseFile:
     url: str
 
 
-platform_tags = ["macosx", "manylinux", "musllinux", "win_amd", "win_arm"]
+platform_tags = [
+    "linux_i386",
+    "linux_x86_64",
+    "macosx",
+    "manylinux",
+    "musllinux",
+    "win_amd",
+    "win_arm",
+    "win32",
+]
 
 files_by_type = defaultdict(list)
 for file_info in files:
