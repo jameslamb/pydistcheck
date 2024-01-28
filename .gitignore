@@ -6,6 +6,7 @@ _build/
 build/
 *.bz
 *.bz2
+*.conda
 *.core
 *.coverage
 *.css
@@ -28,6 +29,7 @@ htmlcov/
 .idea/
 *.js
 *.json
+*.lzma
 .mypy_cache/
 *.npy
 *.o
@@ -41,6 +43,9 @@ htmlcov/
 *.pyc
 __pycache__/
 .pytest_cache/
+*.rda
+*.rds
+*.Rdata
 *.rsa
 scratch.md
 _skbuild/

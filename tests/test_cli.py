@@ -560,7 +560,7 @@ def test_debug_symbols_check_works(distro_file):
     assert result.exit_code == 1, result.output
     if "macosx" in distro_file:
         if platform.startswith("cygwin") or platform.startswith("win"):
-            debug_cmd = r"'llvm\-nm \-\-debug\-syms \"lib/lib_baseballmetrics\.dylib\"'\."
+            debug_cmd = r"'llvm\-nm \-a \"lib/lib_baseballmetrics\.dylib\"'\."
         else:
             # dsymutil works on both macOS and Linux
             debug_cmd = r"'dsymutil \-s \"lib/lib_baseballmetrics\.dylib\"'\."
