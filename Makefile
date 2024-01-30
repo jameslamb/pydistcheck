@@ -94,7 +94,20 @@ test-data-sdist:
 .PHONY: test-data-bdist
 test-data-bdist: \
 	linux-wheel \
-	mac-wheel
+	mac-wheel \
+	test-data-conda-packages
+
+.PHONY: test-data-conda-packages
+test-data-macos-conda-packages:
+	BASEBALLMETRICS_SOURCE_DIR="$${PWD}/tests/data/baseballmetrics" \
+	conda build \
+		--debug \
+		--no-anaconda-upload \
+		--no-test \
+		--no-verify \
+		./tests/data/conda-recipes
+	cp $$(conda info --base)/conda-bld/osx-64/baseballmetrics*.bz2  "$${PWD}/tests/data"
+	cp $$(conda info --base)/conda-bld/osx-64/debug-baseballmetrics*.bz2  "$${PWD}/tests/data"
 
 .PHONY: test
 test:

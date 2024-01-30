@@ -14,11 +14,13 @@ BASE_PACKAGES = [
 PROBLEMATIC_PACKAGES = ["problematic-package-0.1.0.tar.gz", "problematic-package-0.1.0.zip"]
 MACOS_SUFFIX = "macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl"
 MANYLINUX_SUFFIX = "manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl"
-BASE_WHEELS = [
+BASEBALL_PACKAGES = [
+    f"baseballmetrics-0.1.0-0.tar.bz2",
     f"baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
     f"baseballmetrics-0.1.0-py3-none-{MANYLINUX_SUFFIX}",
 ]
-WHEELS_WITH_DEBUG_SYMBOLS = [
+PACKAGES_WITH_DEBUG_SYMBOLS = [
+    f"debug-baseballmetrics-0.1.0-0.tar.bz2",
     f"debug-baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
     f"debug-baseballmetrics-py3-none-{MANYLINUX_SUFFIX}",
 ]
@@ -36,7 +38,7 @@ def _assert_log_matches_pattern(result: Result, pattern: str, num_times: int = 1
     assert num_matches_found == num_times, msg
 
 
-@pytest.mark.parametrize("distro_file", BASE_PACKAGES + BASE_WHEELS)
+@pytest.mark.parametrize("distro_file", BASE_PACKAGES + BASEBALL_PACKAGES)
 def test_check_runs_without_error(distro_file):
     runner = CliRunner()
     result = runner.invoke(check, [os.path.join(TEST_DATA_DIR, distro_file)])
@@ -550,7 +552,7 @@ def test_cli_raises_exactly_the_expected_number_of_errors_for_the_problematic_pa
     _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: 12$")
 
 
-@pytest.mark.parametrize("distro_file", WHEELS_WITH_DEBUG_SYMBOLS)
+@pytest.mark.parametrize("distro_file", PACKAGES_WITH_DEBUG_SYMBOLS)
 def test_debug_symbols_check_works(distro_file):
     runner = CliRunner()
     result = runner.invoke(

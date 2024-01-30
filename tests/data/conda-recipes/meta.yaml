@@ -1,0 +1,27 @@
+{% set version = "0.1.0" %}
+{% set build_number = 0 %}
+
+package:
+  name: pydistcheck-test-packages
+  version: {{ version }}
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cmake >=3.22
+    - ninja
+    - pip >=23.3
+    - python
+    - scikit-build-core
+
+build:
+  number: {{ build_number }}
+  script_env:
+    - BASEBALLMETRICS_SOURCE_DIR
+
+outputs:
+  - name: baseballmetrics
+    script: install-baseballmetrics.sh
+  - name: debug-baseballmetrics
+    script: install-debug-baseballmetrics.sh
