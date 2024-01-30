@@ -97,6 +97,7 @@ test-data-bdist: \
 	mac-wheel \
 	test-data-conda-packages
 
+# NOTE: .bz2 packages were created with conda-build 3.27.0
 .PHONY: test-data-conda-packages
 test-data-macos-conda-packages:
 	BASEBALLMETRICS_SOURCE_DIR="$${PWD}/tests/data/baseballmetrics" \
@@ -106,8 +107,12 @@ test-data-macos-conda-packages:
 		--no-test \
 		--no-verify \
 		./tests/data/conda-recipes
-	cp $$(conda info --base)/conda-bld/osx-64/baseballmetrics*.bz2  "$${PWD}/tests/data"
-	cp $$(conda info --base)/conda-bld/osx-64/debug-baseballmetrics*.bz2  "$${PWD}/tests/data"
+	cp \
+		$$(conda info --base)/conda-bld/osx-64/baseballmetrics-0.1.0-0.tar.bz2 \
+		$${PWD}/tests/data/osx-64-baseballmetrics-0.1.0-0.tar.bz2
+	cp \
+		$$(conda info --base)/conda-bld/osx-64/debug-baseballmetrics-0.1.0-0.tar.bz2 \
+		$${PWD}/tests/data/osx-64-debug-baseballmetrics-0.1.0-0.tar.bz2
 
 .PHONY: test
 test:

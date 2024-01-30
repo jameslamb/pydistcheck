@@ -14,6 +14,10 @@ requirements:
     - pip >=23.3
     - python
     - scikit-build-core
+  host:
+    - python
+  run:
+    - python
 
 build:
   number: {{ build_number }}
