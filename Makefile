@@ -101,12 +101,6 @@ test-data-bdist: \
 .PHONY: test-data-conda-packages
 test-data-macos-conda-packages:
 	bin/create-test-data-conda.sh 'osx-64'
-	mv \
-		./tests/data/baseballmetrics-0.1.0-h01edc0c_0.tar.bz2 \
-		./tests/data/osx-64-baseballmetrics-0.1.0_0.tar.bz2
-	mv \
-		./tests/data/debug-baseballmetrics-0.1.0-h01edc0c_0.tar.bz2 \
-		./tests/data/osx-64-debug-baseballmetrics-0.1.0_0.tar.bz2
 
 .PHONY: test
 test:

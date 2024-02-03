@@ -15,12 +15,12 @@ PROBLEMATIC_PACKAGES = ["problematic-package-0.1.0.tar.gz", "problematic-package
 MACOS_SUFFIX = "macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl"
 MANYLINUX_SUFFIX = "manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl"
 BASEBALL_PACKAGES = [
-    f"baseballmetrics-0.1.0-0.tar.bz2",
+    f"osx-64-baseballmetrics-0.1.0-0.tar.bz2",
     f"baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
     f"baseballmetrics-0.1.0-py3-none-{MANYLINUX_SUFFIX}",
 ]
 PACKAGES_WITH_DEBUG_SYMBOLS = [
-    f"debug-baseballmetrics-0.1.0-0.tar.bz2",
+    f"osx-64-debug-baseballmetrics-0.1.0-0.tar.bz2",
     f"debug-baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
     f"debug-baseballmetrics-py3-none-{MANYLINUX_SUFFIX}",
 ]
