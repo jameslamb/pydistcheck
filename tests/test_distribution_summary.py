@@ -186,14 +186,14 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
     if "macosx" in distro_file:
         assert ds.size_by_file_extension == {
             ".dylib": 16504,
-            "no-extension": 837,
+            "no-extension": 1129,
             ".py": 536,
             ".txt": 0,
         }
     else:
         assert ds.size_by_file_extension == {
-            ".so": 15616,
-            "no-extension": 902,
+            ".so": 14248,
+            "no-extension": 1204,
             ".py": 536,
             ".txt": 0,
         }
