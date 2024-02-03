@@ -23,6 +23,7 @@ requirements:
     - scikit-build-core >=0.7.0
   host:
     - python
+    - scikit-build-core >=0.7.0
   run:
     - python
 
