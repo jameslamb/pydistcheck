@@ -95,12 +95,20 @@ test-data-sdist:
 test-data-bdist: \
 	linux-wheel \
 	mac-wheel \
-	test-data-conda-packages
+	test-data-macos-conda-tarbz2-packages \
+	test-data-conda-dot-conda-packages
 
 # NOTE: .bz2 packages were created with conda-build 3.27.0
 .PHONY: test-data-conda-packages
-test-data-macos-conda-packages:
+test-data-macos-conda-tarbz2-packages:
 	bin/create-test-data-conda.sh 'osx-64'
+
+.PHONY: test-data-conda-dot-conda-packages
+test-data-conda-dot-conda-packages:
+	cph transmute \
+		--out-folder ./tests/data \
+		'./tests/data/*-0.tar.bz2' \
+		'.conda'
 
 .PHONY: test
 test:
