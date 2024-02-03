@@ -36,6 +36,7 @@ if [[ $OS_NAME == "linux" ]]; then
     pip wheel \
         -w ./dist \
         --config-setting='cmake.build-type=Debug' \
+        --config-setting='install.strip=false' \
         .
     mv \
         ./dist/baseballmetrics-0.1.0-py3-none-manylinux_2_28_x86_64.whl \
@@ -53,6 +54,7 @@ elif [[ $OS_NAME == "macos" ]]; then
     pip wheel \
         -w ./dist \
         --config-setting='cmake.build-type=Debug' \
+        --config-setting='install.strip=false' \
         .
     mv \
         ./dist/baseballmetrics-0.1.0-py3-none-macosx_*.whl \
