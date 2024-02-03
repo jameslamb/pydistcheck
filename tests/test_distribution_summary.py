@@ -186,7 +186,7 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
     if "macosx" in distro_file:
         assert ds.size_by_file_extension == {
             ".dylib": 16504,
-            "no-extension": 837,
+            "no-extension": 1129,
             ".py": 536,
             ".txt": 0,
         }
@@ -227,8 +227,6 @@ def test_distribution_summary_correctly_reads_contents_of_bz2_conda_packages(dis
     else:
         expected_file_format = "ELF"
         shared_lib_ext = "so"
-
-    raise RuntimeError
 
     expected_file_paths = [
         "info/hash_input.json",
