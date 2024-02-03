@@ -2,8 +2,15 @@
 {% set build_number = 0 %}
 
 package:
-  name: pydistcheck-test-packages
+  name: baseballmetrics
   version: {{ version }}
+
+source:
+  path: /Users/jlamb/repos/pydistcheck/tests/data/baseballmetrics
+
+build:
+  number: {{ build_number }}
+  script: ${PYTHON} -m pip install --no-deps --ignore-installed .
 
 requirements:
   build:
@@ -13,19 +20,29 @@ requirements:
     - ninja
     - pip >=23.3
     - python
-    - scikit-build-core
+    - scikit-build-core >=0.7.0
   host:
     - python
   run:
     - python
 
-build:
-  number: {{ build_number }}
-  script_env:
-    - BASEBALLMETRICS_SOURCE_DIR
+# outputs:
+#   - name: baseballmetrics
+#     script: install-baseballmetrics.sh
+#     build:
+#       requirements:
+#         build:
+#           - {{ compiler('c') }}
+#           - {{ compiler('cxx') }}
+#           - cmake >=3.22
+#           - ninja
+#           - pip >=23.3
+#           - python
+#           - scikit-build-core
+#         host:
+#           - python
+#         run:
+#           - python
 
-outputs:
-  - name: baseballmetrics
-    script: install-baseballmetrics.sh
-  - name: debug-baseballmetrics
-    script: install-debug-baseballmetrics.sh
+# - name: debug-baseballmetrics
+#   script: install-debug-baseballmetrics.sh
