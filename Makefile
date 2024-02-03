@@ -100,11 +100,22 @@ test-data-bdist: \
 # NOTE: .bz2 packages were created with conda-build 3.27.0
 .PHONY: test-data-conda-packages
 test-data-macos-conda-packages:
+	rm -rf ./conda-build
+	mkdir ./conda-build
+	cd ./conda-build && \
 	conda build \
 		--no-anaconda-upload \
 		--no-test \
 		--no-verify \
-		./tests/data/conda-recipes
+		../tests/data/conda-recipes
+	cp \
+		$$(conda info --base)/conda-bld/osx-64/baseballmetrics-0.1.0-py39*.tar.bz2 \
+		$${PWD}/tests/data/
+	rm -f ./build_env_setup.sh
+
+# cp \
+# 	$$(conda info --base)/conda-bld/osx-64/debug-baseballmetrics-0.1.0-py39*.tar.bz2 \
+# 	$${PWD}/tests/data/
 
 # # TODO: why are Python files not being included? Suspect the wrong python is being used.
 # cp \
