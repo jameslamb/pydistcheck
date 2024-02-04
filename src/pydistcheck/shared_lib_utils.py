@@ -83,7 +83,6 @@ def _archive_member_has_debug_symbols(
         elif archive_format == _ArchiveFormat.GZIP_TAR:
             with tarfile.open(archive_file, mode="r:gz") as tf:
                 tf.extractall(path=tmp_dir, members=[tf.getmember(file_info.name)], filter="data")
-
         full_path = os.path.join(tmp_dir, file_info.name)
 
         # test with tools that produce debug symbols that can be matched with a regex

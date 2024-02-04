@@ -20,11 +20,17 @@ BASEBALL_PACKAGES = [
     f"baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
     f"baseballmetrics-0.1.0-py3-none-{MANYLINUX_SUFFIX}",
 ]
+# NOTE: .bz2 and .tar.gz packages here are just unzipped
+#       and re-tarred Python wheels... to avoid pydistcheck
+#       implicitly assuming that, for example, '*.tar.gz' must
+#       be an sdist and therefore not have compiled objects
 PACKAGES_WITH_DEBUG_SYMBOLS = [
-    f"osx-64-debug-baseballmetrics-0.1.0-0.conda",
-    f"osx-64-debug-baseballmetrics-0.1.0-0.tar.bz2",
+    "debug-baseballmetrics-0.1.0-macosx-wheel.tar.bz2",
+    "debug-baseballmetrics-0.1.0-macosx-wheel.tar.gz",
     f"debug-baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
     f"debug-baseballmetrics-py3-none-{MANYLINUX_SUFFIX}",
+    f"osx-64-debug-baseballmetrics-0.1.0-0.conda",
+    f"osx-64-debug-baseballmetrics-0.1.0-0.tar.bz2",
 ]
 TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 

@@ -89,6 +89,7 @@ class _DistributionSummary:
                     else:
                         directories.append(_DirectoryInfo(name=zip_info.filename))
         elif archive_format == _ArchiveFormat.ZIP:
+            # assume anything else can be opened with zipfile
             with zipfile.ZipFile(filename, mode="r") as f:
                 for zip_info in f.infolist():
                     if not zip_info.is_dir():
