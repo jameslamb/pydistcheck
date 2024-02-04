@@ -2,7 +2,7 @@ import pathlib
 import tarfile
 import zipfile
 from dataclasses import dataclass
-from typing import Tuple, Union
+from typing import Callable, Tuple, Union
 
 
 @dataclass
