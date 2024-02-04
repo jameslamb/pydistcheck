@@ -5,11 +5,12 @@ functions used to analyze compiled objects
 import os
 import re
 import subprocess
+import tarfile
 import zipfile
 from tempfile import TemporaryDirectory
 from typing import List, Tuple
 
-from .file_utils import _FileInfo
+from .file_utils import _ArchiveFormat, _FileInfo
 
 _COMMAND_FAILED = "__command_failed__"
 _NO_DEBUG_SYMBOLS = "__no_debug_symbols_found__"
@@ -69,10 +70,19 @@ def _nm_reports_debug_symbols(tool_name: str, lib_file: str) -> Tuple[bool, str]
     return exported_symbols != all_symbols, f"{tool_name} -a"
 
 
-def _archive_member_has_debug_symbols(archive_file: str, file_info: _FileInfo) -> Tuple[bool, str]:
+def _archive_member_has_debug_symbols(
+    archive_file: str, archive_format: str, file_info: _FileInfo
+) -> Tuple[bool, str]:
     with TemporaryDirectory() as tmp_dir:
-        with zipfile.ZipFile(archive_file, mode="r") as zf:
-            zf.extractall(path=tmp_dir, members=[file_info.name])
+        if archive_format == _ArchiveFormat.ZIP:
+            with zipfile.ZipFile(archive_file, mode="r") as zf:
+                zf.extractall(path=tmp_dir, members=[file_info.name])
+        elif archive_format == _ArchiveFormat.BZIP2_TAR:
+            with tarfile.open(archive_file, mode="r:bz2") as tf:
+                tf.extractall(path=tmp_dir, members=[tf.getmember(file_info.name)], filter="data")
+        elif archive_format == _ArchiveFormat.GZIP_TAR:
+            with tarfile.open(archive_file, mode="r:gz") as tf:
+                tf.extractall(path=tmp_dir, members=[tf.getmember(file_info.name)], filter="data")
         full_path = os.path.join(tmp_dir, file_info.name)
 
         # test with tools that produce debug symbols that can be matched with a regex

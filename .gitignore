@@ -68,6 +68,8 @@ wheels/
 # exclusions
 !tests/data/baseballmetrics-0.1.0-py3-none-macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl
 !tests/data/baseballmetrics-0.1.0-py3-none-manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl
+!tests/data/debug-baseballmetrics-0.1.0-macosx-wheel.tar.bz2
+!tests/data/debug-baseballmetrics-0.1.0-macosx-wheel.tar.gz
 !tests/data/debug-baseballmetrics-0.1.0-py3-none-macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl
 !tests/data/debug-baseballmetrics-py3-none-manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl
 !tests/data/base-package-0.1.0.tar.gz

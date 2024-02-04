@@ -41,7 +41,9 @@ class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
         out: List[str] = []
         for file_info in distro_summary.compiled_objects:
             has_debug_symbols, cmd_str = _archive_member_has_debug_symbols(
-                archive_file=distro_summary.original_file, file_info=file_info
+                archive_file=distro_summary.original_file,
+                archive_format=distro_summary.archive_format,
+                file_info=file_info,
             )
             if has_debug_symbols:
                 msg = (
