@@ -70,24 +70,26 @@ elif [[ $OS_NAME == "macos" ]]; then
     rm -rf ./tmp-dir
     mkdir -p ./tmp-dir
     unzip \
-      -d ./tmp-dir \
-      "./dist/${DEBUG_DISTRO_NAME}.whl"
+        -d ./tmp-dir \
+        "./dist/${DEBUG_DISTRO_NAME}.whl"
 
     tar \
-      -C ./tmp-dir \
-      -c \
-      --gzip \
-      -f dist/debug-baseballmetrics-0.1.0-macosx-wheel.tar.gz \
-      .
+        -C ./tmp-dir \
+        -c \
+        --gzip \
+        --strip-components=1 \
+        -f dist/debug-baseballmetrics-0.1.0-macosx-wheel.tar.gz \
+        .
 
     tar \
-      -C ./tmp-dir \
-      -c \
-      --bzip2 \
-      -f dist/debug-baseballmetrics-0.1.0-macosx-wheel.tar.bz2 \
-      .
+        -C ./tmp-dir \
+        -c \
+        --bzip2 \
+        --strip-components=1 \
+        -f dist/debug-baseballmetrics-0.1.0-macosx-wheel.tar.bz2 \
+        .
 
-    rm -rf ./tmp-tgz-dir
+    rm -rf ./tmp-dir
 
 fi
 
