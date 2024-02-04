@@ -9,7 +9,7 @@ get-files() {
     rm -rf ./smoke-tests
     mkdir ./smoke-tests
     echo ""
-    python bin/get-release-files.py \
+    python bin/get-pypi-files.py \
         "${pkg_name}" \
         ./smoke-tests
 }
