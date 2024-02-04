@@ -3,7 +3,7 @@ package:
   version: '0.1.0'
 
 source:
-  path: /Users/jlamb/repos/pydistcheck/tests/data/baseballmetrics
+  path: ../../baseballmetrics
 
 build:
   number: 0
@@ -24,7 +24,7 @@ requirements:
     - ninja
     - pip >=23.3
     - python
-    - scikit-build-core >=0.7.0
+    - scikit-build-core >=0.8.0
   host:
     - python
-    - scikit-build-core >=0.7.0
+    - scikit-build-core >=0.8.0
