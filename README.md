@@ -10,10 +10,10 @@
 
 ## What is `pydistcheck`?
 
-`pydistcheck` is a command line interface (CLI) for:
+`pydistcheck` is a command line interface (CLI) that you run on Python packages, which can:
 
-* inspecting the contents of Python package distributions during development
-* enforcing constraints on Python package distributions in continuous integration
+* detect common portability issues
+* print useful summaries of the package's contents
 
 It's inspired by R's `R CMD check`.
 
