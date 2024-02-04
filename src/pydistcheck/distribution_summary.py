@@ -50,15 +50,25 @@ class _DistributionSummary:
                     else:
                         directories.append(_DirectoryInfo(name=tar_info.name))
         elif archive_format == _ArchiveFormat.CONDA:
-            # .conda files are a zip archive containing:
+            # as of Jan 2023, .conda files are a zip archive containing:
             #   - an uncompresed file 'metadata.json' describing the contents
-            #   - 1 or more additional zstd-compressed tarfiles with the package contents
+            #   - 2 zstd-compressed tarfiles with the package contents
+            #      - 'info-*.tar.zst'
+            #      - 'pkg-*.tar.zst'
             #
             # ref: https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/packages.html#conda-file-format
             with zipfile.ZipFile(filename, mode="r") as f, TemporaryDirectory() as tmp_dir:
                 for zip_info in f.infolist():
-                    # .conda files contain multiple zstd-compressed inner tar files
-                    if zip_info.filename.endswith("tar.zst"):
+                    # case 1 - is a directory
+                    if zip_info.is_dir():
+                        directories.append(_DirectoryInfo(name=zip_info.filename))
+                    # case 2 - is a file but not one of the zstandard-compressed ones
+                    elif not zip_info.filename.endswith("tar.zst"):
+                        files.append(
+                            _FileInfo.from_zipfile_member(archive_file=f, zip_info=zip_info)
+                        )
+                    # case 3 - one of the zstandard-compressed archives
+                    else:
                         full_path = os.path.join(tmp_dir, zip_info.filename)
                         # ref: https://stackoverflow.com/a/55260983/3986677
                         #
@@ -82,12 +92,6 @@ class _DistributionSummary:
                                     )
                                 else:
                                     directories.append(_DirectoryInfo(name=tar_info.name))
-                    elif not zip_info.is_dir():
-                        files.append(
-                            _FileInfo.from_zipfile_member(archive_file=f, zip_info=zip_info)
-                        )
-                    else:
-                        directories.append(_DirectoryInfo(name=zip_info.filename))
         elif archive_format == _ArchiveFormat.ZIP:
             # assume anything else can be opened with zipfile
             with zipfile.ZipFile(filename, mode="r") as f:
