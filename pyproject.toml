@@ -119,7 +119,7 @@ select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"src/pydistcheck/shared_lib_utils.py" = [
+"src/pydistcheck/*" = [
     # uses of tarfile.extractall()
     "S202"
 ]

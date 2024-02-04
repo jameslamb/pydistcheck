@@ -3,12 +3,17 @@ Implementations for individual checks that ``pydistcheck``
 performs on distributions.
 """
 
+import os
+import tarfile
+import zipfile
 from collections import defaultdict
 from fnmatch import fnmatchcase
+from tempfile import TemporaryDirectory
 from typing import List, Protocol
 
 from .distribution_summary import _DistributionSummary
-from .shared_lib_utils import _archive_member_has_debug_symbols
+from .file_utils import _ArchiveFormat
+from .shared_lib_utils import _file_has_debug_symbols
 from .utils import _FileSize
 
 # ALL_CHECKS constant is used to validate configuration options like '--ignore' that reference
@@ -39,19 +44,42 @@ class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
-        for file_info in distro_summary.compiled_objects:
-            has_debug_symbols, cmd_str = _archive_member_has_debug_symbols(
-                archive_file=distro_summary.original_file,
-                archive_format=distro_summary.archive_format,
-                file_info=file_info,
-            )
-            if has_debug_symbols:
-                msg = (
-                    f"[{self.check_name}] Found compiled object containing debug symbols. "
-                    "For details, extract the distribution contents and run "
-                    f"'{cmd_str} \"{file_info.name}\"'."
+        archive_file = distro_summary.original_file
+        archive_format = distro_summary.archive_format
+        compiled_object_paths = [file_info.name for file_info in distro_summary.compiled_objects]
+        if not compiled_object_paths:
+            return out
+
+        with TemporaryDirectory() as tmp_dir:
+            if distro_summary.archive_format == _ArchiveFormat.ZIP:
+                with zipfile.ZipFile(archive_file, mode="r") as zf:
+                    zf.extractall(path=tmp_dir, members=compiled_object_paths)
+            elif archive_format == _ArchiveFormat.BZIP2_TAR:
+                with tarfile.open(archive_file, mode="r:bz2") as tf:
+                    tf.extractall(
+                        path=tmp_dir,
+                        members=[tf.getmember(p) for p in compiled_object_paths],
+                        filter="data",
+                    )
+            elif archive_format == _ArchiveFormat.GZIP_TAR:
+                with tarfile.open(archive_file, mode="r:gz") as tf:
+                    tf.extractall(
+                        path=tmp_dir,
+                        members=[tf.getmember(p) for p in compiled_object_paths],
+                        filter="data",
+                    )
+
+            for file_relative_path in compiled_object_paths:
+                has_debug_symbols, cmd_str = _file_has_debug_symbols(
+                    file_absolute_path=os.path.join(tmp_dir, file_relative_path)
                 )
-                out.append(msg)
+                if has_debug_symbols:
+                    msg = (
+                        f"[{self.check_name}] Found compiled object containing debug symbols. "
+                        "For details, extract the distribution contents and run "
+                        f"'{cmd_str} \"{file_relative_path}\"'."
+                    )
+                    out.append(msg)
         return out
 
 
