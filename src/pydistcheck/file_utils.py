@@ -2,7 +2,7 @@ import pathlib
 import tarfile
 import zipfile
 from dataclasses import dataclass
-from typing import Callable, Tuple, Union
+from typing import List, Tuple, Union
 
 
 @dataclass
@@ -137,3 +137,32 @@ def _guess_archive_member_file_format(
         return _FileFormat.WINDOWS_PE, True
 
     return _FileFormat.OTHER, False
+
+
+def _extract_subset_of_files_from_archive(
+    archive_file: str, archive_format: str, relative_paths: List[str], out_dir: str
+) -> None:
+    """
+    Extract a subset of files from an archive to a destination directory.
+
+    Extracts AT LEAST those files... might in some cases extract all files.
+    """
+    if archive_format == _ArchiveFormat.ZIP:
+        with zipfile.ZipFile(archive_file, mode="r") as zf:
+            zf.extractall(path=out_dir, members=relative_paths)
+    elif archive_format == _ArchiveFormat.BZIP2_TAR:
+        with tarfile.open(archive_file, mode="r:bz2") as tf:
+            tf.extractall(
+                path=out_dir,
+                members=[tf.getmember(p) for p in relative_paths],
+                filter="data",
+            )
+    elif archive_format == _ArchiveFormat.GZIP_TAR:
+        with tarfile.open(archive_file, mode="r:gz") as tf:
+            tf.extractall(
+                path=out_dir,
+                members=[tf.getmember(p) for p in relative_paths],
+                filter="data",
+            )
+    else:
+        raise RuntimeError(f"files of format '{archive_format}' are not supported")
