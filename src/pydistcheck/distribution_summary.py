@@ -37,6 +37,15 @@ class _DistributionSummary:
                         )
                     else:
                         directories.append(_DirectoryInfo(name=tar_info.name))
+        elif archive_format == _ArchiveFormat.BZIP2_TAR:
+            with tarfile.open(filename, mode="r:bz2") as tf:
+                for tar_info in tf.getmembers():
+                    if tar_info.isfile():
+                        files.append(
+                            _FileInfo.from_tarfile_member(archive_file=tf, tar_info=tar_info)
+                        )
+                    else:
+                        directories.append(_DirectoryInfo(name=tar_info.name))
         else:
             # assume anything else can be opened with zipfile
             with zipfile.ZipFile(filename, mode="r") as f:

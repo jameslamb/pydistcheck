@@ -15,7 +15,13 @@ BASE_WHEELS = [
     f"baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
     f"baseballmetrics-0.1.0-py3-none-{MANYLINUX_SUFFIX}",
 ]
-WHEELS_WITH_DEBUG_SYMBOLS = [
+# NOTE: .bz2 and .tar.gz packages here are just unzipped
+#       and re-tarred Python wheels... to avoid pydistcheck
+#       implicitly assuming that, for example, '*.tar.gz' must
+#       be an sdist and therefore not have compiled objects
+PACKAGES_WITH_DEBUG_SYMBOLS = [
+    "debug-baseballmetrics-0.1.0-macosx-wheel.tar.bz2",
+    "debug-baseballmetrics-0.1.0-macosx-wheel.tar.gz",
     f"debug-baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
     f"debug-baseballmetrics-py3-none-{MANYLINUX_SUFFIX}",
 ]
@@ -547,7 +553,7 @@ def test_cli_raises_exactly_the_expected_number_of_errors_for_the_problematic_pa
     _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: 12$")
 
 
-@pytest.mark.parametrize("distro_file", WHEELS_WITH_DEBUG_SYMBOLS)
+@pytest.mark.parametrize("distro_file", PACKAGES_WITH_DEBUG_SYMBOLS)
 def test_debug_symbols_check_works(distro_file):
     runner = CliRunner()
     result = runner.invoke(

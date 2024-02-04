@@ -56,15 +56,48 @@ elif [[ $OS_NAME == "macos" ]]; then
         --config-setting='cmake.build-type=Debug' \
         --config-setting='install.strip=false' \
         .
+
+    DEBUG_DISTRO_NAME="debug-baseballmetrics-0.1.0-py3-none-macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64"
     mv \
         ./dist/baseballmetrics-0.1.0-py3-none-macosx_*.whl \
-        ./dist/debug-baseballmetrics-0.1.0-py3-none-macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl
+        ./dist/${DEBUG_DISTRO_NAME}.whl
 
     pip wheel -w ./dist .
     mv \
         ./dist/baseballmetrics-0.1.0-py3-none-macosx_*.whl \
         ./dist/baseballmetrics-0.1.0-py3-none-macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl
+
+    rm -rf ./tmp-dir
+    mkdir -p ./tmp-dir
+    unzip \
+      -d ./tmp-dir \
+      "./dist/${DEBUG_DISTRO_NAME}.whl"
+
+    tar \
+      -C ./tmp-dir \
+      -c \
+      --gzip \
+      -f dist/debug-baseballmetrics-0.1.0-macosx-wheel.tar.gz \
+      .
+
+    tar \
+      -C ./tmp-dir \
+      -c \
+      --bzip2 \
+      -f dist/debug-baseballmetrics-0.1.0-macosx-wheel.tar.bz2 \
+      .
+
+    rm -rf ./tmp-tgz-dir
+
 fi
+
+mv \
+    ./dist/*.tar.bz2 \
+    ../
+
+mv \
+    ./dist/*.tar.gz \
+    ../
 
 mv \
     ./dist/*.whl \
