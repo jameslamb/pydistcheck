@@ -10,7 +10,7 @@ OUTPUT_DIR = sys.argv[2]
 BASE_URL = "https://api.anaconda.org/package/conda-forge"
 
 print(f"Getting conda-forge details for package '{PACKAGE_NAME}'")
-res = requests.get(url=f"{BASE_URL}/{PACKAGE_NAME}")
+res = requests.get(url=f"{BASE_URL}/{PACKAGE_NAME}", timeout=30)
 res.raise_for_status()
 release_info = res.json()
 
@@ -48,7 +48,9 @@ for file_type in files_by_type:
     sample_release = files_by_type[file_type][0]
     output_file = os.path.join(OUTPUT_DIR, sample_release.filename)
     print(f"Downloading '{sample_release.filename}'")
-    res = requests.get(url=sample_release.url, headers={"Accept": "application/octet-stream"})
+    res = requests.get(
+        url=sample_release.url, headers={"Accept": "application/octet-stream"}, timeout=30
+    )
     res.raise_for_status()
     with open(output_file, "wb") as f:
         f.write(res.content)

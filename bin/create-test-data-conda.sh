@@ -17,6 +17,9 @@ set -Eeuox pipefail
 
 REPO_ROOT="${PWD}"
 TEST_DATA_DIR="${PWD}/tests/data"
+CONDA_BASE_DIR=$(
+    conda info --base
+)
 
 new_build_dir() {
     rm -rf ./conda-build
@@ -51,11 +54,11 @@ conda_build ../tests/data/conda-recipes/debug-baseballmetrics
 
 # get packages
 cp \
-    $(conda info --base)/conda-bld/${CHANNEL}/baseballmetrics-0.1.0-0.tar.bz2 \
+    "${CONDA_BASE_DIR}/conda-bld/${CHANNEL}/baseballmetrics-0.1.0-0.tar.bz2" \
     "${TEST_DATA_DIR}/${CHANNEL}-baseballmetrics-0.1.0-0.tar.bz2"
 
 cp \
-    $(conda info --base)/conda-bld/${CHANNEL}/debug-baseballmetrics-0.1.0-0.tar.bz2 \
+    "${CONDA_BASE_DIR}/conda-bld/${CHANNEL}/debug-baseballmetrics-0.1.0-0.tar.bz2" \
     "${TEST_DATA_DIR}/${CHANNEL}-debug-baseballmetrics-0.1.0-0.tar.bz2"
 
 # clean up
