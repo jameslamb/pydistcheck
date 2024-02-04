@@ -79,12 +79,14 @@ exclude = [
     # (pylint) 
 ]
 ignore = [
-    # (flake8-simplify) use ternary operator instead of if-else
-    "SIM108",
     # (pycodestyle) Line too long
     "E501",
     # (pylint) Magic value used in comparison, consider replacing with a constant
-    "PLR2004"
+    "PLR2004",
+    # (flake8-bandit) subprocess call: check for execution of untrusted input
+    "S603",
+    # (flake8-simplify) use ternary operator instead of if-else
+    "SIM108"
 ]
 select = [
     # flake8-builtins
@@ -109,6 +111,8 @@ select = [
     "RET",
     # ruff-exclusive checks
     "RUF",
+    # flake8-bandit
+    "S",
     # flake8-simplify
     "SIM",
 ]
@@ -120,4 +124,6 @@ target-version = "py38"
 "tests/*" = [
     # (flake8-bugbear) Found useless expression
     "B018",
+    # (flake8-bandit) use of assert detected
+    "S101"
 ]
