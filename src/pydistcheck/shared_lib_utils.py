@@ -2,15 +2,9 @@
 functions used to analyze compiled objects
 """
 
-import os
 import re
 import subprocess
-import tarfile
-import zipfile
-from tempfile import TemporaryDirectory
 from typing import List, Tuple
-
-from .file_utils import _ArchiveFormat, _FileInfo
 
 _COMMAND_FAILED = "__command_failed__"
 _NO_DEBUG_SYMBOLS = "__no_debug_symbols_found__"
@@ -70,36 +64,23 @@ def _nm_reports_debug_symbols(tool_name: str, lib_file: str) -> Tuple[bool, str]
     return exported_symbols != all_symbols, f"{tool_name} -a"
 
 
-def _archive_member_has_debug_symbols(
-    archive_file: str, archive_format: str, file_info: _FileInfo
-) -> Tuple[bool, str]:
-    with TemporaryDirectory() as tmp_dir:
-        if archive_format == _ArchiveFormat.ZIP:
-            with zipfile.ZipFile(archive_file, mode="r") as zf:
-                zf.extractall(path=tmp_dir, members=[file_info.name])
-        elif archive_format == _ArchiveFormat.BZIP2_TAR:
-            with tarfile.open(archive_file, mode="r:bz2") as tf:
-                tf.extractall(path=tmp_dir, members=[tf.getmember(file_info.name)], filter="data")
-        elif archive_format == _ArchiveFormat.GZIP_TAR:
-            with tarfile.open(archive_file, mode="r:gz") as tf:
-                tf.extractall(path=tmp_dir, members=[tf.getmember(file_info.name)], filter="data")
-        full_path = os.path.join(tmp_dir, file_info.name)
+def _file_has_debug_symbols(file_absolute_path: str) -> Tuple[bool, str]:
 
-        # test with tools that produce debug symbols that can be matched with a regex
-        has_debug_symbols, cmd_str = _look_for_debug_symbols(lib_file=full_path)
+    # test with tools that produce debug symbols that can be matched with a regex
+    has_debug_symbols, cmd_str = _look_for_debug_symbols(lib_file=file_absolute_path)
+    if has_debug_symbols:
+        return True, cmd_str
+
+    # "nm"'s test is like "check if the output is different when a flag is supplied",
+    # instead of "test if this tool produces output matching this regex",
+    # so it runs separately here
+    for nm_tool in ["nm", "llvm-nm"]:
+        has_debug_symbols, cmd_str = _nm_reports_debug_symbols(
+            tool_name=nm_tool,
+            lib_file=file_absolute_path,
+        )
         if has_debug_symbols:
             return True, cmd_str
-
-        # "nm"'s test is like "check if the output is different when a flag is supplied",
-        # instead of "test if this tool produces output matching this regex",
-        # so it runs separately here
-        for nm_tool in ["nm", "llvm-nm"]:
-            has_debug_symbols, cmd_str = _nm_reports_debug_symbols(
-                tool_name=nm_tool,
-                lib_file=full_path,
-            )
-            if has_debug_symbols:
-                return True, cmd_str
 
     # at this point, none of the checks found debug symbols
     return False, cmd_str
