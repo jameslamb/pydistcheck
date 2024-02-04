@@ -121,10 +121,12 @@ def _guess_archive_member_file_format(
             header = f.read(4)
     else:
         fileobj = archive_file.extractfile(member_name)
-        assert fileobj is not None, (
-            f"'{member_name}' not found. This is a bug in pydistcheck."
-            "Report it at https://github.com/jameslamb/pydistcheck/issues."
-        )
+        if fileobj is None:
+            error_msg = (
+                f"'{member_name}' not found. This is a bug in pydistcheck."
+                "Report it at https://github.com/jameslamb/pydistcheck/issues."
+            )
+            raise RuntimeError(error_msg)
         header = fileobj.read(4)
 
     if header in _ELF_MAGIC_FIRST_4_BYTES:

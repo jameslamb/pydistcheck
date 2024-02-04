@@ -10,7 +10,7 @@ OUTPUT_DIR = sys.argv[2]
 PYPI_URL = "https://pypi.org"
 
 print(f"Getting PyPI details for package '{PACKAGE_NAME}'")
-res = requests.get(url=f"{PYPI_URL}/pypi/{PACKAGE_NAME}/json")
+res = requests.get(url=f"{PYPI_URL}/pypi/{PACKAGE_NAME}/json", timeout=30)
 res.raise_for_status()
 release_info = res.json()
 
@@ -61,7 +61,9 @@ for file_type in files_by_type:
     sample_release = files_by_type[file_type][0]
     output_file = os.path.join(OUTPUT_DIR, sample_release.filename)
     print(f"Downloading '{sample_release.filename}'")
-    res = requests.get(url=sample_release.url, headers={"Accept": "application/octet-stream"})
+    res = requests.get(
+        url=sample_release.url, headers={"Accept": "application/octet-stream"}, timeout=30
+    )
     res.raise_for_status()
     with open(output_file, "wb") as f:
         f.write(res.content)
