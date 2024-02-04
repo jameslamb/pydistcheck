@@ -4,15 +4,13 @@ performs on distributions.
 """
 
 import os
-import tarfile
-import zipfile
 from collections import defaultdict
 from fnmatch import fnmatchcase
 from tempfile import TemporaryDirectory
 from typing import List, Protocol
 
 from .distribution_summary import _DistributionSummary
-from .file_utils import _ArchiveFormat
+from .file_utils import _extract_subset_of_files_from_archive
 from .shared_lib_utils import _file_has_debug_symbols
 from .utils import _FileSize
 
@@ -44,30 +42,17 @@ class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
-        archive_file = distro_summary.original_file
-        archive_format = distro_summary.archive_format
         compiled_object_paths = [file_info.name for file_info in distro_summary.compiled_objects]
         if not compiled_object_paths:
             return out
 
         with TemporaryDirectory() as tmp_dir:
-            if distro_summary.archive_format == _ArchiveFormat.ZIP:
-                with zipfile.ZipFile(archive_file, mode="r") as zf:
-                    zf.extractall(path=tmp_dir, members=compiled_object_paths)
-            elif archive_format == _ArchiveFormat.BZIP2_TAR:
-                with tarfile.open(archive_file, mode="r:bz2") as tf:
-                    tf.extractall(
-                        path=tmp_dir,
-                        members=[tf.getmember(p) for p in compiled_object_paths],
-                        filter="data",
-                    )
-            elif archive_format == _ArchiveFormat.GZIP_TAR:
-                with tarfile.open(archive_file, mode="r:gz") as tf:
-                    tf.extractall(
-                        path=tmp_dir,
-                        members=[tf.getmember(p) for p in compiled_object_paths],
-                        filter="data",
-                    )
+            _extract_subset_of_files_from_archive(
+                archive_file=distro_summary.original_file,
+                archive_format=distro_summary.archive_format,
+                relative_paths=compiled_object_paths,
+                out_dir=tmp_dir,
+            )
 
             for file_relative_path in compiled_object_paths:
                 has_debug_symbols, cmd_str = _file_has_debug_symbols(
