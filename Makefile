@@ -40,7 +40,7 @@ format:
 
 .PHONY: install
 install:
-	pipx install --force .
+	pipx install --force '.[conda]'
 
 .PHONY: lint
 lint:
