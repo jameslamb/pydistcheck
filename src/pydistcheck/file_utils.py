@@ -1,8 +1,11 @@
+import os
 import pathlib
 import tarfile
 import zipfile
 from dataclasses import dataclass
 from typing import List, Tuple, Union
+
+import zstandard
 
 
 @dataclass
@@ -140,7 +143,7 @@ def _guess_archive_member_file_format(
 
 
 def _extract_subset_of_files_from_archive(
-    archive_file: str, archive_format: str, relative_paths: List[str], out_dir: str
+    *, archive_file: str, archive_format: str, relative_paths: List[str], out_dir: str
 ) -> None:
     """
     Extract a subset of files from an archive to a destination directory.
@@ -164,5 +167,44 @@ def _extract_subset_of_files_from_archive(
                 members=[tf.getmember(p) for p in relative_paths],
                 filter="data",
             )
+    elif archive_format == _ArchiveFormat.CONDA:
+        inner_tar_zst_files = []
+        # extract any files at the outer ZIP level,
+        # and pull out the .tar.zst files
+        with zipfile.ZipFile(archive_file, mode="r") as zf:
+            for zip_info in zf.infolist():
+                # case 1 - skip directories
+                if zip_info.is_dir():
+                    continue
+
+                # case 2 - if file is in the outer ZIP archive, extract it
+                if not zip_info.filename.endswith("tar.zst"):
+                    if zip_info.filename in relative_paths:
+                        zf.extractall(path=out_dir, members=[zip_info.filename])
+                    continue
+
+                # case 3 - one of the zstandard-compressed archives
+                inner_tar_zst_files.append(os.path.join(out_dir, zip_info.filename))
+                zf.extractall(path=out_dir, members=[zip_info.filename])
+
+        # extract any of these files found in those .tar.zst files
+        for tar_zst_file in inner_tar_zst_files:
+            # decompress the .tar.zst to just .tar
+            with open(tar_zst_file, "rb") as compressed:
+                decompressor = zstandard.ZstdDecompressor()
+                decompressed_tar_path = tar_zst_file.replace(".tar.zst", ".tar")
+                with open(decompressed_tar_path, "wb") as destination:
+                    decompressor.copy_stream(compressed, destination)
+
+            # do tarfile things
+            with tarfile.open(decompressed_tar_path, mode="r") as tf:
+                files_to_extract = [
+                    tar_info for tar_info in tf.getmembers() if tar_info.name in relative_paths
+                ]
+                tf.extractall(
+                    path=out_dir,
+                    members=files_to_extract,
+                    filter="data",
+                )
     else:
         raise RuntimeError(f"files of format '{archive_format}' are not supported")
