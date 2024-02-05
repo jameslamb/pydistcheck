@@ -5,7 +5,7 @@ import zipfile
 from dataclasses import dataclass
 from typing import List, Tuple, Union
 
-import zstandard
+from ._compat import _import_zstandard
 
 
 @dataclass
@@ -142,6 +142,15 @@ def _guess_archive_member_file_format(
     return _FileFormat.OTHER, False
 
 
+def _decompress_zstd_archive(*, tar_zst_file: str, decompressed_tar_path: str) -> None:
+    """Given a path to a .tar.zst file, decompress its contents to a .tar file"""
+    zstandard = _import_zstandard()
+    with open(tar_zst_file, "rb") as compressed:
+        decompressor = zstandard.ZstdDecompressor()
+        with open(decompressed_tar_path, "wb") as destination:
+            decompressor.copy_stream(compressed, destination)
+
+
 def _extract_subset_of_files_from_archive(
     *, archive_file: str, archive_format: str, relative_paths: List[str], out_dir: str
 ) -> None:
@@ -190,11 +199,10 @@ def _extract_subset_of_files_from_archive(
         # extract any of these files found in those .tar.zst files
         for tar_zst_file in inner_tar_zst_files:
             # decompress the .tar.zst to just .tar
-            with open(tar_zst_file, "rb") as compressed:
-                decompressor = zstandard.ZstdDecompressor()
-                decompressed_tar_path = tar_zst_file.replace(".tar.zst", ".tar")
-                with open(decompressed_tar_path, "wb") as destination:
-                    decompressor.copy_stream(compressed, destination)
+            decompressed_tar_path = tar_zst_file.replace(".tar.zst", ".tar")
+            _decompress_zstd_archive(
+                tar_zst_file=tar_zst_file, decompressed_tar_path=decompressed_tar_path
+            )
 
             # do tarfile things
             with tarfile.open(decompressed_tar_path, mode="r") as tf:

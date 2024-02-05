@@ -9,6 +9,13 @@ Because of this, the preferred way to install it from PyPI is with ``pipx`` (`do
 
     pipx install pydistcheck
 
+Checking ``.conda``-format ``conda`` packages requires some additional dependencies.
+To install those, run the following.
+
+.. code-block:: shell
+
+    pipx install 'pydistcheck[conda]'
+
 If that doesn't work for you, see the sections below for other options.
 
 PyPI
@@ -19,6 +26,13 @@ If you do not want to use ``pipx`` but want to install from PyPI, install with `
 .. code-block:: shell
 
     pip install pydistcheck
+
+Checking ``.conda``-format ``conda`` packages requires some additional dependencies.
+To install those, run the following.
+
+.. code-block:: shell
+
+    pip install 'pydistcheck[conda]'
 
 conda-forge
 ***********
@@ -44,4 +58,4 @@ To install the latest development (not released) version of ``pydistcheck``, clo
 
     git clone https://github.com/jameslamb/pydistcheck.git
     cd pydistcheck
-    pipx install .
+    pipx install '.[conda]'

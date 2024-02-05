@@ -12,9 +12,13 @@ from functools import cached_property
 from tempfile import TemporaryDirectory
 from typing import Dict, List
 
-import zstandard
-
-from .file_utils import _ArchiveFormat, _DirectoryInfo, _FileInfo, _guess_archive_format
+from .file_utils import (
+    _ArchiveFormat,
+    _decompress_zstd_archive,
+    _DirectoryInfo,
+    _FileInfo,
+    _guess_archive_format,
+)
 
 
 @dataclass
@@ -75,11 +79,12 @@ class _DistributionSummary:
                         # decompress and write to a regular tarfile
                         with zipfile.ZipFile(filename, mode="r") as zf:
                             zf.extractall(path=tmp_dir, members=[zip_info.filename])
-                            with open(full_path, "rb") as compressed:
-                                decompressor = zstandard.ZstdDecompressor()
-                                decompressed_tar_path = full_path.replace(".tar.zst", ".tar")
-                                with open(decompressed_tar_path, "wb") as destination:
-                                    decompressor.copy_stream(compressed, destination)
+
+                            # decompress the .tar.zst to just .tar
+                            decompressed_tar_path = full_path.replace(".tar.zst", ".tar")
+                            _decompress_zstd_archive(
+                                tar_zst_file=full_path, decompressed_tar_path=decompressed_tar_path
+                            )
 
                         # do tarfile things
                         with tarfile.open(decompressed_tar_path, mode="r") as tf:
