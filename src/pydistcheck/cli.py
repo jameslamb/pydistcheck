@@ -129,6 +129,7 @@ class ExitCodes:
     ),
 )
 def check(  # noqa: PLR0913
+    *,
     filepaths: str,
     version: bool,
     config: str,
