@@ -46,7 +46,7 @@ class _FileInfo:
 
     @classmethod
     def from_tarfile_member(
-        cls, archive_file: tarfile.TarFile, tar_info: tarfile.TarInfo
+        cls, *, archive_file: tarfile.TarFile, tar_info: tarfile.TarInfo
     ) -> "_FileInfo":
         member_name = tar_info.name
         file_format, is_compiled = _guess_archive_member_file_format(
@@ -62,7 +62,7 @@ class _FileInfo:
 
     @classmethod
     def from_zipfile_member(
-        cls, archive_file: zipfile.ZipFile, zip_info: zipfile.ZipInfo
+        cls, *, archive_file: zipfile.ZipFile, zip_info: zipfile.ZipInfo
     ) -> "_FileInfo":
         member_name = zip_info.filename
         file_format, is_compiled = _guess_archive_member_file_format(
@@ -115,7 +115,7 @@ class _FileFormat:
 
 
 def _guess_archive_member_file_format(
-    archive_file: Union[tarfile.TarFile, zipfile.ZipFile], member_name: str
+    *, archive_file: Union[tarfile.TarFile, zipfile.ZipFile], member_name: str
 ) -> Tuple[str, bool]:
     """
     The approach in this function was inspired by similar code in
@@ -148,7 +148,7 @@ def _guess_archive_member_file_format(
 
 
 def _extract_subset_of_files_from_archive(
-    archive_file: str, archive_format: str, relative_paths: List[str], out_dir: str
+    *, archive_file: str, archive_format: str, relative_paths: List[str], out_dir: str
 ) -> None:
     """
     Extract a subset of files from an archive to a destination directory.
