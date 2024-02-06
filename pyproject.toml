@@ -128,6 +128,10 @@ select = [
     # uses of tarfile.extractall()
     "S202"
 ]
+"src/pydistcheck/cli.py" = [
+    # Too many branches
+    "PLR0912"
+]
 "tests/*" = [
     # (flake8-bugbear) Found useless expression
     "B018",

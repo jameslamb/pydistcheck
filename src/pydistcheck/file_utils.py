@@ -21,14 +21,22 @@ class _ArchiveFormat:
 
 
 def _guess_archive_format(filename: str) -> str:
-    if filename.endswith("gz"):
+    if filename.lower().endswith("gz"):
         return _ArchiveFormat.GZIP_TAR
-    if filename.endswith("bz2"):
+    if filename.lower().endswith("bz2"):
         return _ArchiveFormat.BZIP2_TAR
-    if filename.endswith(".conda"):
+    if filename.lower().endswith(".conda"):
         return _ArchiveFormat.CONDA
+    if filename.lower().endswith(".zip"):
+        return _ArchiveFormat.ZIP
+    if filename.lower().endswith(".whl"):
+        return _ArchiveFormat.ZIP
 
-    return _ArchiveFormat.ZIP
+    raise ValueError(
+        f"File '{filename}' does not appear to be a Python package distribution in "
+        "one of the formats supported by 'pydistcheck'. "
+        "Supported formats: .conda, .tar.bz2, .tar.gz, .whl, .zip"
+    )
 
 
 @dataclass
@@ -184,10 +192,10 @@ def _extract_subset_of_files_from_archive(
             for zip_info in zf.infolist():
                 # case 1 - skip directories
                 if zip_info.is_dir():
-                    continue
+                    continue  # pragma: no cover
 
                 # case 2 - if file is in the outer ZIP archive, extract it
-                if not zip_info.filename.endswith("tar.zst"):
+                if not zip_info.filename.endswith("tar.zst"):  # pragma: no cover
                     if zip_info.filename in relative_paths:
                         zf.extractall(path=out_dir, members=[zip_info.filename])
                     continue
@@ -214,5 +222,3 @@ def _extract_subset_of_files_from_archive(
                     members=files_to_extract,
                     filter="data",
                 )
-    else:
-        raise RuntimeError(f"files of format '{archive_format}' are not supported")

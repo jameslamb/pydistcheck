@@ -77,6 +77,19 @@ def test_check_fails_with_informative_error_if_file_doesnt_exist():
     _assert_log_matches_pattern(result, r"Path 'some\-garbage\.exe' does not exist\.$")
 
 
+def test_check_fails_with_informative_error_if_file_is_an_unrecognized_format():
+    runner = CliRunner()
+    result = runner.invoke(check, [__file__])
+    assert result.exit_code > 0
+    _assert_log_matches_pattern(
+        result,
+        (
+            f"error: File '{__file__}' does not appear to be a Python package distribution "
+            "in one of the formats supported by 'pydistcheck'\. Supported formats\:"
+        ),
+    )
+
+
 def test_check_runs_for_all_files_before_exiting():
     runner = CliRunner()
     result = runner.invoke(

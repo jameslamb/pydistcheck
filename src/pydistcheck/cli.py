@@ -27,6 +27,12 @@ from .inspect import inspect_distribution
 from .utils import _FileSize
 
 
+class ExitCodes:
+    OK = 0
+    CHECK_ERRORS = 1
+    UNSUPPORT_FILE_TYPE = 2
+
+
 @click.command()
 @click.argument(
     "filepaths",
@@ -208,8 +214,12 @@ def check(  # noqa: PLR0913
             inspect_distribution(filepath=filepath)
 
         print("------------ check results -----------")
-        summary = _DistributionSummary.from_file(filename=filepath)
         errors: List[str] = []
+        try:
+            summary = _DistributionSummary.from_file(filename=filepath)
+        except ValueError as err:
+            print(f"error: {err}")
+            sys.exit(ExitCodes.UNSUPPORT_FILE_TYPE)
         for this_check in checks:
             errors += this_check(distro_summary=summary)
 
@@ -226,4 +236,7 @@ def check(  # noqa: PLR0913
 
     # now that all files have been checked, be sure to exit with a non-0 code
     # if any errors were found
-    sys.exit(int(any_errors_found))
+    if any_errors_found:
+        sys.exit(ExitCodes.CHECK_ERRORS)
+    else:
+        sys.exit(ExitCodes.OK)

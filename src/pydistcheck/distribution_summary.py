@@ -67,7 +67,7 @@ class _DistributionSummary:
                     if zip_info.is_dir():
                         directories.append(_DirectoryInfo(name=zip_info.filename))
                     # case 2 - is a file but not one of the zstandard-compressed ones
-                    elif not zip_info.filename.endswith("tar.zst"):
+                    elif not zip_info.filename.lower().endswith("tar.zst"):
                         files.append(
                             _FileInfo.from_zipfile_member(archive_file=f, zip_info=zip_info)
                         )
@@ -81,7 +81,7 @@ class _DistributionSummary:
                             zf.extractall(path=tmp_dir, members=[zip_info.filename])
 
                             # decompress the .tar.zst to just .tar
-                            decompressed_tar_path = full_path.replace(".tar.zst", ".tar")
+                            decompressed_tar_path = full_path.lower().replace(".tar.zst", ".tar")
                             _decompress_zstd_archive(
                                 tar_zst_file=full_path, decompressed_tar_path=decompressed_tar_path
                             )
@@ -107,12 +107,6 @@ class _DistributionSummary:
                         )
                     else:
                         directories.append(_DirectoryInfo(name=zip_info.filename))
-        else:
-            raise ValueError(
-                f"File '{filename}' does not appear to be a Python package distribution in "
-                "one of the formats supported by 'pydistcheck'. "
-                "Supported formats: .conda, .tar.bz2, .tar.gz, .whl, .zip"
-            )
 
         return cls(
             archive_format=archive_format,
