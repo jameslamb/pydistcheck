@@ -69,7 +69,8 @@ def test_version_flag_works():
 def test_check_fails_with_informative_error_if_file_doesnt_exist():
     runner = CliRunner()
     result = runner.invoke(check, ["some-garbage.exe"])
-    assert result.exit_code == 1
+    # NOTE: this exit code comes from 'click'
+    assert result.exit_code >= 1
     _assert_log_matches_pattern(result, r"Path 'some\-garbage\.exe' does not exist\.$")
 
 
