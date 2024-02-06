@@ -50,7 +50,7 @@ def _assert_log_matches_pattern(result: Result, pattern: str, num_times: int = 1
 def test_check_runs_without_error(distro_file):
     runner = CliRunner()
     result = runner.invoke(check, [os.path.join(TEST_DATA_DIR, distro_file)])
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 0
 
 
 def test_version_flag_works():
@@ -61,7 +61,7 @@ def test_version_flag_works():
             "--version",
         ],
     )
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 0
 
     _assert_log_matches_pattern(
         result=result,
@@ -143,7 +143,7 @@ def test_check_respects_ignore_with_one_check(distro_file):
             "--max-allowed-files=1",
         ],
     )
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 0
     _assert_log_matches_pattern(result, "errors found while checking\\: 0")
 
 
@@ -190,7 +190,7 @@ def test_check_respects_ignore_with_multiple_checks(distro_file):
             "--max-allowed-files=1",
         ],
     )
-    assert result.exit_code == 0, result.output
+    assert result.exit_code == 0
     _assert_log_matches_pattern(result, "errors found while checking\\: 0")
 
 
