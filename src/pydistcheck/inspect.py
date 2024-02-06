@@ -3,6 +3,7 @@ Code that prints diagnostic information about a distribution.
 """
 
 from typing import TYPE_CHECKING
+
 from .utils import _FileSize
 
 if TYPE_CHECKING:

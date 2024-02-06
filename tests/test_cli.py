@@ -98,6 +98,7 @@ def test_check_runs_for_all_files_before_exiting():
         result=result, pattern="errors found while checking\\: 1", num_times=2
     )
 
+
 @pytest.mark.parametrize("flags", ([], ["--inspect"]))
 def test_check_fails_with_informative_error_if_file_is_an_unrecognized_format(flags):
     runner = CliRunner()
