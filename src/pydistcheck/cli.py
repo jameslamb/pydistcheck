@@ -226,7 +226,6 @@ def check(  # noqa: PLR0913
 
         print("------------ check results -----------")
         errors: List[str] = []
-        summary = _DistributionSummary.from_file(filename=filepath)
         for this_check in checks:
             errors += this_check(distro_summary=summary)
 
