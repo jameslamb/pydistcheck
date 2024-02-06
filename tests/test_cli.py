@@ -107,8 +107,8 @@ def test_check_fails_with_informative_error_if_file_is_an_unrecognized_format(fl
     _assert_log_matches_pattern(
         result,
         (
-            f"error: File '{__file__}' does not appear to be a Python package distribution "
-            "in one of the formats supported by 'pydistcheck'\. Supported formats\:"
+            rf"error: File '{__file__}' does not appear to be a Python package distribution "
+            r"in one of the formats supported by 'pydistcheck'\. Supported formats\:"
         ),
     )
 
