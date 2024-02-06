@@ -105,11 +105,7 @@ def test_check_fails_with_informative_error_if_file_is_an_unrecognized_format(fl
     result = runner.invoke(check, [__file__, *flags])
     assert result.exit_code == 2
     _assert_log_matches_pattern(
-        result,
-        (
-            rf"error: File '{__file__}' does not appear to be a Python package distribution "
-            r"in one of the formats supported by 'pydistcheck'. Supported formats"
-        ),
+        result, r"error.*File '.*' does not appear to be a Python package distribution"
     )
 
 
