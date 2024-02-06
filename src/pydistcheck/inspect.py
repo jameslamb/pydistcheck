@@ -2,12 +2,14 @@
 Code that prints diagnostic information about a distribution.
 """
 
-from .distribution_summary import _DistributionSummary
+from typing import TYPE_CHECKING
 from .utils import _FileSize
 
+if TYPE_CHECKING:
+    from .distribution_summary import _DistributionSummary
 
-def inspect_distribution(filepath: str) -> None:
-    summary = _DistributionSummary.from_file(filename=filepath)
+
+def inspect_distribution(summary: "_DistributionSummary") -> None:
     print("file size")
     compressed_size = _FileSize(summary.compressed_size_bytes, "B")
     uncompressed_size = _FileSize(summary.uncompressed_size_bytes, "B")
