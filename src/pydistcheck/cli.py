@@ -30,7 +30,7 @@ from .utils import _FileSize
 class ExitCodes:
     OK = 0
     CHECK_ERRORS = 1
-    UNSUPPORT_FILE_TYPE = 2
+    UNSUPPORTED_FILE_TYPE = 2
 
 
 @click.command()
@@ -143,10 +143,15 @@ def check(  # noqa: PLR0913
     """
     Run the contents of a distribution through a set of checks, and warn about
     any problematic characteristics that are detected.
+
+    Exit codes:
+
+      0 = no issues detected\n
+      1 = issues detected
     """
     if version:
         print(f"pydistcheck {_VERSION}")
-        sys.exit(0)
+        sys.exit(ExitCodes.OK)
 
     print("==================== running pydistcheck ====================")
     filepaths_to_check = [click.format_filename(f) for f in filepaths]
