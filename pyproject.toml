@@ -130,7 +130,9 @@ select = [
 ]
 "src/pydistcheck/cli.py" = [
     # Too many branches
-    "PLR0912"
+    "PLR0912",
+    # Too many statements
+    "PLR0915"
 ]
 "tests/*" = [
     # (flake8-bugbear) Found useless expression

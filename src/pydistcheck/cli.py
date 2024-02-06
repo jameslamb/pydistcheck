@@ -226,11 +226,6 @@ def check(  # noqa: PLR0913
 
         print("------------ check results -----------")
         errors: List[str] = []
-        try:
-            summary = _DistributionSummary.from_file(filename=filepath)
-        except ValueError as err:
-            print(f"error: {err}")
-            sys.exit(ExitCodes.UNSUPPORT_FILE_TYPE)
         for this_check in checks:
             errors += this_check(distro_summary=summary)
 
