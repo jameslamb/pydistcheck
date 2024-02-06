@@ -214,9 +214,15 @@ def check(  # noqa: PLR0913
     for filepath in filepaths_to_check:
         print(f"\nchecking '{filepath}'")
 
+        try:
+            summary = _DistributionSummary.from_file(filename=filepath)
+        except ValueError as err:
+            print(f"error: {err}")
+            sys.exit(ExitCodes.UNSUPPORTED_FILE_TYPE)
+
         if conf.inspect:
             print("----- package inspection summary -----")
-            inspect_distribution(filepath=filepath)
+            inspect_distribution(summary)
 
         print("------------ check results -----------")
         errors: List[str] = []
