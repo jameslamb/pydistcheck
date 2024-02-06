@@ -99,6 +99,16 @@ def test_check_runs_for_all_files_before_exiting():
     )
 
 
+@pytest.mark.parametrize("flags", ([], ["--inspect"]))
+def test_check_fails_with_informative_error_if_file_is_an_unrecognized_format(flags):
+    runner = CliRunner()
+    result = runner.invoke(check, [__file__, *flags])
+    assert result.exit_code == 2
+    _assert_log_matches_pattern(
+        result, r"error.*File '.*' does not appear to be a Python package distribution"
+    )
+
+
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES)
 def test_check_respects_ignore_with_one_check(distro_file):
     runner = CliRunner()

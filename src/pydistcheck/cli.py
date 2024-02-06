@@ -30,6 +30,7 @@ from .utils import _FileSize
 class ExitCodes:
     OK = 0
     CHECK_ERRORS = 1
+    UNSUPPORTED_FILE_TYPE = 2
 
 
 @click.command()
@@ -213,12 +214,17 @@ def check(  # noqa: PLR0913
     for filepath in filepaths_to_check:
         print(f"\nchecking '{filepath}'")
 
+        try:
+            summary = _DistributionSummary.from_file(filename=filepath)
+        except ValueError as err:
+            print(f"error: {err}")
+            sys.exit(ExitCodes.UNSUPPORTED_FILE_TYPE)
+
         if conf.inspect:
             print("----- package inspection summary -----")
-            inspect_distribution(filepath=filepath)
+            inspect_distribution(summary)
 
         print("------------ check results -----------")
-        summary = _DistributionSummary.from_file(filename=filepath)
         errors: List[str] = []
         for this_check in checks:
             errors += this_check(distro_summary=summary)

@@ -18,14 +18,22 @@ class _ArchiveFormat:
 
 
 def _guess_archive_format(filename: str) -> str:
-    if filename.endswith("gz"):
+    if filename.lower().endswith("gz"):
         return _ArchiveFormat.GZIP_TAR
-    if filename.endswith("bz2"):
+    if filename.lower().endswith("bz2"):
         return _ArchiveFormat.BZIP2_TAR
-    if filename.endswith(".conda"):
+    if filename.lower().endswith(".conda"):
         return _ArchiveFormat.CONDA
+    if filename.lower().endswith(".zip"):
+        return _ArchiveFormat.ZIP
+    if filename.lower().endswith(".whl"):
+        return _ArchiveFormat.ZIP
 
-    return _ArchiveFormat.ZIP
+    raise ValueError(
+        f"File '{filename}' does not appear to be a Python package distribution in "
+        "one of the formats supported by 'pydistcheck'. "
+        "Supported formats: .conda, .tar.bz2, .tar.gz, .whl, .zip"
+    )
 
 
 @dataclass
