@@ -20,6 +20,7 @@ get-conda-forge-files() {
     echo ""
     python bin/get-conda-release-files.py \
         "${pkg_name}" \
+        'conda-forge' \
         ./smoke-tests
 }
 

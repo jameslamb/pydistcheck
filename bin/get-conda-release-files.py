@@ -6,8 +6,9 @@ from dataclasses import dataclass
 import requests
 
 PACKAGE_NAME = sys.argv[1]
-OUTPUT_DIR = sys.argv[2]
-BASE_URL = "https://api.anaconda.org/package/conda-forge"
+CONDA_CHANNEL = sys.argv[2]
+OUTPUT_DIR = sys.argv[3]
+BASE_URL = f"https://api.anaconda.org/package/{CONDA_CHANNEL}"
 
 print(f"Getting conda-forge details for package '{PACKAGE_NAME}'")
 res = requests.get(url=f"{BASE_URL}/{PACKAGE_NAME}", timeout=30)
