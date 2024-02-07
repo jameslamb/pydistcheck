@@ -7,7 +7,7 @@ echo "running smoke tests"
 get-files() {
     pkg_name=$1
     rm -rf ./smoke-tests
-    mkdir ./smoke-tests
+    mkdir -p ./smoke-tests
     echo ""
     python bin/get-pypi-files.py \
         "${pkg_name}" \
@@ -16,6 +16,7 @@ get-files() {
 
 get-conda-forge-files() {
     pkg_name=$1
+    mkdir ./smoke-tests
     echo ""
     python bin/get-conda-release-files.py \
         "${pkg_name}" \
