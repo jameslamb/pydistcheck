@@ -27,6 +27,7 @@ get-conda-forge-files() {
 get-conda-forge-files librmm
 get-conda-forge-files rmm
 pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
     ./smoke-tests/*
 
 # wheel-only packages
