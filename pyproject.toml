@@ -49,6 +49,11 @@ version = {attr = "pydistcheck.__version__"}
 [project.scripts]
 pydistcheck = "pydistcheck.cli:check"
 
+[project.optional-dependencies]
+conda = [
+    "zstandard>=0.22.0"
+]
+
 [project.urls]
 homepage = "https://pydistcheck.readthedocs.io/en/latest/"
 documentation = "https://pydistcheck.readthedocs.io/en/latest/"
@@ -119,13 +124,15 @@ select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"src/pydistcheck/*" = [
+"src/pydistcheck/*.py" = [
     # uses of tarfile.extractall()
     "S202"
 ]
 "src/pydistcheck/cli.py" = [
     # Too many branches
-    "PLR0912"
+    "PLR0912",
+    # Too many statements
+    "PLR0915"
 ]
 "tests/*" = [
     # (flake8-bugbear) Found useless expression

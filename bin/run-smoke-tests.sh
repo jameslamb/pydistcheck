@@ -7,15 +7,33 @@ echo "running smoke tests"
 get-files() {
     pkg_name=$1
     rm -rf ./smoke-tests
-    mkdir ./smoke-tests
+    mkdir -p ./smoke-tests
     echo ""
     python bin/get-pypi-files.py \
         "${pkg_name}" \
         ./smoke-tests
 }
 
+get-conda-forge-files() {
+    pkg_name=$1
+    mkdir -p ./smoke-tests
+    echo ""
+    python bin/get-conda-release-files.py \
+        "${pkg_name}" \
+        'conda-forge' \
+        ./smoke-tests
+}
+
+# conda package where conda-forge only has the old .tar.bz2 format
+get-conda-forge-files librmm
+get-conda-forge-files rmm
+pydistcheck \
+    --ignore 'compiled-objects-have-debug-symbols' \
+    ./smoke-tests/*
+
 # wheel-only packages
 get-files catboost
+get-conda-forge-files catboost
 pydistcheck \
     --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,too-many-files,unexpected-files' \
     --max-allowed-size-compressed '100M' \
@@ -29,6 +47,7 @@ pydistcheck \
 
 # package where source distro is a .zip
 get-files numpy
+get-conda-forge-files numpy
 pydistcheck \
     --ignore 'compiled-objects-have-debug-symbols,mixed-file-extensions,path-contains-spaces,unexpected-files' \
     --max-allowed-files 7500 \

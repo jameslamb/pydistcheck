@@ -9,9 +9,16 @@ import zipfile
 from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
 from functools import cached_property
+from tempfile import TemporaryDirectory
 from typing import Dict, List
 
-from .file_utils import _ArchiveFormat, _DirectoryInfo, _FileInfo, _guess_archive_format
+from .file_utils import (
+    _ArchiveFormat,
+    _decompress_zstd_archive,
+    _DirectoryInfo,
+    _FileInfo,
+    _guess_archive_format,
+)
 
 
 @dataclass
@@ -46,7 +53,51 @@ class _DistributionSummary:
                         )
                     else:
                         directories.append(_DirectoryInfo(name=tar_info.name))
-        else:
+        elif archive_format == _ArchiveFormat.CONDA:
+            # as of Jan 2023, .conda files are a zip archive containing:
+            #   - an uncompresed file 'metadata.json' describing the contents
+            #   - 2 zstd-compressed tarfiles with the package contents
+            #      - 'info-*.tar.zst'
+            #      - 'pkg-*.tar.zst'
+            #
+            # ref: https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/packages.html#conda-file-format
+            with zipfile.ZipFile(filename, mode="r") as f, TemporaryDirectory() as tmp_dir:
+                for zip_info in f.infolist():
+                    # case 1 - is a directory
+                    if zip_info.is_dir():
+                        directories.append(_DirectoryInfo(name=zip_info.filename))
+                    # case 2 - is a file but not one of the zstandard-compressed ones
+                    elif not zip_info.filename.lower().endswith("tar.zst"):
+                        files.append(
+                            _FileInfo.from_zipfile_member(archive_file=f, zip_info=zip_info)
+                        )
+                    # case 3 - one of the zstandard-compressed archives
+                    else:
+                        full_path = os.path.join(tmp_dir, zip_info.filename)
+                        # ref: https://stackoverflow.com/a/55260983/3986677
+                        #
+                        # decompress and write to a regular tarfile
+                        with zipfile.ZipFile(filename, mode="r") as zf:
+                            zf.extractall(path=tmp_dir, members=[zip_info.filename])
+
+                            # decompress the .tar.zst to just .tar
+                            decompressed_tar_path = full_path.lower().replace(".tar.zst", ".tar")
+                            _decompress_zstd_archive(
+                                tar_zst_file=full_path, decompressed_tar_path=decompressed_tar_path
+                            )
+
+                        # do tarfile things
+                        with tarfile.open(decompressed_tar_path, mode="r") as tf:
+                            for tar_info in tf.getmembers():
+                                if tar_info.isfile():
+                                    files.append(
+                                        _FileInfo.from_tarfile_member(
+                                            archive_file=tf, tar_info=tar_info
+                                        )
+                                    )
+                                else:
+                                    directories.append(_DirectoryInfo(name=tar_info.name))
+        elif archive_format == _ArchiveFormat.ZIP:
             # assume anything else can be opened with zipfile
             with zipfile.ZipFile(filename, mode="r") as f:
                 for zip_info in f.infolist():

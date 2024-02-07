@@ -1,0 +1,31 @@
+---
+package:
+  name: debug-baseballmetrics
+  version: '0.1.0'
+
+source:
+  path: ../../baseballmetrics
+
+build:
+  number: 0
+  script: |
+    ${PYTHON} \
+      -m pip install \
+      --no-deps \
+      --ignore-installed \
+      --config-setting='cmake.build-type=Debug' \
+      --config-settings=install.strip=false \
+      .
+
+requirements:
+  build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
+    - cmake >=3.22
+    - ninja
+    - pip >=23.3
+    - python
+    - scikit-build-core >=0.8.0
+  host:
+    - python
+    - scikit-build-core >=0.8.0

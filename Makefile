@@ -40,7 +40,7 @@ format:
 
 .PHONY: install
 install:
-	pipx install --force .
+	pipx install --force '.[conda]'
 
 .PHONY: lint
 lint:
@@ -60,7 +60,7 @@ lint:
 	mypy ./tests/data
 	yamllint \
 		--strict \
-		-d '{extends: default, rules: {truthy: {check-keys: false}, line-length: {max: 120}}}' \
+		-d '{extends: default, rules: {braces: {max-spaces-inside: 1}, truthy: {check-keys: false}, line-length: {max: 120}}}' \
 		.
 
 .PHONY: linux-wheel
@@ -94,7 +94,21 @@ test-data-sdist:
 .PHONY: test-data-bdist
 test-data-bdist: \
 	linux-wheel \
-	mac-wheel
+	mac-wheel \
+	test-data-macos-conda-tarbz2-packages \
+	test-data-conda-dot-conda-packages
+
+# NOTE: .bz2 packages were created with conda-build 3.27.0
+.PHONY: test-data-conda-packages
+test-data-macos-conda-tarbz2-packages:
+	bin/create-test-data-conda.sh 'osx-64'
+
+.PHONY: test-data-conda-dot-conda-packages
+test-data-conda-dot-conda-packages:
+	cph transmute \
+		--out-folder ./tests/data \
+		'./tests/data/*-0.tar.bz2' \
+		'.conda'
 
 .PHONY: test
 test:

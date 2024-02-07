@@ -50,9 +50,9 @@ body:
       label: Distribution type
       description: What types of distribution does this check apply to?
       options:
-        - label: source (e.g. `.tar.gz`)
+        - label: source (e.g. `.tar.gz`, `.zip`)
           required: false
-        - label: built (e.g. `.whl`)
+        - label: built (e.g. `.conda`, `.tar.bz2`, `.whl`)
           required: false
   - type: textarea
     attributes:
