@@ -3,7 +3,7 @@ miscellaneous helper classes and functions that are
 not specific to package distributions
 """
 
-from typing import Any, Tuple
+from typing import Tuple
 
 _UNIT_TO_NUM_BYTES = {"B": 1, "K": 1024, "M": 1024**2, "G": 1024**3}
 
@@ -37,7 +37,7 @@ class _FileSize:
     def total_size_bytes(self) -> int:
         return int(self._num * _UNIT_TO_NUM_BYTES[self._unit_str])
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         return isinstance(other, type(self)) and self.total_size_bytes == other.total_size_bytes
 
     def __ge__(self, other: "_FileSize") -> bool:
@@ -52,7 +52,7 @@ class _FileSize:
     def __lt__(self, other: "_FileSize") -> bool:
         return self.total_size_bytes < other.total_size_bytes
 
-    def __ne__(self, other: Any) -> bool:
+    def __ne__(self, other: object) -> bool:
         return not self == other
 
     def __str__(self) -> str:
