@@ -16,7 +16,7 @@ get-files() {
 
 get-conda-forge-files() {
     pkg_name=$1
-    mkdir ./smoke-tests
+    mkdir -p ./smoke-tests
     echo ""
     python bin/get-conda-release-files.py \
         "${pkg_name}" \
