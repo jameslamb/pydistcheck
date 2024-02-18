@@ -167,8 +167,8 @@ class _DistributionSummary:
         Aggregate file sizes in a distribution by extension.
 
         :return: An OrderedDict where keys are file extensions and values are the total size in
-                 bytes occupied by such files in the distribution. Sorted in descending
-                 order by size.
+                 bytes (uncompressed) occupied by such files in the distribution.
+                 Sorted in descending order by size.
         """
         summary_dict = {
             file_extension: sum(f.uncompressed_size_bytes for f in files)

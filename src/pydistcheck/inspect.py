@@ -26,7 +26,7 @@ def inspect_distribution(summary: "_DistributionSummary") -> None:
     print("size by extension")
     for extension, size in summary.size_by_file_extension.items():
         size_pct = size / summary.uncompressed_size_bytes
-        print(f"  * {extension} - {round(size / 1024.0, 1)}K ({round(size_pct * 100, 1)}%)")
+        print(f"  * {extension} - {_FileSize(size, 'B')} ({round(size_pct * 100, 1)}%)")
 
     largest_files = summary.get_largest_files(n=5)
     print("largest files")
