@@ -21,16 +21,16 @@ sed \
 rm -f ./src/pydistcheck/*.bak
 
 VERSION=$(
-    cat ./src/pydistcheck/__init__.py \
-    | grep -E '^__version' \
-    | cut -d '=' -f2 \
-    | tr -d ' "'
+    cat ./src/pydistcheck/__init__.py |
+        grep -E '^__version' |
+        cut -d '=' -f2 |
+        tr -d ' "'
 )
 
 git checkout -b release/v${VERSION}
 git add ./src/pydistcheck/__init__.py
 
-commit_msg="release v${VERSION}" 
+commit_msg="release v${VERSION}"
 git commit -m "${commit_msg}"
 git push origin release/v${VERSION}
 

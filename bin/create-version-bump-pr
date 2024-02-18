@@ -21,7 +21,7 @@ rm -f ./src/pydistcheck/*.bak
 git checkout -b ci/dev-version
 git add ./src/pydistcheck/__init__.py
 
-commit_msg="bump development version" 
+commit_msg="bump development version"
 git commit -m "${commit_msg}"
 git push origin ci/dev-version
 
