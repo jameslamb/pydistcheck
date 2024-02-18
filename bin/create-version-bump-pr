@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# [description]
+#
+#   Bump the version and create a PR.
+#
+# [usage]
+#
+#   bin/create-release-pr '4.0.0'
+#
+
+set -Eeuo pipefail
+
+sed \
+    -i=.bak \
+    "/^__version/ s|\"\$|\.99\"|g" \
+    ./src/pydistcheck/__init__.py
+
+rm -f ./src/pydistcheck/*.bak
+
+git checkout -b ci/dev-version
+git add ./src/pydistcheck/__init__.py
+
+commit_msg="bump development version"
+git commit -m "${commit_msg}"
+git push origin ci/dev-version
+
+gh pr create \
+    --repo jameslamb/pydistcheck \
+    --base 'main' \
+    --label 'maintenance' \
+    --title "bump development version" \
+    --body "bump development version"
