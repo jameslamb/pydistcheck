@@ -13,11 +13,21 @@ make build install
 
 ## Releasing
 
-1. Merge a pull request with title `release v{major}.{minor}.{patch}`, changing `version` in `src/pydistcheck/__init__.py` to the desired version.
-2. navigate to https://github.com/jameslamb/pydistcheck/releases
-3. edit the draft release there
+1. Create a pull request with a version bump.
+
+```shell
+bin/create-release-pr '0.6.0'
+```
+
+2. Merge that PR.
+3. navigate to https://github.com/jameslamb/pydistcheck/releases
+4. edit the draft release there
     - remove any changelog items that are just "changed the version number" PRs
     - ensure that the tag that'll be created matches the version number, in the form `v{major}.{minor}.{patch}`
-4. click "publish"
+5. click "publish"
     - when that happens, CI jobs will run that automatically publish the package to PyPI.
-5. Open another pull request with title `bump development version` adding `.99` to the version in `src/pydistcheck/__init__.py`.
+6. Open another PR bumping the version
+
+```shell
+bin/create-version-bump-pr
+```
