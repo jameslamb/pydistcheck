@@ -113,6 +113,8 @@ select = [
     "PGH",
     # pylint
     "PL",
+    # flake8-pyi
+    "PYI",
     # flake8-return
     "RET",
     # ruff-exclusive checks
