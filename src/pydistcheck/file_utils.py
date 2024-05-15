@@ -215,7 +215,9 @@ def _extract_subset_of_files_from_archive(
             # do tarfile things
             with tarfile.open(decompressed_tar_path, mode="r") as tf:
                 files_to_extract = [
-                    tar_info for tar_info in tf.getmembers() if tar_info.name in relative_paths
+                    tar_info
+                    for tar_info in tf.getmembers()
+                    if tar_info.name in relative_paths
                 ]
                 tf.extractall(
                     path=out_dir,

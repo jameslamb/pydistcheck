@@ -50,7 +50,9 @@ for file_type in files_by_type:
     output_file = os.path.join(OUTPUT_DIR, sample_release.filename)
     print(f"Downloading '{sample_release.filename}'")
     res = requests.get(
-        url=sample_release.url, headers={"Accept": "application/octet-stream"}, timeout=30
+        url=sample_release.url,
+        headers={"Accept": "application/octet-stream"},
+        timeout=30,
     )
     res.raise_for_status()
     with open(output_file, "wb") as f:

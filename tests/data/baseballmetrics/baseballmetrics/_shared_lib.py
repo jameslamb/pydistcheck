@@ -8,5 +8,10 @@ else:
     _shlib_ext = "so"
 
 _LIB = ctypes.cdll.LoadLibrary(
-    str(Path(__file__).absolute().parents[1].joinpath(f"lib/lib_baseballmetrics.{_shlib_ext}"))
+    str(
+        Path(__file__)
+        .absolute()
+        .parents[1]
+        .joinpath(f"lib/lib_baseballmetrics.{_shlib_ext}")
+    )
 )

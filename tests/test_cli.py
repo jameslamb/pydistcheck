@@ -11,7 +11,10 @@ BASE_PACKAGES = [
     "base-package-0.1.0.tar.gz",
     "base-package-0.1.0.zip",
 ]
-PROBLEMATIC_PACKAGES = ["problematic-package-0.1.0.tar.gz", "problematic-package-0.1.0.zip"]
+PROBLEMATIC_PACKAGES = [
+    "problematic-package-0.1.0.tar.gz",
+    "problematic-package-0.1.0.zip",
+]
 MACOS_SUFFIX = "macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl"
 MANYLINUX_SUFFIX = "manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl"
 BASEBALL_PACKAGES = [
@@ -35,7 +38,9 @@ PACKAGES_WITH_DEBUG_SYMBOLS = [
 TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
 
-def _assert_log_matches_pattern(result: Result, pattern: str, num_times: int = 1) -> None:
+def _assert_log_matches_pattern(
+    result: Result, pattern: str, num_times: int = 1
+) -> None:
     log_lines = result.output.split("\n")
     match_results = [bool(re.search(pattern, log_line)) for log_line in log_lines]
     num_matches_found = sum(match_results)
@@ -198,7 +203,10 @@ def test_check_respects_ignore_with_multiple_checks(distro_file):
 def test_check_fails_with_expected_error_if_one_check_is_unrecognized(distro_file):
     result = CliRunner().invoke(
         check,
-        [os.path.join(TEST_DATA_DIR, distro_file), "--ignore=too-many-files,random-nonsense"],
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--ignore=too-many-files,random-nonsense",
+        ],
     )
     assert result.exit_code == 1
     _assert_log_matches_pattern(
@@ -211,7 +219,9 @@ def test_check_fails_with_expected_error_if_one_check_is_unrecognized(distro_fil
 
 
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES)
-def test_check_fails_with_expected_error_if_multiple_checks_are_unrecognized(distro_file):
+def test_check_fails_with_expected_error_if_multiple_checks_are_unrecognized(
+    distro_file,
+):
     result = CliRunner().invoke(
         check,
         [
@@ -258,7 +268,10 @@ def test_check_respects_max_allowed_size_compressed(size_str, distro_file):
     runner = CliRunner()
     result = runner.invoke(
         check,
-        [os.path.join(TEST_DATA_DIR, distro_file), f"--max-allowed-size-compressed={size_str}"],
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            f"--max-allowed-size-compressed={size_str}",
+        ],
     )
     assert result.exit_code == 1
 
@@ -287,7 +300,10 @@ def test_check_respects_max_allowed_size_uncompressed(size_str, distro_file):
     runner = CliRunner()
     result = runner.invoke(
         check,
-        [os.path.join(TEST_DATA_DIR, distro_file), f"--max-allowed-size-uncompressed={size_str}"],
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            f"--max-allowed-size-uncompressed={size_str}",
+        ],
     )
     assert result.exit_code == 1
 
@@ -306,7 +322,9 @@ def test_check_prefers_pyproject_toml_to_defaults(distro_file, tmp_path):
     runner = CliRunner()
     with runner.isolated_filesystem(temp_dir=tmp_path):
         with open("pyproject.toml", "w") as f:
-            f.write("[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '7B'\n")
+            f.write(
+                "[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '7B'\n"
+            )
         result = runner.invoke(
             check,
             [os.path.join(TEST_DATA_DIR, distro_file)],
@@ -349,14 +367,21 @@ def test_check_handles_ignore_list_in_pyproject_toml_correctly(distro_file, tmp_
 
 
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES)
-def test_check_prefers_keyword_args_to_pyproject_toml_and_defaults(distro_file, tmp_path):
+def test_check_prefers_keyword_args_to_pyproject_toml_and_defaults(
+    distro_file, tmp_path
+):
     runner = CliRunner()
     with runner.isolated_filesystem(temp_dir=tmp_path):
         with open("pyproject.toml", "w") as f:
-            f.write("[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '7B'\n")
+            f.write(
+                "[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '7B'\n"
+            )
         result = runner.invoke(
             check,
-            [os.path.join(TEST_DATA_DIR, distro_file), "--max-allowed-size-uncompressed=123B"],
+            [
+                os.path.join(TEST_DATA_DIR, distro_file),
+                "--max-allowed-size-uncompressed=123B",
+            ],
         )
 
     assert result.exit_code == 1
@@ -375,12 +400,16 @@ def test_check_prefers_custom_toml_file_to_root_pyproject_toml(distro_file, tmp_
     runner = CliRunner()
     with runner.isolated_filesystem(temp_dir=tmp_path):
         with open("pyproject.toml", "w") as f:
-            f.write("[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '10GB'\n")
+            f.write(
+                "[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '10GB'\n"
+            )
         other_dir = os.path.join(tmp_path, "cool-files")
         other_config = os.path.join(other_dir, "stuff.toml")
         os.mkdir(other_dir)
         with open(other_config, "w") as f:
-            f.write("[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '7B'\n")
+            f.write(
+                "[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '7B'\n"
+            )
         result = runner.invoke(
             check,
             [os.path.join(TEST_DATA_DIR, distro_file), f"--config={other_config}"],
@@ -415,7 +444,9 @@ def test_files_only_differ_by_case_works(distro_file):
             r",problematic\-package\-0\.1\.0/problematic_package/question\.py"
         ),
     )
-    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: [0-9]{1}")
+    _assert_log_matches_pattern(
+        result=result, pattern=r"errors found while checking\: [0-9]{1}"
+    )
 
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
@@ -442,7 +473,9 @@ def test_mixed_file_extension_use_works(distro_file):
         ),
     )
 
-    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: [0-9]{1}")
+    _assert_log_matches_pattern(
+        result=result, pattern=r"errors found while checking\: [0-9]{1}"
+    )
 
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
@@ -465,7 +498,9 @@ def test_path_contains_non_ascii_characters_works(distro_file):
         ),
     )
 
-    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: [0-9]{1}")
+    _assert_log_matches_pattern(
+        result=result, pattern=r"errors found while checking\: [0-9]{1}"
+    )
 
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
@@ -511,7 +546,9 @@ def test_path_contains_spaces_works(distro_file):
         ),
     )
 
-    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: [0-9]{1}")
+    _assert_log_matches_pattern(
+        result=result, pattern=r"errors found while checking\: [0-9]{1}"
+    )
 
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
@@ -557,18 +594,24 @@ def test_unexpected_files_check_works(distro_file):
         ),
     )
 
-    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: [0-9]{1}")
+    _assert_log_matches_pattern(
+        result=result, pattern=r"errors found while checking\: [0-9]{1}"
+    )
 
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
-def test_cli_raises_exactly_the_expected_number_of_errors_for_the_problematic_package(distro_file):
+def test_cli_raises_exactly_the_expected_number_of_errors_for_the_problematic_package(
+    distro_file,
+):
     runner = CliRunner()
     result = runner.invoke(
         check,
         [os.path.join(TEST_DATA_DIR, distro_file)],
     )
     assert result.exit_code == 1
-    _assert_log_matches_pattern(result=result, pattern=r"errors found while checking\: 12$")
+    _assert_log_matches_pattern(
+        result=result, pattern=r"errors found while checking\: 12$"
+    )
 
 
 @pytest.mark.parametrize("distro_file", PACKAGES_WITH_DEBUG_SYMBOLS)
@@ -617,7 +660,12 @@ def test_debug_symbols_check_works(distro_file):
 def test_inspect_runs_before_checks(distro_file):
     runner = CliRunner()
     result = runner.invoke(
-        check, ["--inspect", "--max-allowed-files=1", os.path.join(TEST_DATA_DIR, distro_file)]
+        check,
+        [
+            "--inspect",
+            "--max-allowed-files=1",
+            os.path.join(TEST_DATA_DIR, distro_file),
+        ],
     )
     assert result.exit_code == 1
 

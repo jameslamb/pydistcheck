@@ -38,7 +38,10 @@ class _FileSize:
         return int(self._num * _UNIT_TO_NUM_BYTES[self._unit_str])
 
     def __eq__(self, other: object) -> bool:
-        return isinstance(other, type(self)) and self.total_size_bytes == other.total_size_bytes
+        return (
+            isinstance(other, type(self))
+            and self.total_size_bytes == other.total_size_bytes
+        )
 
     def __ge__(self, other: "_FileSize") -> bool:
         return self.total_size_bytes >= other.total_size_bytes

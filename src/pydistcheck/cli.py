@@ -33,20 +33,20 @@ class ExitCodes:
     UNSUPPORTED_FILE_TYPE = 2
 
 
-@click.command()
-@click.argument(
+@click.command()  # type: ignore[misc]
+@click.argument(  # type: ignore[misc]
     "filepaths",
     type=click.Path(exists=True),
     nargs=-1,
 )
-@click.option(
+@click.option(  # type: ignore[misc]
     "--version",
     is_flag=True,
     show_default=False,
     default=False,
     help="Print the version of pydistcheck and exit.",
 )
-@click.option(
+@click.option(  # type: ignore[misc]
     "--config",
     type=click.Path(exists=True),
     default=None,
@@ -55,7 +55,7 @@ class ExitCodes:
         "If provided, pyproject.toml will be ignored."
     ),
 )
-@click.option(
+@click.option(  # type: ignore[misc]
     "--ignore",
     type=str,
     default=_Config.ignore,
@@ -64,21 +64,21 @@ class ExitCodes:
         "``distro-too-large-compressed,path-contains-spaces``."
     ),
 )
-@click.option(
+@click.option(  # type: ignore[misc]
     "--inspect",
     is_flag=True,
     show_default=False,
     default=_Config.inspect,
     help="print diagnostic information about the distribution",
 )
-@click.option(
+@click.option(  # type: ignore[misc]
     "--max-allowed-files",
     default=_Config.max_allowed_files,
     show_default=True,
     type=int,
     help="maximum number of files allowed in the distribution",
 )
-@click.option(
+@click.option(  # type: ignore[misc]
     "--max-allowed-size-compressed",
     default=_Config.max_allowed_size_compressed,
     show_default=True,
@@ -92,7 +92,7 @@ class ExitCodes:
         "  - G = gigabytes"
     ),
 )
-@click.option(
+@click.option(  # type: ignore[misc]
     "--max-allowed-size-uncompressed",
     default=_Config.max_allowed_size_uncompressed,
     show_default=True,
@@ -106,7 +106,7 @@ class ExitCodes:
         "  - G = gigabytes"
     ),
 )
-@click.option(
+@click.option(  # type: ignore[misc]
     "--unexpected-directory-patterns",
     default=_Config.unexpected_directory_patterns,
     show_default=True,
@@ -117,7 +117,7 @@ class ExitCodes:
         "by ``fnmatch.fnmatchcase()``. See https://docs.python.org/3/library/fnmatch.html."
     ),
 )
-@click.option(
+@click.option(  # type: ignore[misc]
     "--unexpected-file-patterns",
     default=_Config.unexpected_file_patterns,
     show_default=True,
@@ -182,7 +182,9 @@ def check(  # noqa: PLR0913
         # converting to list + sorting here so outputs are deterministic
         # (since sets don't guarantee ordering)
         error_str = ",".join(sorted(unrecognized_checks))
-        print(f"ERROR: found the following unrecognized checks passed via '--ignore': {error_str}")
+        print(
+            f"ERROR: found the following unrecognized checks passed via '--ignore': {error_str}"
+        )
         sys.exit(1)
 
     checks = [

@@ -16,7 +16,9 @@ def inspect_distribution(summary: "_DistributionSummary") -> None:
     uncompressed_size = _FileSize(summary.uncompressed_size_bytes, "B")
     print(f"  * compressed size: {compressed_size}")
     print(f"  * uncompressed size: {uncompressed_size}")
-    space_saving = 1.0 - (compressed_size.total_size_bytes / uncompressed_size.total_size_bytes)
+    space_saving = 1.0 - (
+        compressed_size.total_size_bytes / uncompressed_size.total_size_bytes
+    )
     print(f"  * compression space saving: {round(100 * space_saving, 1)}%")
 
     print("contents")
@@ -31,4 +33,6 @@ def inspect_distribution(summary: "_DistributionSummary") -> None:
     largest_files = summary.get_largest_files(n=5)
     print("largest files")
     for file_info in largest_files:
-        print(f"  * ({_FileSize(file_info.uncompressed_size_bytes, 'B')}) {file_info.name}")
+        print(
+            f"  * ({_FileSize(file_info.uncompressed_size_bytes, 'B')}) {file_info.name}"
+        )

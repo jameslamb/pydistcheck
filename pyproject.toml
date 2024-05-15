@@ -67,9 +67,6 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
-[tool.black]
-line-length = 100
-
 [tool.isort]
 line_length = 100
 profile = "black"
@@ -77,6 +74,7 @@ profile = "black"
 [tool.mypy]
 exclude = 'docs/conf\.py$|build/*'
 ignore_missing_imports = true
+mypy_path = "./src:./tests/data"
 strict = true
 
 [tool.ruff]
@@ -135,6 +133,10 @@ select = [
     "PLR0912",
     # Too many statements
     "PLR0915"
+]
+"src/pydistcheck/distribution_summary.py" = [
+    # Too many branches
+    "PLR0912"
 ]
 "tests/*" = [
     # (flake8-bugbear) Found useless expression

@@ -46,7 +46,9 @@ _COMMANDS_TO_PATTERNS = [
 def _look_for_debug_symbols(lib_file: str) -> Tuple[bool, str]:
     for cmd_args, pattern in _COMMANDS_TO_PATTERNS:
         stdout = _run_command(args=[*cmd_args, lib_file])
-        contains_debug_symbols = any(bool(re.search(pattern, x)) for x in stdout.split("\n"))
+        contains_debug_symbols = any(
+            bool(re.search(pattern, x)) for x in stdout.split("\n")
+        )
         if contains_debug_symbols:
             return True, " ".join(cmd_args)
     # if you get here, no debug symbols were found by any tools
@@ -55,7 +57,9 @@ def _look_for_debug_symbols(lib_file: str) -> Tuple[bool, str]:
 
 def _get_symbols(cmd_args: List[str], lib_file: str) -> str:
     syms = _run_command(args=[*cmd_args, lib_file])
-    return "\n".join([line for line in syms.split("\n") if not (" a " in line or "\ta\t" in line)])
+    return "\n".join(
+        [line for line in syms.split("\n") if not (" a " in line or "\ta\t" in line)]
+    )
 
 
 def _nm_reports_debug_symbols(tool_name: str, lib_file: str) -> Tuple[bool, str]:
@@ -65,7 +69,6 @@ def _nm_reports_debug_symbols(tool_name: str, lib_file: str) -> Tuple[bool, str]
 
 
 def _file_has_debug_symbols(file_absolute_path: str) -> Tuple[bool, str]:
-
     # test with tools that produce debug symbols that can be matched with a regex
     has_debug_symbols, cmd_str = _look_for_debug_symbols(lib_file=file_absolute_path)
     if has_debug_symbols:

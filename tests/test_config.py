@@ -45,7 +45,9 @@ def test_update_from_dict_raises_exception_for_first_bad_value_encountered(base_
         base_config.update_from_dict({"a": 7, "b": 8, "inspect": False})
 
 
-def test_update_from_dict_works_even_if_dict_does_not_include_all_config_values(base_config):
+def test_update_from_dict_works_even_if_dict_does_not_include_all_config_values(
+    base_config,
+):
     assert base_config.inspect is False
     base_config.update_from_dict({"inspect": True})
     assert base_config.inspect is True
@@ -65,7 +67,9 @@ def test_update_from_dict_works_when_changing_all_values(base_config):
         "unexpected_directory_patterns": "*/tests",
         "unexpected_file_patterns": "*.xlsx,data/*.csv",
     }
-    assert set(patch_dict.keys()) == _ALLOWED_CONFIG_VALUES, "this test needs to be updated"
+    assert (
+        set(patch_dict.keys()) == _ALLOWED_CONFIG_VALUES
+    ), "this test needs to be updated"
     base_config.update_from_dict(patch_dict)
     assert base_config.inspect is True
     assert base_config.max_allowed_files == 8
@@ -81,7 +85,9 @@ def test_update_from_toml_silently_returns_self_if_file_does_not_exist(base_conf
     assert out == original_config
 
 
-def test_update_from_toml_works_for_files_with_no_pydistcheck_configuration(base_config, tmpdir):
+def test_update_from_toml_works_for_files_with_no_pydistcheck_configuration(
+    base_config, tmpdir
+):
     original_config = deepcopy(base_config)
     temp_file = os.path.join(tmpdir, f"{uuid.uuid4().hex}.toml")
     with open(temp_file, "w") as f:
@@ -90,7 +96,9 @@ def test_update_from_toml_works_for_files_with_no_pydistcheck_configuration(base
     assert base_config == original_config
 
 
-def test_update_from_toml_works_for_files_with_empty_pydistcheck_configuration(base_config, tmpdir):
+def test_update_from_toml_works_for_files_with_empty_pydistcheck_configuration(
+    base_config, tmpdir
+):
     original_config = deepcopy(base_config)
     temp_file = os.path.join(tmpdir, f"{uuid.uuid4().hex}.toml")
     with open(temp_file, "w") as f:
@@ -102,7 +110,9 @@ def test_update_from_toml_works_for_files_with_empty_pydistcheck_configuration(b
 @pytest.mark.parametrize(
     "config_key", ["max_allowed_size_compressed", "max-allowed-size_compressed"]
 )
-def test_update_from_toml_works_with_underscores_and_hyphens(base_config, tmpdir, config_key):
+def test_update_from_toml_works_with_underscores_and_hyphens(
+    base_config, tmpdir, config_key
+):
     temp_file = os.path.join(tmpdir, f"{uuid.uuid4().hex}.toml")
     with open(temp_file, "w") as f:
         f.write(f"[tool.pylint]\n[tool.pydistcheck]\n{config_key} = '2.5G'\n")
@@ -111,7 +121,9 @@ def test_update_from_toml_works_with_underscores_and_hyphens(base_config, tmpdir
 
 
 @pytest.mark.parametrize("use_hyphens", [True, False])
-def test_update_from_toml_works_with_all_config_values(base_config, tmpdir, use_hyphens):
+def test_update_from_toml_works_with_all_config_values(
+    base_config, tmpdir, use_hyphens
+):
     temp_file = os.path.join(tmpdir, f"{uuid.uuid4().hex}.toml")
     patch_dict = {
         "ignore": "[\n'path-contains-spaces',\n'too-many-files'\n]",
@@ -122,7 +134,9 @@ def test_update_from_toml_works_with_all_config_values(base_config, tmpdir, use_
         "unexpected_directory_patterns": "[\n'tests/*'\n]",
         "unexpected_file_patterns": "[\n'*.pq',\n'*/tests/data/*.csv']",
     }
-    assert set(patch_dict.keys()) == _ALLOWED_CONFIG_VALUES, "this test needs to be updated"
+    assert (
+        set(patch_dict.keys()) == _ALLOWED_CONFIG_VALUES
+    ), "this test needs to be updated"
     if use_hyphens:
         patch_dict = {k.replace("_", "-"): v for k, v in patch_dict.items()}
     with open(temp_file, "w") as f:
