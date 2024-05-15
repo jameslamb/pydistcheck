@@ -74,10 +74,13 @@ The following open-source tools can be used to detect (and in some cases repair)
 * ``auditwheel-symbols`` (`link <https://github.com/messense/auditwheel-symbols>`__) = detect which symbols in a Linux wheel's shared library are causing ``auditwheel`` to sugggest a more recent ``manylinux`` tag
 * ``check-manifest`` (`link <https://github.com/mgedmin/check-manifest>`__) = check that sdists contain all the files you expect them to, based on what you've checked into version control
 * ``check-wheel-contents`` (`link <https://github.com/jwodder/check-wheel-contents>`__) = detect unnecessary files, import issues, portability problems in wheels
+* ``conda-verify`` (`link <https://github.com/conda/conda-verify/tree/main>__`) = detect portability and correctness problems in conda packages
 * ``delocate`` (`link <https://github.com/matthew-brett/delocate>`__) = detect and repair issues in macOS wheels that link to external shared libraries
 * ``delvewheel`` (`link <https://github.com/adang1345/delvewheel>`__) = detect and repair issues in Windows wheels that link to external shared libraries
-* ``pydistcheck`` (`link <https://github.com/jameslamb/pydistcheck>`__) = detect portability problems in wheels and sdists
+* ``pkginfo`` (`link https://pythonhosted.org/pkginfo/`__) = print sdist and wheel metadata
+* ``pydistcheck`` (`link <https://github.com/jameslamb/pydistcheck>`__) = detect portability problems in conda packages, wheels, and sdists
 * ``pyroma`` (`link <https://github.com/regebro/pyroma>`__) = detect incomplete or malformed metadata in sdists
+* ``repairwheel`` (`link <https://github.com/jvolkman/repairwheel>`__) = repair issues in Linux, macOS, and Windows wheels (wraps ``auditwheel``, ``delocate``, and ``delvewheel``)
 * ``twine`` (`link <https://github.com/pypa/twine>`__) = detect issues in package metadata (via ``twine check``)
 * ``wheel-inspect`` (`link <https://github.com/jwodder/wheel-inspect>`__) = dump summary information about wheels into machine-readable formats
 
