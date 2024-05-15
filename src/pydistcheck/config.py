@@ -73,7 +73,9 @@ class _Config:
     def __setattr__(self, name: str, value: Any) -> None:
         attr_name = name.replace("-", "_")
         if attr_name not in _ALLOWED_CONFIG_VALUES:
-            raise ValueError(f"Configuration value '{name}' is not recognized by pydistcheck")
+            raise ValueError(
+                f"Configuration value '{name}' is not recognized by pydistcheck"
+            )
         object.__setattr__(self, attr_name, value)
 
     def update_from_dict(self, input_dict: Dict[str, Any]) -> "_Config":

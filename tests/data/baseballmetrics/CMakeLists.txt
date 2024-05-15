@@ -33,7 +33,7 @@ else()
     set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR})
 endif()
 
-# install lib_baseballmetrics to 
+# install lib_baseballmetrics to
 install(
   TARGETS _baseballmetrics
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

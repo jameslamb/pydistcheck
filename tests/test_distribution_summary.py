@@ -79,7 +79,10 @@ def test_distribution_summary_basically_works(distro_file):
 
     # files_by_extension makes sense
     assert ds.files_by_extension.keys() == ds.size_by_file_extension.keys()
-    assert sum(len(file_list) for file_list in ds.files_by_extension.values()) == ds.num_files
+    assert (
+        sum(len(file_list) for file_list in ds.files_by_extension.values())
+        == ds.num_files
+    )
 
     # size_by_file_extension should return results sorted from largest to smallest by file size
     last_size_seen = float("inf")
@@ -100,7 +103,9 @@ def test_distribution_summary_basically_works(distro_file):
 
 
 def test_distribution_summary_get_largest_files_works():
-    ds = _DistributionSummary.from_file(os.path.join(TEST_DATA_DIR, BASE_PACKAGE_SDISTS[0]))
+    ds = _DistributionSummary.from_file(
+        os.path.join(TEST_DATA_DIR, BASE_PACKAGE_SDISTS[0])
+    )
 
     # get_largest_files() should return a non-empty list of _FileInfo objects
     num_files = ds.num_files

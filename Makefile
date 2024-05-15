@@ -35,8 +35,6 @@ format:
 		--indent 4 \
 		--space-redirects \
 		./bin
-	isort .
-	black .
 
 .PHONY: install
 install:
@@ -44,6 +42,7 @@ install:
 
 .PHONY: lint
 lint:
+	pre-commit run --all-files
 	shfmt \
 		-d \
 		-i 4 \
@@ -52,12 +51,6 @@ lint:
 	shellcheck \
 		--exclude=SC2002 \
 		bin/*.sh
-	black \
-		--check \
-		.
-	ruff check .
-	mypy ./src
-	mypy ./tests/data
 	yamllint \
 		--strict \
 		-d '{extends: default, rules: {braces: {max-spaces-inside: 1}, truthy: {check-keys: false}, line-length: {max: 120}}}' \

@@ -40,7 +40,9 @@ class _DistributionSummary:
                 for tar_info in tf.getmembers():
                     if tar_info.isfile():
                         files.append(
-                            _FileInfo.from_tarfile_member(archive_file=tf, tar_info=tar_info)
+                            _FileInfo.from_tarfile_member(
+                                archive_file=tf, tar_info=tar_info
+                            )
                         )
                     else:
                         directories.append(_DirectoryInfo(name=tar_info.name))
@@ -49,7 +51,9 @@ class _DistributionSummary:
                 for tar_info in tf.getmembers():
                     if tar_info.isfile():
                         files.append(
-                            _FileInfo.from_tarfile_member(archive_file=tf, tar_info=tar_info)
+                            _FileInfo.from_tarfile_member(
+                                archive_file=tf, tar_info=tar_info
+                            )
                         )
                     else:
                         directories.append(_DirectoryInfo(name=tar_info.name))
@@ -61,7 +65,9 @@ class _DistributionSummary:
             #      - 'pkg-*.tar.zst'
             #
             # ref: https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/packages.html#conda-file-format
-            with zipfile.ZipFile(filename, mode="r") as f, TemporaryDirectory() as tmp_dir:
+            with zipfile.ZipFile(
+                filename, mode="r"
+            ) as f, TemporaryDirectory() as tmp_dir:
                 for zip_info in f.infolist():
                     # case 1 - is a directory
                     if zip_info.is_dir():
@@ -69,7 +75,9 @@ class _DistributionSummary:
                     # case 2 - is a file but not one of the zstandard-compressed ones
                     elif not zip_info.filename.lower().endswith("tar.zst"):
                         files.append(
-                            _FileInfo.from_zipfile_member(archive_file=f, zip_info=zip_info)
+                            _FileInfo.from_zipfile_member(
+                                archive_file=f, zip_info=zip_info
+                            )
                         )
                     # case 3 - one of the zstandard-compressed archives
                     else:
@@ -81,9 +89,12 @@ class _DistributionSummary:
                             zf.extractall(path=tmp_dir, members=[zip_info.filename])
 
                             # decompress the .tar.zst to just .tar
-                            decompressed_tar_path = full_path.lower().replace(".tar.zst", ".tar")
+                            decompressed_tar_path = full_path.lower().replace(
+                                ".tar.zst", ".tar"
+                            )
                             _decompress_zstd_archive(
-                                tar_zst_file=full_path, decompressed_tar_path=decompressed_tar_path
+                                tar_zst_file=full_path,
+                                decompressed_tar_path=decompressed_tar_path,
                             )
 
                         # do tarfile things
@@ -96,14 +107,18 @@ class _DistributionSummary:
                                         )
                                     )
                                 else:
-                                    directories.append(_DirectoryInfo(name=tar_info.name))
+                                    directories.append(
+                                        _DirectoryInfo(name=tar_info.name)
+                                    )
         elif archive_format == _ArchiveFormat.ZIP:
             # assume anything else can be opened with zipfile
             with zipfile.ZipFile(filename, mode="r") as f:
                 for zip_info in f.infolist():
                     if not zip_info.is_dir():
                         files.append(
-                            _FileInfo.from_zipfile_member(archive_file=f, zip_info=zip_info)
+                            _FileInfo.from_zipfile_member(
+                                archive_file=f, zip_info=zip_info
+                            )
                         )
                     else:
                         directories.append(_DirectoryInfo(name=zip_info.filename))
@@ -155,7 +170,9 @@ class _DistributionSummary:
         return len(self.files)
 
     def get_largest_files(self, n: int) -> List[_FileInfo]:
-        return sorted(self.files, key=lambda f: f.uncompressed_size_bytes, reverse=True)[:n]
+        return sorted(
+            self.files, key=lambda f: f.uncompressed_size_bytes, reverse=True
+        )[:n]
 
     @property
     def uncompressed_size_bytes(self) -> int:

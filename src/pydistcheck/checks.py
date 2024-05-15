@@ -33,7 +33,9 @@ ALL_CHECKS = {
 class _CheckProtocol(Protocol):
     check_name: str
 
-    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:  # pragma: no cover
+    def __call__(
+        self, distro_summary: _DistributionSummary
+    ) -> List[str]:  # pragma: no cover
         ...
 
 
@@ -42,7 +44,9 @@ class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
-        compiled_object_paths = [file_info.name for file_info in distro_summary.compiled_objects]
+        compiled_object_paths = [
+            file_info.name for file_info in distro_summary.compiled_objects
+        ]
         if not compiled_object_paths:
             return out
 
@@ -96,7 +100,9 @@ class _DistroTooLargeUnCompressedCheck(_CheckProtocol):
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
         max_size = _FileSize(num=self.max_allowed_size_bytes, unit_str="B")
-        actual_size = _FileSize(num=distro_summary.uncompressed_size_bytes, unit_str="B")
+        actual_size = _FileSize(
+            num=distro_summary.uncompressed_size_bytes, unit_str="B"
+        )
         if actual_size > max_size:
             msg = (
                 f"[{self.check_name}] Uncompressed size {actual_size} is larger "
@@ -155,7 +161,9 @@ class _NonAsciiCharacterCheck(_CheckProtocol):
         out: List[str] = []
         for file_path in distro_summary.all_paths:
             if not file_path.isascii():
-                ascii_converted_str = file_path.encode("ascii", "replace").decode("ascii")
+                ascii_converted_str = file_path.encode("ascii", "replace").decode(
+                    "ascii"
+                )
                 msg = (
                     f"[{self.check_name}] Found file path containing non-ASCII characters: "
                     f"'{ascii_converted_str}'"
@@ -210,7 +218,9 @@ class _UnexpectedFilesCheck(_CheckProtocol):
     check_name = "unexpected-files"
 
     def __init__(
-        self, unexpected_directory_patterns: List[str], unexpected_file_patterns: List[str]
+        self,
+        unexpected_directory_patterns: List[str],
+        unexpected_file_patterns: List[str],
     ):
         self.unexpected_directory_patterns = unexpected_directory_patterns
         self.unexpected_file_patterns = unexpected_file_patterns

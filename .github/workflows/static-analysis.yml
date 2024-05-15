@@ -24,11 +24,9 @@ jobs:
           conda install \
             --yes \
             -c conda-forge \
-              black \
-              isort \
               'mypy>=0.931' \
+              pre-commit \
               requests \
-              ruff \
               shellcheck \
               types-requests \
               yamllint
