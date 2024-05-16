@@ -77,7 +77,7 @@ The following open-source tools can be used to detect (and in some cases repair)
 * ``conda-verify`` (`link <https://github.com/conda/conda-verify/tree/main>__`) = detect portability and correctness problems in conda packages
 * ``delocate`` (`link <https://github.com/matthew-brett/delocate>`__) = detect and repair issues in macOS wheels that link to external shared libraries
 * ``delvewheel`` (`link <https://github.com/adang1345/delvewheel>`__) = detect and repair issues in Windows wheels that link to external shared libraries
-* ``pkginfo`` (`link https://pythonhosted.org/pkginfo/`__) = print sdist and wheel metadata
+* ``pkginfo`` (`link <https://pythonhosted.org/pkginfo>`__) = print sdist and wheel metadata
 * ``pydistcheck`` (`link <https://github.com/jameslamb/pydistcheck>`__) = detect portability problems in conda packages, wheels, and sdists
 * ``pyroma`` (`link <https://github.com/regebro/pyroma>`__) = detect incomplete or malformed metadata in sdists
 * ``repairwheel`` (`link <https://github.com/jvolkman/repairwheel>`__) = repair issues in Linux, macOS, and Windows wheels (wraps ``auditwheel``, ``delocate``, and ``delvewheel``)
