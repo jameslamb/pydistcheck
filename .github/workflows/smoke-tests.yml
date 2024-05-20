@@ -45,7 +45,7 @@ jobs:
       - name: run tests
         shell: bash -l {0}
         run: |
-          mamba install \
+          conda install \
             --yes \
               pipx \
               requests
