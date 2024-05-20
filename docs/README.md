@@ -4,10 +4,10 @@ This page describes how to test and develop changes to ``pydistcheck``'s documen
 
 ## Build Locally
 
-To build the documentation locally, create a ``conda`` environment using [`mamba`](https://github.com/mamba-org/mamba).
+To build the documentation locally, create a ``conda`` environment.
 
 ```shell
-mamba env create \
+conda env create \
     -n pydistcheck-docs \
     --file ./env.yml
 ```
