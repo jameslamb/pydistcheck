@@ -1,19 +1,19 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # [description] test that the packages used in in unit tests
 #               are valid, installable Python distributions
 
 set -e -u -o pipefail
 
-if [[ $OSTYPE == 'darwin'* ]]; then
+if [[ $OSTYPE =~ [Dd]arwin.* ]]; then
     OS_NAME="macos"
 else
     OS_NAME="linux"
 fi
 
 check_distro() {
-    distro_file=${1}
-    test_code=${2}
+    local distro_file=${1}
+    local test_code=${2}
     echo ""
     echo "checking '${distro_file}'"
     pip uninstall -qq --yes \
