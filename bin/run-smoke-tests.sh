@@ -5,7 +5,7 @@ set -e -u -o pipefail
 echo "running smoke tests"
 
 get-files() {
-    pkg_name=$1
+    local pkg_name=$1
     rm -rf ./smoke-tests
     mkdir -p ./smoke-tests
     echo ""
@@ -15,7 +15,7 @@ get-files() {
 }
 
 get-conda-forge-files() {
-    pkg_name=$1
+    local pkg_name=$1
     mkdir -p ./smoke-tests
     echo ""
     python bin/get-conda-release-files.py \
