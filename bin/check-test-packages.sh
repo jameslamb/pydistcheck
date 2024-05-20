@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # [description] test that the packages used in in unit tests
 #               are valid, installable Python distributions
