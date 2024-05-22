@@ -27,6 +27,9 @@ max_allowed_size_uncompressed = '75M'
 
 # If any file or directory in the distribution has a path longer
 # than this many characters, pydistcheck reports a 'path-too-long' check failure.
+#
+# For help choosing a value, see
+# https://pydistcheck.readthedocs.io/en/latest/check-reference.html#path-too-long
 max_path_length = 200
 
 # List of fnmatch.fnmatchcase() patterns to be compared to directories
