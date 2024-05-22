@@ -3,30 +3,28 @@ pydistcheck
 
 ``pydistcheck`` is a command-line interface (CLI) used to perform the following activities on Python package distributions.
 
+**enforce constraints in continuous integration**
+
+- *package contains all the expected files*
+- *package is free from any unexpected files*
+- *maximum package size (compressed and uncompressed)*
+- *filepaths portable to different operating systems*
+- *binary objects do not contain debugging symbols*
+
 **inspect the distribution's contents during development**
 
 - *how large is the package, compressed and uncompressed?*
 - *how many files does it contain?*
 - *what % of the package is Python files? compiled objects?*
-- *what's the difference between the compressed and uncompressed size?*
-
-**enforce constraints in continuous integration**
-
-- *should not be larger than* ``n`` *MB uncompressed*
-- *should not contain more than* ``x`` *files*
-- *should not contain non-portable filepaths*
-- *should not contain compiled code with debugging symbols*
+- *what are the largest files in the package?*
 
 .. code-block:: shell
 
     # install
-    pipx install pydistcheck
-
-    # run checks
-    pydistcheck dist/*
+    pip install pydistcheck
 
     # run checks and view diagnostic information
-    pydistcheck --inspect dist/*
+    pipx run pydistcheck --inspect dist/*
 
 .. toctree::
    :maxdepth: 1
