@@ -121,6 +121,58 @@ For more information, see:
 * `"Don't use spaces or underscores in file paths" (blog post) <https://yihui.org/en/2018/03/space-pain/>`_
 * `"What technical reasons exist for not using space characters in file names?" (Stack Overflow) <https://superuser.com/questions/29111/what-technical-reasons-exist-for-not-using-space-characters-in-file-names>`_
 
+path-too-long
+*************
+
+A file or directory in the distribution has a path that has too many characters.
+
+Some operating systems have limits on path lengths, and distributions with longer paths
+might not be installable on those systems.
+
+By default, ``pydistcheck`` reports this check failure if it detects any paths longer than ``200`` characters.
+This is primarily informed by the following limitations:
+
+* many Windows systems limit the total filepath length (excluding drive specifiers like ``C://``) to 256 characters
+* some older ``tar`` implementations will not support paths longer than 256 characters
+
+See below for details.
+
+> *Tarballs are only required to store paths of up to 100 bytes and cannot store those of more than 256 bytes*.
+
+`R CMD check source code <https://github.com/wch/r-source/blob/29559f9bf4df2c55ef5eace203cbe335bbd03f2f/src/library/tools/R/check.R#L839>`__
+
+> *...packages are normally distributed as tarballs, and these have a limit on path lengths: for maximal portability 100 bytes.*
+
+`"Package Structure" (Writing R Extensions) <https://cran.r-project.org/doc/manuals/R-exts.html#Package-structure>`__
+
+> *Windows historically has limited path lengths to 260 characters.*
+> *This meant that paths longer than this would not resolve and errors would result.*
+>
+> *In the latest versions of Windows, this limitation can be expanded to approximately 32,000 characters.*
+> *Your administrator will need to activate the ``"Enable Win32 long paths"`` group policy, or set ``LongPathsEnabled`` to 1 in the registry key ``HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem``.*
+>
+> *This allows the open() function, the os module and most other path functionality to accept and return paths longer than 260 characters.*
+
+`"Removing the Max Path Limitation" (Python Windows docs) <https://docs.python.org/3/using/windows.html#removing-the-max-path-limitation>`__
+
+> *Git has a limit of 4096 characters for a filename, except on Windows when Git is compiled with msys.*
+> *It uses an older version of the Windows API and there's a limit of 260 characters for a filename.*
+>
+> *You can circumvent this by using another Git client on Windows or set ``core.longpaths`` to ``true``...*
+
+`Filename too long in Git for Windows (Stack Overflow answer) <https://stackoverflow.com/a/22575737/3986677>`__
+
+Other relevant discussions:
+
+* `"Maximum Path Length" (Windows docs) <https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry>`__
+* `"Comparison of Filesystems: Limits" (Wikipedia) <https://en.wikipedia.org/wiki/Comparison_of_file_systems#Limits>`__
+* `"Could the 100 byte path length limit be lifted?" (r-pkg-devel, 2023) <https://stat.ethz.ch/pipermail/r-package-devel/2023q4/010203.html>`__
+* `"R CMD check NOTE - Long paths in package" (r-pkg-devel, 2015) <https://stat.ethz.ch/pipermail/r-package-devel/2015q4/000511.html>`__
+* `"Filename length limits on linux?" (serverfault answer, 2009-2016) <https://serverfault.com/a/9548>`__
+* `"Command prompt (Cmd. exe) command-line string limitation" (Windows docs, 2023) <https://learn.microsoft.com/en-us/troubleshoot/windows-client/shell-experience/command-line-string-limitation>`__
+* `conda-build discussion about 255-character prefix limit (conda/conda-build#1482) <https://github.com/conda/conda-build/issues/1482#issuecomment-256530225>`__
+* `discussion about paths lengths (Python Discourse, 2023) <https://discuss.python.org/t/you-can-now-download-pypi-locally/32662/8>`__
+
 too-many-files
 **************
 

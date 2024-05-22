@@ -27,6 +27,7 @@ ALL_CHECKS = {
     "mixed-file-extensions",
     "path-contains-non-ascii-characters",
     "path-contains-spaces",
+    "path-too-long",
     "unexpected-files",
 }
 
@@ -200,6 +201,26 @@ class _MixedFileExtensionCheck(_CheckProtocol):
                     f"the same file type: {count_str}"
                 )
                 out.append(msg)
+        return out
+
+
+class _PathTooLongCheck(_CheckProtocol):
+    check_name = "path-too-long"
+
+    def __init__(self, max_path_length: int):
+        self.max_path_length = max_path_length
+
+    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
+        out: List[str] = []
+        bad_paths = [
+            p for p in distro_summary.all_paths if len(p) > self.max_path_length
+        ]
+        for file_path in bad_paths:
+            msg = (
+                f"[{self.check_name}] Path too long ({len(file_path)} > {self.max_path_length}): "
+                f"'{file_path}'"
+            )
+            out.append(msg)
         return out
 
 

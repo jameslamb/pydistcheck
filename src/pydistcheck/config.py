@@ -16,13 +16,14 @@ from ._compat import tomllib
 #
 # unit tests confirm that it matches the `_Config` class, so it shouldn't ever drift from that class
 _ALLOWED_CONFIG_VALUES = {
+    "expected_directories",
+    "expected_files",
     "ignore",
     "inspect",
     "max_allowed_files",
     "max_allowed_size_compressed",
     "max_allowed_size_uncompressed",
-    "expected_directories",
-    "expected_files",
+    "max_path_length",
 }
 
 _EXPECTED_DIRECTORIES = ",".join(
@@ -62,13 +63,14 @@ _EXPECTED_FILES = ",".join(
 
 @dataclass
 class _Config:
+    expected_directories: str = _EXPECTED_DIRECTORIES
+    expected_files: str = _EXPECTED_FILES
     ignore: str = ""
     inspect: bool = False
     max_allowed_files: int = 2000
     max_allowed_size_compressed: str = "50M"
     max_allowed_size_uncompressed: str = "75M"
-    expected_directories: str = _EXPECTED_DIRECTORIES
-    expected_files: str = _EXPECTED_FILES
+    max_path_length: int = 200
 
     def __setattr__(self, name: str, value: Any) -> None:
         attr_name = name.replace("-", "_")

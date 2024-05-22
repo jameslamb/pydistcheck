@@ -19,6 +19,7 @@ from .checks import (
     _FilesOnlyDifferByCaseCheck,
     _MixedFileExtensionCheck,
     _NonAsciiCharacterCheck,
+    _PathTooLongCheck,
     _SpacesInPathCheck,
     _UnexpectedFilesCheck,
 )
@@ -75,6 +76,32 @@ class ExitCodes:
     ),
 )
 @click.option(  # type: ignore[misc]
+    "--expected-directories",
+    default=_Config.expected_directories,
+    show_default=True,
+    type=str,
+    help=(
+        "comma-delimited list of patterns matching directories that are expected "
+        "to be found in the distribution. Prefix with '!' to indicate a pattern which "
+        "should NOT match any of the distribution's contents. Patterns should be in "
+        "the format understood by ``fnmatch.fnmatchcase()``. "
+        "See https://docs.python.org/3/library/fnmatch.html."
+    ),
+)
+@click.option(  # type: ignore[misc]
+    "--expected-files",
+    default=_Config.expected_files,
+    show_default=True,
+    type=str,
+    help=(
+        "comma-delimited list of patterns matching files that are expected "
+        "to be found in the distribution. Prefix with '!' to indicate a pattern which "
+        "should NOT match any of the distribution's contents. Patterns should be in "
+        "the format understood by ``fnmatch.fnmatchcase()``. "
+        "See https://docs.python.org/3/library/fnmatch.html."
+    ),
+)
+@click.option(  # type: ignore[misc]
     "--max-allowed-files",
     default=_Config.max_allowed_files,
     show_default=True,
@@ -110,43 +137,25 @@ class ExitCodes:
     ),
 )
 @click.option(  # type: ignore[misc]
-    "--expected-directories",
-    default=_Config.expected_directories,
+    "--max-path-length",
+    default=_Config.max_path_length,
     show_default=True,
-    type=str,
-    help=(
-        "comma-delimited list of patterns matching directories that are expected "
-        "to be found in the distribution. Prefix with '!' to indicate a pattern which "
-        "should NOT match any of the distribution's contents. Patterns should be in "
-        "the format understood by ``fnmatch.fnmatchcase()``. "
-        "See https://docs.python.org/3/library/fnmatch.html."
-    ),
-)
-@click.option(  # type: ignore[misc]
-    "--expected-files",
-    default=_Config.expected_files,
-    show_default=True,
-    type=str,
-    help=(
-        "comma-delimited list of patterns matching files that are expected "
-        "to be found in the distribution. Prefix with '!' to indicate a pattern which "
-        "should NOT match any of the distribution's contents. Patterns should be in "
-        "the format understood by ``fnmatch.fnmatchcase()``. "
-        "See https://docs.python.org/3/library/fnmatch.html."
-    ),
+    type=int,
+    help="Maximum allowed filepath length for files or directories in the distribution.",
 )
 def check(  # noqa: PLR0913
     *,
     filepaths: str,
     version: bool,
     config: str,
+    expected_directories: str,
+    expected_files: str,
     ignore: str,
     inspect: bool,
     max_allowed_files: int,
     max_allowed_size_compressed: str,
     max_allowed_size_uncompressed: str,
-    expected_directories: str,
-    expected_files: str,
+    max_path_length: int,
 ) -> None:
     """
     Run the contents of a distribution through a set of checks, and warn about
@@ -170,6 +179,7 @@ def check(  # noqa: PLR0913
         "max_allowed_files": max_allowed_files,
         "max_allowed_size_compressed": max_allowed_size_compressed,
         "max_allowed_size_uncompressed": max_allowed_size_uncompressed,
+        "max_path_length": max_path_length,
         "expected_directories": expected_directories,
         "expected_files": expected_files,
     }
@@ -213,6 +223,7 @@ def check(  # noqa: PLR0913
         _FileCountCheck(max_allowed_files=conf.max_allowed_files),
         _FilesOnlyDifferByCaseCheck(),
         _MixedFileExtensionCheck(),
+        _PathTooLongCheck(max_path_length=conf.max_path_length),
         _SpacesInPathCheck(),
         _UnexpectedFilesCheck(
             directory_patterns=expected_directories.split(","),

@@ -17,12 +17,15 @@ PROBLEMATIC_PACKAGES = [
 ]
 MACOS_SUFFIX = "macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl"
 MANYLINUX_SUFFIX = "manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl"
-BASEBALL_PACKAGES = [
+BASEBALL_CONDA_PACKAGES = [
     "osx-64-baseballmetrics-0.1.0-0.conda",
     "osx-64-baseballmetrics-0.1.0-0.tar.bz2",
+]
+BASEBALL_WHEELS = [
     f"baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
     f"baseballmetrics-0.1.0-py3-none-{MANYLINUX_SUFFIX}",
 ]
+BASEBALL_PACKAGES = BASEBALL_CONDA_PACKAGES + BASEBALL_WHEELS
 # NOTE: .bz2 and .tar.gz packages here are just unzipped
 #       and re-tarred Python wheels... to avoid pydistcheck
 #       implicitly assuming that, for example, '*.tar.gz' must
@@ -668,6 +671,48 @@ def test_expected_files_does_not_raise_check_failure_if_directory_pattern_matche
 
     _assert_log_matches_pattern(
         result=result, pattern=r"errors found while checking\: 0"
+    )
+
+
+@pytest.mark.parametrize("distro_file", BASEBALL_CONDA_PACKAGES)
+def test_path_too_long_check_works_for_conda_packages(distro_file):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [
+            "--max-path-length=5",
+            os.path.join(TEST_DATA_DIR, distro_file),
+        ],
+    )
+    assert result.exit_code == 1
+
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"\[path\-too\-long\] Path too long \(78 > 5\)\: "
+            r"'lib/python3\.9/site\-packages/baseballmetrics/__pycache__/metrics\.cpython\-39\.pyc'"
+        ),
+    )
+
+
+@pytest.mark.parametrize("distro_file", BASEBALL_WHEELS)
+def test_path_too_long_check_works_for_wheels(distro_file):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [
+            "--max-path-length=5",
+            os.path.join(TEST_DATA_DIR, distro_file),
+        ],
+    )
+    assert result.exit_code == 1
+
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"\[path\-too\-long\] Path too long \(30 > 5\)\: "
+            r"'baseballmetrics/_shared_lib\.py'"
+        ),
     )
 
 
