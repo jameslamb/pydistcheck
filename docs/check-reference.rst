@@ -61,6 +61,14 @@ The package distribution is larger (uncompressed) than the allowed size.
 
 Change that limit using configuration option ``max-distro-size-uncompressed``.
 
+expected-files
+**************
+
+The package distribution does not contain a file or directory that it was expected to contain.
+
+This can be used to test that changes to ``MANIFEST.in``, ``package_data``, and similar don't
+accidentally result in the exclusion of any expected files.
+
 files-only-differ-by-case
 *************************
 
