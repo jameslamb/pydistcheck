@@ -24,8 +24,6 @@ _ALLOWED_CONFIG_VALUES = {
     "max_allowed_size_compressed",
     "max_allowed_size_uncompressed",
     "max_path_length",
-    "unexpected_directory_patterns",
-    "unexpected_file_patterns",
 }
 
 _EXPECTED_DIRECTORIES = ",".join(
@@ -72,7 +70,7 @@ class _Config:
     max_allowed_files: int = 2000
     max_allowed_size_compressed: str = "50M"
     max_allowed_size_uncompressed: str = "75M"
-    max_path_length: int = 500
+    max_path_length: int = 200
 
     def __setattr__(self, name: str, value: Any) -> None:
         attr_name = name.replace("-", "_")

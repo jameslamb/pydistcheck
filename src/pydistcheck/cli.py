@@ -179,6 +179,7 @@ def check(  # noqa: PLR0913
         "max_allowed_files": max_allowed_files,
         "max_allowed_size_compressed": max_allowed_size_compressed,
         "max_allowed_size_uncompressed": max_allowed_size_uncompressed,
+        "max_path_length": max_path_length,
         "expected_directories": expected_directories,
         "expected_files": expected_files,
     }

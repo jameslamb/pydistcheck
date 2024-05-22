@@ -59,26 +59,26 @@ def test_update_from_dict_works_when_changing_all_values(base_config):
     assert base_config.max_allowed_size_compressed == "1G"
     assert base_config.max_allowed_size_uncompressed == "18K"
     patch_dict = {
+        "expected_directories": "!*/tests",
+        "expected_files": "!*.xlsx,!data/*.csv",
         "ignore": "path-contains-spaces,too-many-files",
         "inspect": True,
         "max_allowed_files": 8,
         "max_allowed_size_compressed": "2G",
         "max_allowed_size_uncompressed": "141K",
         "max_path_length": 600,
-        "expected_directories": "!*/tests",
-        "expected_files": "!*.xlsx,!data/*.csv",
     }
     assert (
         set(patch_dict.keys()) == _ALLOWED_CONFIG_VALUES
     ), "this test needs to be updated"
     base_config.update_from_dict(patch_dict)
+    assert base_config.expected_directories == "!*/tests"
+    assert base_config.expected_files == "!*.xlsx,!data/*.csv"
     assert base_config.inspect is True
     assert base_config.max_allowed_files == 8
     assert base_config.max_allowed_size_compressed == "2G"
     assert base_config.max_allowed_size_uncompressed == "141K"
     assert base_config.max_path_length == 600
-    assert base_config.expected_directories == "!*/tests"
-    assert base_config.expected_files == "!*.xlsx,!data/*.csv"
 
 
 def test_update_from_toml_silently_returns_self_if_file_does_not_exist(base_config):
@@ -128,14 +128,14 @@ def test_update_from_toml_works_with_all_config_values(
 ):
     temp_file = os.path.join(tmpdir, f"{uuid.uuid4().hex}.toml")
     patch_dict = {
+        "expected_directories": "[\n'!tests/*'\n]",
+        "expected_files": "[\n'!*.pq',\n'!*/tests/data/*.csv']",
         "ignore": "[\n'path-contains-spaces',\n'too-many-files'\n]",
         "inspect": "true",
         "max_allowed_files": 8,
         "max_allowed_size_compressed": "'3G'",
         "max_allowed_size_uncompressed": "'4.12G'",
         "max_path_length": 25,
-        "expected_directories": "[\n'!tests/*'\n]",
-        "expected_files": "[\n'!*.pq',\n'!*/tests/data/*.csv']",
     }
     assert (
         set(patch_dict.keys()) == _ALLOWED_CONFIG_VALUES
@@ -148,14 +148,14 @@ def test_update_from_toml_works_with_all_config_values(
         ]
         f.write("\n".join(lines))
     base_config.update_from_toml(toml_file=temp_file)
+    assert base_config.expected_directories == "!tests/*"
+    assert base_config.expected_files == "!*.pq,!*/tests/data/*.csv"
     assert base_config.ignore == "path-contains-spaces,too-many-files"
     assert base_config.inspect is True
     assert base_config.max_allowed_files == 8
     assert base_config.max_allowed_size_compressed == "3G"
     assert base_config.max_allowed_size_uncompressed == "4.12G"
     assert base_config.max_path_length == 25
-    assert base_config.expected_directories == "!tests/*"
-    assert base_config.expected_files == "!*.pq,!*/tests/data/*.csv"
 
 
 def test_update_from_toml_converts_lists_to_comma_delimited_string(base_config, tmpdir):
