@@ -155,8 +155,10 @@ See below for details.
 
 `"Removing the Max Path Limitation" (Python Windows docs) <https://docs.python.org/3/using/windows.html#removing-the-max-path-limitation>`__
 
-> *``Git`` has a limit of 4096 characters for a filename, except on Windows when ``Git`` is compiled with msys.*
+> *Git has a limit of 4096 characters for a filename, except on Windows when Git is compiled with msys.*
 > *It uses an older version of the Windows API and there's a limit of 260 characters for a filename.*
+>
+> *You can circumvent this by using another Git client on Windows or set ``core.longpaths`` to ``true``...*
 
 `Filename too long in Git for Windows (Stack Overflow answer) <https://stackoverflow.com/a/22575737/3986677>`__
 
