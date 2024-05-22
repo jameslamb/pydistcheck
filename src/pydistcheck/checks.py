@@ -21,6 +21,7 @@ ALL_CHECKS = {
     "compiled-objects-have-debug-symbols",
     "distro-too-large-compressed",
     "distro-too-large-uncompressed",
+    "expected-files",
     "too-many-files",
     "files-only-differ-by-case",
     "mixed-file-extensions",
@@ -214,27 +215,71 @@ class _SpacesInPathCheck(_CheckProtocol):
         return out
 
 
+class _ExpectedFilesCheck(_CheckProtocol):
+    check_name = "expected-files"
+
+    def __init__(
+        self,
+        directory_patterns: List[str],
+        file_patterns: List[str],
+    ):
+        self.directory_patterns = [
+            d for d in directory_patterns if not d.startswith("!")
+        ]
+        self.file_patterns = [f for f in file_patterns if not f.startswith("!")]
+
+    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
+        out: List[str] = []
+        for pattern in self.file_patterns:
+            found_any = False
+            for file_path in distro_summary.file_paths:
+                if fnmatchcase(file_path, pattern):
+                    found_any = True
+                    break
+
+            if not found_any:
+                msg = f"[{self.check_name}] Did not find any files matching pattern '{pattern}'."
+                out.append(msg)
+
+        for pattern in self.directory_patterns:
+            found_any = False
+            for directory_path in distro_summary.directory_paths:
+                # NOTE: some archive formats have a trailing "/" on directory names,
+                #       some do not
+                if fnmatchcase(directory_path, pattern) or fnmatchcase(
+                    directory_path, pattern + "/"
+                ):
+                    found_any = True
+                    break
+            if not found_any:
+                msg = f"[{self.check_name}] Did not find any directories matching pattern '{pattern}'."
+                out.append(msg)
+        return out
+
+
 class _UnexpectedFilesCheck(_CheckProtocol):
     check_name = "unexpected-files"
 
     def __init__(
         self,
-        unexpected_directory_patterns: List[str],
-        unexpected_file_patterns: List[str],
+        directory_patterns: List[str],
+        file_patterns: List[str],
     ):
-        self.unexpected_directory_patterns = unexpected_directory_patterns
-        self.unexpected_file_patterns = unexpected_file_patterns
+        self.directory_patterns = [
+            d[1:] for d in directory_patterns if d.startswith("!")
+        ]
+        self.file_patterns = [f[1:] for f in file_patterns if f.startswith("!")]
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
         out: List[str] = []
         for file_path in distro_summary.file_paths:
-            for pattern in self.unexpected_file_patterns:
+            for pattern in self.file_patterns:
                 if fnmatchcase(file_path, pattern):
                     msg = f"[{self.check_name}] Found unexpected file '{file_path}'."
                     out.append(msg)
 
         for directory_path in distro_summary.directory_paths:
-            for pattern in self.unexpected_directory_patterns:
+            for pattern in self.directory_patterns:
                 # NOTE: some archive formats have a trailing "/" on directory names,
                 #       some do not
                 if fnmatchcase(directory_path, pattern) or fnmatchcase(

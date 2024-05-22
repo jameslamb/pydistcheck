@@ -27,34 +27,34 @@ max_allowed_size_uncompressed = '75M'
 
 # List of fnmatch.fnmatchcase() patterns to be compared to directories
 # in the distribution.
-unexpected_directory_patterns = [
-    '*/.appveyor',
-    '*/.binder',
-    '*/.circleci',
-    '*/.git',
-    '*/.github',
-    '*/.idea',
-    '*/.pytest_cache',
-    '*/.mypy_cache'
+expected_directories = [
+    '!*/.appveyor',
+    '!*/.binder',
+    '!*/.circleci',
+    '!*/.git',
+    '!*/.github',
+    '!*/.idea',
+    '!*/.pytest_cache',
+    '!*/.mypy_cache'
 ]
 
 # List of fnmatch.fnmatchcase() patterns to be compared to files
 # in the distribution.
-unexpected_file_patterns = [
-    '*/appveyor.yml',
-    '*/.appveyor.yml',
-    '*/azure-pipelines.yml',
-    '*/.azure-pipelines.yml',
-    '*/.cirrus.star',
-    '*/.cirrus.yml',
-    '*/codecov.yml',
-    '*/.codecov.yml',
-    '*/.DS_Store',
-    '*/.gitignore',
-    '*/.gitpod.yml',
-    '*/.hadolint.yaml',
-    '*/.readthedocs.yaml',
-    '*/.travis.yml',
-    '*/vsts-ci.yml',
-    '*/.vsts-ci.yml'
+expected_files = [
+    '!*/appveyor.yml',
+    '!*/.appveyor.yml',
+    '!*/azure-pipelines.yml',
+    '!*/.azure-pipelines.yml',
+    '!*/.cirrus.star',
+    '!*/.cirrus.yml',
+    '!*/codecov.yml',
+    '!*/.codecov.yml',
+    '!*/.DS_Store',
+    '!*/.gitignore',
+    '!*/.gitpod.yml',
+    '!*/.hadolint.yaml',
+    '!*/.readthedocs.yaml',
+    '!*/.travis.yml',
+    '!*/vsts-ci.yml',
+    '!*/.vsts-ci.yml'
 ]
