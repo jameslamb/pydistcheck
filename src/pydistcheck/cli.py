@@ -70,7 +70,9 @@ class ExitCodes:
     is_flag=True,
     show_default=False,
     default=_Config.inspect,
-    help="print diagnostic information about the distribution",
+    help=(
+        "Print a summary of the distribution, like its total size and largest files."
+    ),
 )
 @click.option(  # type: ignore[misc]
     "--max-allowed-files",
