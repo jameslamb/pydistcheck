@@ -600,6 +600,78 @@ def test_unexpected_files_check_works(distro_file):
 
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
+def test_expected_files_check_works(distro_file):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [
+            "--expected-files=*.R",
+            "--expected-directories=Movies/*",
+            os.path.join(TEST_DATA_DIR, distro_file),
+        ],
+    )
+    assert result.exit_code == 1
+
+    # directory
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^1\. \[expected\-files\] Did not find any directories matching pattern 'Movies/\*'."
+        ),
+    )
+
+    # file
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"^2\. \[expected\-files\] Did not find any files matching pattern '\*\.R'."
+        ),
+    )
+
+    _assert_log_matches_pattern(
+        result=result, pattern=r"errors found while checking\: [0-9]+"
+    )
+
+
+@pytest.mark.parametrize("distro_file", BASEBALL_PACKAGES)
+def test_expected_files_does_not_raise_check_failure_if_all_patterns_match(distro_file):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [
+            # wheel: lib/lib_baseball_metrics
+            # conda: lib/python3.9/site-packages/lib/lib_baseballmetrics.dylib
+            "--expected-files=*/lib_baseballmetrics.*",
+            os.path.join(TEST_DATA_DIR, distro_file),
+        ],
+    )
+    assert result.exit_code == 0
+
+    _assert_log_matches_pattern(
+        result=result, pattern=r"errors found while checking\: 0"
+    )
+
+
+def test_expected_files_does_not_raise_check_failure_if_directory_pattern_matches():
+    # conda packages, macOS wheels do not preserve directory members...
+    # testing with a manylinux wheel to test that directory functionality works
+    distro_file = f"baseballmetrics-0.1.0-py3-none-{MANYLINUX_SUFFIX}"
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [
+            "--expected-directories=lib/",
+            os.path.join(TEST_DATA_DIR, distro_file),
+        ],
+    )
+    assert result.exit_code == 0
+
+    _assert_log_matches_pattern(
+        result=result, pattern=r"errors found while checking\: 0"
+    )
+
+
+@pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
 def test_cli_raises_exactly_the_expected_number_of_errors_for_the_problematic_package(
     distro_file,
 ):

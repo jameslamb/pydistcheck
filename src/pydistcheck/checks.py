@@ -252,7 +252,7 @@ class _ExpectedFilesCheck(_CheckProtocol):
                     found_any = True
                     break
             if not found_any:
-                msg = f"[{self.check_name}] Did not find any files matching pattern '{pattern}'."
+                msg = f"[{self.check_name}] Did not find any directories matching pattern '{pattern}'."
                 out.append(msg)
         return out
 
