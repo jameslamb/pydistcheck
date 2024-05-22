@@ -25,10 +25,11 @@ So finally, FINALLY, it's time to package it up into a tarball and upload it to 
 Hopefully! But let's check.
 
 * `Are those distributions valid zip or tar files?`
-* `Will their READMEs look pretty when rendered on the PyPI homepage?`
-* `Do they have correctly-formatted platform tags?`
+* `Are they small enough to fit on PyPI?`
 * `Are they as small as possible, to be kind to package repositories and users with weak internet connections?`
 * `Are they free from filepaths and file names that some operating systems will struggle with?`
+* `Do they have correctly-formatted platform tags?`
+* `Will their READMEs look pretty when rendered on the PyPI homepage?`
 
 You checked those things, right? And in continuous integration, with open-source tools, not with manual steps and random ``tar`` incantations copied from Stack Overflow?
 
