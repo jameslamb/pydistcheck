@@ -64,6 +64,7 @@ def test_update_from_dict_works_when_changing_all_values(base_config):
         "max_allowed_files": 8,
         "max_allowed_size_compressed": "2G",
         "max_allowed_size_uncompressed": "141K",
+        "max_path_length": 600,
         "expected_directories": "!*/tests",
         "expected_files": "!*.xlsx,!data/*.csv",
     }
@@ -75,6 +76,7 @@ def test_update_from_dict_works_when_changing_all_values(base_config):
     assert base_config.max_allowed_files == 8
     assert base_config.max_allowed_size_compressed == "2G"
     assert base_config.max_allowed_size_uncompressed == "141K"
+    assert base_config.max_path_length == 600
     assert base_config.expected_directories == "!*/tests"
     assert base_config.expected_files == "!*.xlsx,!data/*.csv"
 
@@ -131,6 +133,7 @@ def test_update_from_toml_works_with_all_config_values(
         "max_allowed_files": 8,
         "max_allowed_size_compressed": "'3G'",
         "max_allowed_size_uncompressed": "'4.12G'",
+        "max_path_length": 25,
         "expected_directories": "[\n'!tests/*'\n]",
         "expected_files": "[\n'!*.pq',\n'!*/tests/data/*.csv']",
     }
@@ -150,6 +153,7 @@ def test_update_from_toml_works_with_all_config_values(
     assert base_config.max_allowed_files == 8
     assert base_config.max_allowed_size_compressed == "3G"
     assert base_config.max_allowed_size_uncompressed == "4.12G"
+    assert base_config.max_path_length == 25
     assert base_config.expected_directories == "!tests/*"
     assert base_config.expected_files == "!*.pq,!*/tests/data/*.csv"
 
