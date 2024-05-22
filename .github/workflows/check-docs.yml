@@ -21,7 +21,7 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v3
         with:
           environment-file: docs/env.yml
-          activate-environment: pydistscheck-docs
+          activate-environment: pydistcheck-docs
           miniforge-variant: Mambaforge
           use-mamba: true
       - name: build docs

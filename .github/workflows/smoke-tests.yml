@@ -32,7 +32,7 @@ jobs:
           fetch-depth: 1
       - uses: conda-incubator/setup-miniconda@v3
         with:
-          activate-environment: pydistscheck-tests
+          activate-environment: pydistcheck-tests
           miniforge-variant: Mambaforge
           use-mamba: true
           python-version: ${{ matrix.python_version }}

@@ -3,7 +3,7 @@ Configuration
 
 This page describes how to configure ``pydistcheck``.
 
-``pydistscheck`` resolves different sources of configuration in the following order.
+``pydistcheck`` resolves different sources of configuration in the following order.
 
 1. default values
 2. :ref:`pyproject-toml`

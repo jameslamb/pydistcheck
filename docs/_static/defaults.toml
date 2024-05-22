@@ -1,10 +1,32 @@
 [tool.pydistcheck]
 
+# List of checks to ignore.
+# See https://pydistcheck.readthedocs.io/en/latest/check-reference.html for
+# a complete list.
 ignore = []
+
+# Set to true to print a summary of the distribution, like its total
+# size and largest files.
 inspect = false
+
+# If more than this many files is found in the distribution,
+# pydistcheck reports a 'too-many-files' check failure.
 max_allowed_files = 2000
+
+# If the distribution is larger than this size (compressed),
+# pydistcheck reports a 'distro-too-large-compressed' check failure.
+#
+# See 'pydistcheck --help' for available units.
 max_allowed_size_compressed = '50M'
+
+# If the distribution is larger than this size (uncompressed),
+# pydistcheck reports a 'distro-too-large-compressed' check failure.
+#
+# See 'pydistcheck --help' for available units.
 max_allowed_size_uncompressed = '75M'
+
+# List of fnmatch.fnmatchcase() patterns to be compared to directories
+# in the distribution.
 unexpected_directory_patterns = [
     '*/.appveyor',
     '*/.binder',
@@ -15,6 +37,9 @@ unexpected_directory_patterns = [
     '*/.pytest_cache',
     '*/.mypy_cache'
 ]
+
+# List of fnmatch.fnmatchcase() patterns to be compared to files
+# in the distribution.
 unexpected_file_patterns = [
     '*/appveyor.yml',
     '*/.appveyor.yml',
