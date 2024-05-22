@@ -122,8 +122,6 @@ List of Tools
 
 The following open-source tools can be used to detect (and in some cases repair) a wide range of Python packaging issues.
 
-Tools that accept distributions (sdists, wheels, ``.tar.gz``, ``.zip``, etc.) as inputs.
-
 * ``abi3audit`` (`link <https://github.com/trailofbits/abi3audit>`__) = detect ABI incompatibilities in wheels with CPython extensions
 * ``auditwheel`` (`link <https://github.com/pypa/auditwheel>`__) = detect and repair issues in Linux wheels that link to external shared libraries
 * ``auditwheel-emscripten`` (`link <https://github.com/ryanking13/auditwheel-emscripten>`__) = like ``auditwheel``, but focused on Python-in-a-web-browser applications (e.g. `pyodide auditwheel`_)
@@ -139,13 +137,5 @@ Tools that accept distributions (sdists, wheels, ``.tar.gz``, ``.zip``, etc.) as
 * ``repairwheel`` (`link <https://github.com/jvolkman/repairwheel>`__) = repair issues in Linux, macOS, and Windows wheels (wraps ``auditwheel``, ``delocate``, and ``delvewheel``)
 * ``twine`` (`link <https://github.com/pypa/twine>`__) = detect issues in package metadata (via ``twine check``)
 * ``wheel-inspect`` (`link <https://github.com/jwodder/wheel-inspect>`__) = dump summary information about wheels into machine-readable formats
-
-Tools that run on source code.
-
-* ``pre-commit-hooks`` (`link <https://github.com/pre-commit/pre-commit-hooks>`__) = some notable portability-focused hooks for the ``pre-commit`` tool
-    - ``check-added-large-files`` = detect large files added to source control (which might make it into distributions)
-    - ``check-case-conflict``
-    - 
-
 
 .. _pyodide auditwheel: https://pyodide.org/en/stable/usage/api/pyodide-cli.html
