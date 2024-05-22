@@ -100,8 +100,6 @@ portability-related issues before they even make it into distributions.
           args: ['--maxkb=512']
         # files whose names only differ by case
         - id: check-case-conflict
-        # filepaths that won't be legal on Windows
-        - id: check-illegal-windows-names
         # symlinks that don't point to anything
         - id: check-symlinks
         # symlinks changed to regular files with content of a path
