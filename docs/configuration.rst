@@ -3,11 +3,13 @@ Configuration
 
 This page describes how to configure ``pydistcheck``.
 
-``pydistscheck`` resolves different sources of configuration in the following order.
+``pydistcheck`` combines different sources of configuration in the following order.
 
 1. default values
-2. :ref:`pyproject-toml`
+2. :ref:`pyproject-toml` (or custom TOML file passed via ``--config``)
 3. :ref:`cli-arguments`
+
+Configuration found further down the list overrides configuration found earlier in the list.
 
 .. toctree::
    :maxdepth: 2
