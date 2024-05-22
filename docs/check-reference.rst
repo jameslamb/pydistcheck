@@ -155,6 +155,11 @@ See below for details.
 
 `"Removing the Max Path Limitation" (Python Windows docs) <https://docs.python.org/3/using/windows.html#removing-the-max-path-limitation>`__
 
+> *``Git`` has a limit of 4096 characters for a filename, except on Windows when ``Git`` is compiled with msys.*
+> *It uses an older version of the Windows API and there's a limit of 260 characters for a filename.*
+
+`Filename too long in Git for Windows (Stack Overflow answer) <https://stackoverflow.com/a/22575737/3986677>`__
+
 Other relevant discussions:
 
 * `"Maximum Path Length" (Windows docs) <https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry>`__
@@ -164,6 +169,7 @@ Other relevant discussions:
 * `"Filename length limits on linux?" (serverfault answer, 2009-2016) <https://serverfault.com/a/9548>`__
 * `"Command prompt (Cmd. exe) command-line string limitation" (Windows docs, 2023) <https://learn.microsoft.com/en-us/troubleshoot/windows-client/shell-experience/command-line-string-limitation>`__
 * `conda-build discussion about 255-character prefix limit (conda/conda-build#1482) <https://github.com/conda/conda-build/issues/1482#issuecomment-256530225>`__
+* `discussion about paths lengths (Python Discourse, 2023) <https://discuss.python.org/t/you-can-now-download-pypi-locally/32662/8>`__
 
 too-many-files
 **************
