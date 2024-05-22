@@ -6,7 +6,7 @@ Introduction
 
 Your code is good. Really good.
 
-You enforced consistent style with ``black``, ``isort``, and ``pydocstyle``.
+You enforced consistent style with ``black``, ``isort``, ``ruff``, and ``pydocstyle``.
 
 You checked for a wide range of performance, correctness, and readability issues with ``flake8``, ``mypy``, ``pylint``, and ``ruff``.
 
@@ -25,10 +25,11 @@ So finally, FINALLY, it's time to package it up into a tarball and upload it to 
 Hopefully! But let's check.
 
 * `Are those distributions valid zip or tar files?`
-* `Will their READMEs look pretty when rendered on the PyPI homepage?`
-* `Do they have correctly-formatted platform tags?`
+* `Are they small enough to fit on PyPI?`
 * `Are they as small as possible, to be kind to package repositories and users with weak internet connections?`
 * `Are they free from filepaths and file names that some operating systems will struggle with?`
+* `Do they have correctly-formatted platform tags?`
+* `Will their READMEs look pretty when rendered on the PyPI homepage?`
 
 You checked those things, right? And in continuous integration, with open-source tools, not with manual steps and random ``tar`` incantations copied from Stack Overflow?
 
@@ -43,7 +44,7 @@ After building at least one wheel and sdist...
 
 .. code-block:: shell
 
-    python -m build -o dist .
+    python -m build --outdir dist .
 
 Run the following on those distributions to catch a wide range of packaging issues.
 
@@ -59,9 +60,65 @@ Run the following on those distributions to catch a wide range of packaging issu
     pyroma --min=10 dist/*.tar.gz
     twine check --strict dist/*
 
+    # (INFO-level) print some details to logs
+    pkginfo --json dist/*.tar.gz
+    pkginfo --json dist/*.whl
+
+    # (DEBUG-level) print even more details to logs
+    wheel2json dist/*.whl
+
     # is the distribution properly structured and portable?
     check-wheel-contents dist/*.whl
     pydistcheck --inspect dist/*
+
+Some of those tools can also dump package data to machine-readable formats, that could
+then be passed through your own custom scripts.
+
+.. code-block:: shell
+
+    # simple list of filepaths in the wheel
+    unzip -l dist/*.whl > filepaths.txt
+
+    # JSON representation of the wheel metadata
+    pkginfo --json dist/*.whl > pkginfo.json
+
+    # this has most of what pkginfo has, plus things like
+    # md5 and sha256 checksums for every file in the distribution
+    wheel2json dist/*.whl > wheel-inspect.json
+
+Consider using ``pre-commit`` (https://pre-commit.com/), with at least the following configuration to catch
+portability-related issues before they even make it into distributions.
+
+.. code-block:: yaml
+
+    repos:
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+        rev: v4.5.0
+        hooks:
+        # large files checked into source control
+        - id: check-added-large-files
+          args: ['--maxkb=512']
+        # files whose names only differ by case
+        - id: check-case-conflict
+        # symlinks that don't point to anything
+        - id: check-symlinks
+        # symlinks changed to regular files with content of a path
+        - id: destroyed-symlinks
+        # ensure all files end in a newline
+        - id: end-of-file-fixer
+        # mixed line endings
+        - id: mixed-line-ending
+        # superfluous whitespace
+        - id: trailing-whitespace
+    - repo: https://github.com/koalaman/shellcheck-precommit
+      rev: v0.7.2
+      hooks:
+        # portability (and other) issues in shell scripts
+        - id: shellcheck
+
+If you use GitHub Actions for continuous integration, consider adding a step
+with the ``hynek/build-and-inspect-python-package`` action (https://github.com/hynek/build-and-inspect-python-package)
+running prior to publishing packages.
 
 List of Tools
 *************

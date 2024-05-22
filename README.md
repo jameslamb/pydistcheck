@@ -30,11 +30,19 @@ For more background on the value of such a tool, see the SciPy 2022 talk "Does t
 
 ## Installation
 
-Install with `pipx`.
+Install with `pip`.
 
 ```shell
-pipx install pydistcheck
+pip install pydistcheck
 ```
+
+Or `conda`.
+
+```shell
+conda install -c conda-forge pydistcheck
+```
+
+For more details, see "Installation" ([link](./docs/installation.rst)).
 
 ## Quickstart
 
