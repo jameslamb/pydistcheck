@@ -20,7 +20,7 @@ from .checks import (
     _MixedFileExtensionCheck,
     _NonAsciiCharacterCheck,
     _SpacesInPathCheck,
-    _UnExpectedFilesCheck,
+    _UnexpectedFilesCheck,
 )
 from .config import _Config
 from .distribution_summary import _DistributionSummary
@@ -109,7 +109,7 @@ class ExitCodes:
 )
 @click.option(  # type: ignore[misc]
     "--expected-directories",
-    default=_Config.unexpected_directory_patterns,
+    default=_Config.expected_directories,
     show_default=True,
     type=str,
     help=(
@@ -121,8 +121,8 @@ class ExitCodes:
     ),
 )
 @click.option(  # type: ignore[misc]
-    "--unexpected-files",
-    default=_Config.unexpected_file_patterns,
+    "--expected-files",
+    default=_Config.expected_files,
     show_default=True,
     type=str,
     help=(

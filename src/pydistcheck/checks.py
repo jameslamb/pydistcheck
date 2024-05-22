@@ -21,6 +21,7 @@ ALL_CHECKS = {
     "compiled-objects-have-debug-symbols",
     "distro-too-large-compressed",
     "distro-too-large-uncompressed",
+    "expected-files",
     "too-many-files",
     "files-only-differ-by-case",
     "mixed-file-extensions",
@@ -240,7 +241,7 @@ class _ExpectedFilesCheck(_CheckProtocol):
                 msg = f"[{self.check_name}] Did not find any files matching pattern '{pattern}'."
                 out.append(msg)
 
-        for pattern in self.unexpected_directory_patterns:
+        for pattern in self.directory_patterns:
             found_any = False
             for directory_path in distro_summary.directory_paths:
                 # NOTE: some archive formats have a trailing "/" on directory names,
