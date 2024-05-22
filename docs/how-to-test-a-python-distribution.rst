@@ -117,6 +117,10 @@ portability-related issues before they even make it into distributions.
         # portability (and other) issues in shell scripts
         - id: shellcheck
 
+If you use GitHub Actions for continuous integration, consider adding a step
+with the ``hynek/build-and-inspect-python-package`` action (https://github.com/hynek/build-and-inspect-python-package)
+running prior to publishing packages.
+
 List of Tools
 *************
 

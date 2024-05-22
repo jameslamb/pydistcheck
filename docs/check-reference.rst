@@ -172,6 +172,7 @@ Other relevant discussions:
 * `"Command prompt (Cmd. exe) command-line string limitation" (Windows docs, 2023) <https://learn.microsoft.com/en-us/troubleshoot/windows-client/shell-experience/command-line-string-limitation>`__
 * `conda-build discussion about 255-character prefix limit (conda/conda-build#1482) <https://github.com/conda/conda-build/issues/1482#issuecomment-256530225>`__
 * `discussion about paths lengths (Python Discourse, 2023) <https://discuss.python.org/t/you-can-now-download-pypi-locally/32662/8>`__
+* `"check for long filepaths" (pre-commit/pre-commit feature request, 2022) <https://github.com/pre-commit/pre-commit-hooks/issues/760>`__
 
 too-many-files
 **************
