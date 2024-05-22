@@ -639,8 +639,8 @@ def test_expected_files_does_not_raise_check_failure_if_all_patterns_match(distr
     result = runner.invoke(
         check,
         [
-            # wheel: lib/lib_baseball_metrics
-            # conda: lib/python3.9/site-packages/lib/lib_baseballmetrics.dylib
+            # (wheel) lib/lib_baseball_metrics
+            # (conda) lib/python3.9/site-packages/lib/lib_baseballmetrics.dylib
             "--expected-files=*/lib_baseballmetrics.*",
             os.path.join(TEST_DATA_DIR, distro_file),
         ],
