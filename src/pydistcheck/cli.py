@@ -14,12 +14,13 @@ from .checks import (
     _CompiledObjectsDebugSymbolCheck,
     _DistroTooLargeCompressedCheck,
     _DistroTooLargeUnCompressedCheck,
+    _ExpectedFilesCheck,
     _FileCountCheck,
     _FilesOnlyDifferByCaseCheck,
     _MixedFileExtensionCheck,
     _NonAsciiCharacterCheck,
     _SpacesInPathCheck,
-    _UnexpectedFilesCheck,
+    _UnExpectedFilesCheck,
 )
 from .config import _Config
 from .distribution_summary import _DistributionSummary
@@ -107,25 +108,29 @@ class ExitCodes:
     ),
 )
 @click.option(  # type: ignore[misc]
-    "--unexpected-directory-patterns",
+    "--expected-directories",
     default=_Config.unexpected_directory_patterns,
     show_default=True,
     type=str,
     help=(
-        "comma-delimited list of patterns matching directories that are not expected "
-        "to be found in the distribution. Patterns should be in the format understood "
-        "by ``fnmatch.fnmatchcase()``. See https://docs.python.org/3/library/fnmatch.html."
+        "comma-delimited list of patterns matching directories that are expected "
+        "to be found in the distribution. Prefix with '!' to indicate a pattern which "
+        "should NOT match any of the distribution's contents. Patterns should be in "
+        "the format understood by ``fnmatch.fnmatchcase()``. "
+        "See https://docs.python.org/3/library/fnmatch.html."
     ),
 )
 @click.option(  # type: ignore[misc]
-    "--unexpected-file-patterns",
+    "--unexpected-files",
     default=_Config.unexpected_file_patterns,
     show_default=True,
     type=str,
     help=(
-        "comma-delimited list of patterns matching files that are not expected "
-        "to be found in the distribution. Patterns should be in the format understood "
-        "by ``fnmatch.fnmatchcase()``. See https://docs.python.org/3/library/fnmatch.html."
+        "comma-delimited list of patterns matching files that are expected "
+        "to be found in the distribution. Prefix with '!' to indicate a pattern which "
+        "should NOT match any of the distribution's contents. Patterns should be in "
+        "the format understood by ``fnmatch.fnmatchcase()``. "
+        "See https://docs.python.org/3/library/fnmatch.html."
     ),
 )
 def check(  # noqa: PLR0913
@@ -138,8 +143,8 @@ def check(  # noqa: PLR0913
     max_allowed_files: int,
     max_allowed_size_compressed: str,
     max_allowed_size_uncompressed: str,
-    unexpected_directory_patterns: str,
-    unexpected_file_patterns: str,
+    expected_directories: str,
+    expected_files: str,
 ) -> None:
     """
     Run the contents of a distribution through a set of checks, and warn about
@@ -163,8 +168,8 @@ def check(  # noqa: PLR0913
         "max_allowed_files": max_allowed_files,
         "max_allowed_size_compressed": max_allowed_size_compressed,
         "max_allowed_size_uncompressed": max_allowed_size_uncompressed,
-        "unexpected_directory_patterns": unexpected_directory_patterns,
-        "unexpected_file_patterns": unexpected_file_patterns,
+        "expected_directories": expected_directories,
+        "expected_files": expected_files,
     }
     kwargs_that_differ_from_defaults = {}
     for k, v in kwargs.items():
@@ -199,13 +204,17 @@ def check(  # noqa: PLR0913
                 size_str=conf.max_allowed_size_uncompressed
             ).total_size_bytes
         ),
+        _ExpectedFilesCheck(
+            directory_patterns=expected_directories.split(","),
+            file_patterns=expected_files.split(","),
+        ),
         _FileCountCheck(max_allowed_files=conf.max_allowed_files),
         _FilesOnlyDifferByCaseCheck(),
         _MixedFileExtensionCheck(),
         _SpacesInPathCheck(),
         _UnexpectedFilesCheck(
-            unexpected_directory_patterns=unexpected_directory_patterns.split(","),
-            unexpected_file_patterns=unexpected_file_patterns.split(","),
+            directory_patterns=expected_directories.split(","),
+            file_patterns=expected_files.split(","),
         ),
         _NonAsciiCharacterCheck(),
     ]
