@@ -149,14 +149,14 @@ See below for details.
     *This meant that paths longer than this would not resolve and errors would result.*
     *In the latest versions of Windows, this limitation can be expanded to approximately 32,000 characters.*
     *Your administrator will need to activate the ``"Enable Win32 long paths"`` group policy, or set ``LongPathsEnabled`` to 1 in the registry key ``HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem``.*
-    
+
     *This allows the open() function, the os module and most other path functionality to accept and return paths longer than 260 characters.*
 
 `"Removing the Max Path Limitation" (Python Windows docs) <https://docs.python.org/3/using/windows.html#removing-the-max-path-limitation>`__
 
     *Git has a limit of 4096 characters for a filename, except on Windows when Git is compiled with msys.*
     *It uses an older version of the Windows API and there's a limit of 260 characters for a filename.*
-    
+
     *You can circumvent this by using another Git client on Windows or set ``core.longpaths`` to ``true``...*
 
 `Filename too long in Git for Windows (Stack Overflow answer) <https://stackoverflow.com/a/22575737/3986677>`__
