@@ -137,30 +137,29 @@ This is primarily informed by the following limitations:
 
 See below for details.
 
-> *Tarballs are only required to store paths of up to 100 bytes and cannot store those of more than 256 bytes*.
+`R CMD check source code <https://github.com/wch/r-source/blob/29559f9bf4df2c55ef5eace203cbe335bbd03f2f/src/library/tools/R/check.R#L839>`__:
 
-`R CMD check source code <https://github.com/wch/r-source/blob/29559f9bf4df2c55ef5eace203cbe335bbd03f2f/src/library/tools/R/check.R#L839>`__
+    *"Tarballs are only required to store paths of up to 100 bytes and cannot store those of more than 256 bytes".*
 
-> *...packages are normally distributed as tarballs, and these have a limit on path lengths: for maximal portability 100 bytes.*
+`"Package Structure" (Writing R Extensions) <https://cran.r-project.org/doc/manuals/R-exts.html#Package-structure>`__:
 
-`"Package Structure" (Writing R Extensions) <https://cran.r-project.org/doc/manuals/R-exts.html#Package-structure>`__
+    *"...packages are normally distributed as tarballs, and these have a limit on path lengths: for maximal portability 100 bytes."*
 
-> *Windows historically has limited path lengths to 260 characters.*
-> *This meant that paths longer than this would not resolve and errors would result.*
->
-> *In the latest versions of Windows, this limitation can be expanded to approximately 32,000 characters.*
-> *Your administrator will need to activate the ``"Enable Win32 long paths"`` group policy, or set ``LongPathsEnabled`` to 1 in the registry key ``HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem``.*
->
-> *This allows the open() function, the os module and most other path functionality to accept and return paths longer than 260 characters.*
+`"Removing the Max Path Limitation" (Python Windows docs) <https://docs.python.org/3/using/windows.html#removing-the-max-path-limitation>`__:
 
-`"Removing the Max Path Limitation" (Python Windows docs) <https://docs.python.org/3/using/windows.html#removing-the-max-path-limitation>`__
+    *"Windows historically has limited path lengths to 260 characters.*
+    *This meant that paths longer than this would not resolve and errors would result.*
+    *In the latest versions of Windows, this limitation can be expanded to approximately 32,000 characters.*
+    *Your administrator will need to activate the* ``"Enable Win32 long paths"`` *group policy, or set* ``LongPathsEnabled`` *to 1 in the registry key* ``HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem``.
 
-> *Git has a limit of 4096 characters for a filename, except on Windows when Git is compiled with msys.*
-> *It uses an older version of the Windows API and there's a limit of 260 characters for a filename.*
->
-> *You can circumvent this by using another Git client on Windows or set ``core.longpaths`` to ``true``...*
+    *This allows the* ``open()`` *function, the os module and most other path functionality to accept and return paths longer than 260 characters."*
 
-`Filename too long in Git for Windows (Stack Overflow answer) <https://stackoverflow.com/a/22575737/3986677>`__
+`Filename too long in Git for Windows (Stack Overflow answer) <https://stackoverflow.com/a/22575737/3986677>`__:
+
+    *"Git has a limit of 4096 characters for a filename, except on Windows when Git is compiled with msys.*
+    *It uses an older version of the Windows API and there's a limit of 260 characters for a filename.*
+
+    *You can circumvent this by using another Git client on Windows or set* ``core.longpaths`` *to* ``true`` *..."*
 
 Other relevant discussions:
 
