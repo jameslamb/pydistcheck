@@ -150,7 +150,7 @@ def test_update_from_toml_works_with_all_config_values(
     base_config.update_from_toml(toml_file=temp_file)
     assert base_config.expected_directories == "!tests/*"
     assert base_config.expected_files == "!*.pq,!*/tests/data/*.csv"
-    assert base_config.ignore == "path-contains-spaces,too-many-files"
+    assert base_config.ignore == ["path-contains-spaces", "too-many-files"]
     assert base_config.inspect is True
     assert base_config.max_allowed_files == 8
     assert base_config.max_allowed_size_compressed == "3G"

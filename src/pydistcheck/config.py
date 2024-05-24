@@ -7,7 +7,7 @@ Manages configuration of ``pydistcheck` CLI, including:
 
 import os
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Any, Dict, Sequence
 
 from ._compat import tomllib
 
@@ -65,7 +65,7 @@ _EXPECTED_FILES = ",".join(
 class _Config:
     expected_directories: str = _EXPECTED_DIRECTORIES
     expected_files: str = _EXPECTED_FILES
-    ignore: str = ""
+    ignore: Sequence[str] = ()
     inspect: bool = False
     max_allowed_files: int = 2000
     max_allowed_size_compressed: str = "50M"
@@ -98,7 +98,7 @@ class _Config:
         # a command-line argument
         patch_dict: Dict[str, Any] = {}
         for k, v in tool_options.items():
-            if isinstance(v, list):
+            if isinstance(v, list) and k != "ignore":
                 patch_dict[k] = ",".join(v)
         tool_options.update(patch_dict)
         self.update_from_dict(tool_options)

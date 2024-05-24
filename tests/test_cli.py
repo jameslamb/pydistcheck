@@ -175,7 +175,8 @@ def test_check_respects_ignore_with_multiple_checks(distro_file):
         check,
         [
             os.path.join(TEST_DATA_DIR, distro_file),
-            "--ignore=path-contains-spaces,too-many-files",
+            "--ignore=path-contains-spaces",
+            "--ignore=too-many-files",
             "--max-allowed-files=1",
             "--max-allowed-size-compressed=1B",
         ],
@@ -194,7 +195,8 @@ def test_check_respects_ignore_with_multiple_checks(distro_file):
         check,
         [
             os.path.join(TEST_DATA_DIR, distro_file),
-            "--ignore=too-many-files,distro-too-large-compressed",
+            "--ignore=distro-too-large-compressed",
+            "--ignore=too-many-files",
             "--max-allowed-files=1",
         ],
     )
@@ -208,7 +210,8 @@ def test_check_fails_with_expected_error_if_one_check_is_unrecognized(distro_fil
         check,
         [
             os.path.join(TEST_DATA_DIR, distro_file),
-            "--ignore=too-many-files,random-nonsense",
+            "--ignore=random-nonsense",
+            "--ignore=too-many-files",
         ],
     )
     assert result.exit_code == 1
@@ -229,7 +232,10 @@ def test_check_fails_with_expected_error_if_multiple_checks_are_unrecognized(
         check,
         [
             os.path.join(TEST_DATA_DIR, distro_file),
-            "--ignore=garbage,too-many-files,random-nonsense,other-trash",
+            "--ignore=garbage",
+            "--ignore=other-trash",
+            "--ignore=random-nonsense",
+            "--ignore=too-many-files",
         ],
     )
     assert result.exit_code == 1
