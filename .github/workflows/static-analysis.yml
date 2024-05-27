@@ -24,10 +24,8 @@ jobs:
           conda install \
             --yes \
             -c conda-forge \
-              'mypy>=0.931' \
               pre-commit \
               requests \
-              shellcheck \
               types-requests \
               yamllint
           sudo apt-get update
