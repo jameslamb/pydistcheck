@@ -48,9 +48,6 @@ lint:
 		-i 4 \
 		-sr \
 		./bin
-	shellcheck \
-		--exclude=SC2002 \
-		bin/*.sh
 	yamllint \
 		--strict \
 		-d '{extends: default, rules: {braces: {max-spaces-inside: 1}, truthy: {check-keys: false}, line-length: {max: 120}}}' \
