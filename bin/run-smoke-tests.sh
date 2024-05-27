@@ -42,15 +42,15 @@ shared_args=(
     --max-allowed-size-uncompressed='0.5G'
 )
 pydistcheck \
-    ${shared_args[@]} \
+    "${shared_args[@]}" \
     ./smoke-tests/*.conda
 pydistcheck \
-    ${shared_args[@]} \
+    "${shared_args[@]}" \
     --expected-directories='*/.github' \
     --expected-files='*/.gitignore' \
     ./smoke-tests/*.tar.gz
 pydistcheck \
-    ${shared_args[@]} \
+    "${shared_args[@]}" \
     ./smoke-tests/*.whl
 
 get-files psycopg2-binary
@@ -69,13 +69,13 @@ shared_args=(
     --max-allowed-size-uncompressed=150M
 )
 pydistcheck \
-    ${shared_args[@]} \
+    "${shared_args[@]}" \
     ./smoke-tests/*.conda
 pydistcheck \
-    ${shared_args[@]} \
+    "${shared_args[@]}" \
     ./smoke-tests/*.whl
 pydistcheck \
-    ${shared_args[@]} \
+    "${shared_args[@]}" \
     --expected-files '*/azure-pipelines.yml' \
     --expected-files '*/.cirrus.star' \
     --expected-files '*/.codecov.yml' \
@@ -114,12 +114,12 @@ shared_args=(
     --max-allowed-size-uncompressed=150M
 )
 pydistcheck \
-    ${shared_args[@]} \
+    "${shared_args[@]}" \
     --expected-files '*/.gitignore' \
     --expected-files '*/.readthedocs.yaml' \
     ./smoke-tests/*.tar.gz
 pydistcheck \
-    ${shared_args[@]} \
+    "${shared_args[@]}" \
     ./smoke-tests/*.whl
 
 # Python clients for other systems
@@ -141,11 +141,11 @@ shared_args=(
     --ignore=mixed-file-extensions
 )
 pydistcheck \
-    ${shared_args[@]} \
+    "${shared_args[@]}" \
     --expected-files '*/.gitignore' \
     ./smoke-tests/*.tar.gz
 pydistcheck \
-    ${shared_args[@]} \
+    "${shared_args[@]}" \
     ./smoke-tests/*.whl
 
 get-files astropy
@@ -155,14 +155,14 @@ shared_args=(
     --ignore=mixed-file-extensions
 )
 pydistcheck \
-    ${shared_args[@]} \
+    "${shared_args[@]}" \
     --expected-directories '*/.circleci' \
     --expected-directories '*/.github' \
     --expected-files '*/codecov.yml' \
     --expected-files '*/.readthedocs.yaml' \
     ./smoke-tests/*.tar.gz
 pydistcheck \
-    ${shared_args[@]} \
+    "${shared_args[@]}" \
     ./smoke-tests/*.whl
 
 get-files datatable
@@ -186,12 +186,12 @@ shared_args=(
     --max-allowed-size-uncompressed=200M
 )
 pydistcheck \
-    ${shared_args[@]} \
+    "${shared_args[@]}" \
     --expected-directories '*/.github' \
     --expected-files '*/.gitignore' \
     ./smoke-tests/*.tar.gz
 pydistcheck \
-    ${shared_args[@]} \
+    "${shared_args[@]}" \
     ./smoke-tests/*.whl
 
 get-files pandas
@@ -207,13 +207,13 @@ shared_args=(
     --ignore=mixed-file-extensions
 )
 pydistcheck \
-    ${shared_args[@]} \
+    "${shared_args[@]}" \
     --expected-directories '*/.github' \
     --expected-files '*/codecov.yml' \
     --expected-files '*/.gitignore' \
     ./smoke-tests/*.tar.gz
 pydistcheck \
-    ${shared_args[@]} \
+    "${shared_args[@]}" \
     ./smoke-tests/*.whl
 
 get-files scikit-learn
