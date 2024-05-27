@@ -7,7 +7,7 @@ Manages configuration of ``pydistcheck` CLI, including:
 
 import os
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Any, Dict, Sequence
 
 from ._compat import tomllib
 
@@ -26,46 +26,42 @@ _ALLOWED_CONFIG_VALUES = {
     "max_path_length",
 }
 
-_EXPECTED_DIRECTORIES = ",".join(
-    [
-        "!*/.appveyor",
-        "!*/.binder",
-        "!*/.circleci",
-        "!*/.git",
-        "!*/.github",
-        "!*/.idea",
-        "!*/.pytest_cache",
-        "!*/.mypy_cache",
-    ]
+_EXPECTED_DIRECTORIES = (
+    "!*/.appveyor",
+    "!*/.binder",
+    "!*/.circleci",
+    "!*/.git",
+    "!*/.github",
+    "!*/.idea",
+    "!*/.pytest_cache",
+    "!*/.mypy_cache",
 )
 
-_EXPECTED_FILES = ",".join(
-    [
-        "!*/appveyor.yml",
-        "!*/.appveyor.yml",
-        "!*/azure-pipelines.yml",
-        "!*/.azure-pipelines.yml",
-        "!*/.cirrus.star",
-        "!*/.cirrus.yml",
-        "!*/codecov.yml",
-        "!*/.codecov.yml",
-        "!*/.DS_Store",
-        "!*/.gitignore",
-        "!*/.gitpod.yml",
-        "!*/.hadolint.yaml",
-        "!*/.readthedocs.yaml",
-        "!*/.travis.yml",
-        "!*/vsts-ci.yml",
-        "!*/.vsts-ci.yml",
-    ]
+_EXPECTED_FILES = (
+    "!*/appveyor.yml",
+    "!*/.appveyor.yml",
+    "!*/azure-pipelines.yml",
+    "!*/.azure-pipelines.yml",
+    "!*/.cirrus.star",
+    "!*/.cirrus.yml",
+    "!*/codecov.yml",
+    "!*/.codecov.yml",
+    "!*/.DS_Store",
+    "!*/.gitignore",
+    "!*/.gitpod.yml",
+    "!*/.hadolint.yaml",
+    "!*/.readthedocs.yaml",
+    "!*/.travis.yml",
+    "!*/vsts-ci.yml",
+    "!*/.vsts-ci.yml",
 )
 
 
 @dataclass
 class _Config:
-    expected_directories: str = _EXPECTED_DIRECTORIES
-    expected_files: str = _EXPECTED_FILES
-    ignore: str = ""
+    expected_directories: Sequence[str] = _EXPECTED_DIRECTORIES
+    expected_files: Sequence[str] = _EXPECTED_FILES
+    ignore: Sequence[str] = ()
     inspect: bool = False
     max_allowed_files: int = 2000
     max_allowed_size_compressed: str = "50M"
@@ -94,12 +90,5 @@ class _Config:
             config_dict = tomllib.load(f)
             tool_options = config_dict.get("tool", {}).get("pydistcheck", {})
 
-        # list-like stuff in TOML is expected to be a comma-delimited string when passed as
-        # a command-line argument
-        patch_dict: Dict[str, Any] = {}
-        for k, v in tool_options.items():
-            if isinstance(v, list):
-                patch_dict[k] = ",".join(v)
-        tool_options.update(patch_dict)
         self.update_from_dict(tool_options)
         return self

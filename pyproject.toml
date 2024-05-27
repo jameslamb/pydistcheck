@@ -105,6 +105,8 @@ select = [
     "ERA",
     # pyflakes
     "F",
+    # flynt
+    "FLY",
     # perflint
     "PERF",
     # pygrep-hooks

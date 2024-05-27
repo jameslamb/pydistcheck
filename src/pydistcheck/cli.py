@@ -3,7 +3,7 @@ CLI entrypoints
 """
 
 import sys
-from typing import List
+from typing import List, Sequence
 
 import click
 
@@ -59,11 +59,12 @@ class ExitCodes:
 )
 @click.option(  # type: ignore[misc]
     "--ignore",
-    type=str,
+    multiple=True,
     default=_Config.ignore,
     help=(
-        "comma-separated list of checks to skip, e.g. "
-        "``distro-too-large-compressed,path-contains-spaces``."
+        "ID of a check to skip, e.g. 'compiled-objects-have-debug-symbols'. "
+        "See https://pydistcheck.readthedocs.io/en/docs-fix/check-reference.html for a "
+        "complete list of valid options. Can be passed multiple times."
     ),
 )
 @click.option(  # type: ignore[misc]
@@ -77,28 +78,28 @@ class ExitCodes:
 )
 @click.option(  # type: ignore[misc]
     "--expected-directories",
+    multiple=True,
     default=_Config.expected_directories,
     show_default=True,
-    type=str,
     help=(
-        "comma-delimited list of patterns matching directories that are expected "
-        "to be found in the distribution. Prefix with '!' to indicate a pattern which "
-        "should NOT match any of the distribution's contents. Patterns should be in "
-        "the format understood by ``fnmatch.fnmatchcase()``. "
-        "See https://docs.python.org/3/library/fnmatch.html."
+        "Pattern matching directories that are expected to be found in the distribution. "
+        "Prefix with '!' to indicate a pattern which should NOT match any of the distribution's "
+        "contents. Other than that possible leading '!', patterns should be in the format understood by "
+        "``fnmatch.fnmatchcase()`` (https://docs.python.org/3/library/fnmatch.html). "
+        "Can be passed multiple times."
     ),
 )
 @click.option(  # type: ignore[misc]
     "--expected-files",
+    multiple=True,
     default=_Config.expected_files,
     show_default=True,
-    type=str,
     help=(
-        "comma-delimited list of patterns matching files that are expected "
-        "to be found in the distribution. Prefix with '!' to indicate a pattern which "
-        "should NOT match any of the distribution's contents. Patterns should be in "
-        "the format understood by ``fnmatch.fnmatchcase()``. "
-        "See https://docs.python.org/3/library/fnmatch.html."
+        "Pattern matching files that are expected to be found in the distribution. "
+        "Prefix with '!' to indicate a pattern which should NOT match any of the distribution's "
+        "contents. Other than that possible leading '!', patterns should be in the format understood by "
+        "``fnmatch.fnmatchcase()`` (https://docs.python.org/3/library/fnmatch.html). "
+        "Can be passed multiple times."
     ),
 )
 @click.option(  # type: ignore[misc]
@@ -148,9 +149,9 @@ def check(  # noqa: PLR0913
     filepaths: str,
     version: bool,
     config: str,
-    expected_directories: str,
-    expected_files: str,
-    ignore: str,
+    expected_directories: Sequence[str],
+    expected_files: Sequence[str],
+    ignore: Sequence[str],
     inspect: bool,
     max_allowed_files: int,
     max_allowed_size_compressed: str,
@@ -193,7 +194,7 @@ def check(  # noqa: PLR0913
         conf.update_from_toml(toml_file="pyproject.toml")
     conf.update_from_dict(input_dict=kwargs_that_differ_from_defaults)
 
-    checks_to_ignore = {x for x in conf.ignore.split(",") if x.strip()}
+    checks_to_ignore = {x for x in conf.ignore if x.strip()}
     unrecognized_checks = checks_to_ignore - ALL_CHECKS
     if unrecognized_checks:
         # converting to list + sorting here so outputs are deterministic
@@ -217,8 +218,8 @@ def check(  # noqa: PLR0913
             ).total_size_bytes
         ),
         _ExpectedFilesCheck(
-            directory_patterns=expected_directories.split(","),
-            file_patterns=expected_files.split(","),
+            directory_patterns=expected_directories,
+            file_patterns=expected_files,
         ),
         _FileCountCheck(max_allowed_files=conf.max_allowed_files),
         _FilesOnlyDifferByCaseCheck(),
@@ -226,8 +227,8 @@ def check(  # noqa: PLR0913
         _PathTooLongCheck(max_path_length=conf.max_path_length),
         _SpacesInPathCheck(),
         _UnexpectedFilesCheck(
-            directory_patterns=expected_directories.split(","),
-            file_patterns=expected_files.split(","),
+            directory_patterns=expected_directories,
+            file_patterns=expected_files,
         ),
         _NonAsciiCharacterCheck(),
     ]

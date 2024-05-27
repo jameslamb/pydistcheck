@@ -175,7 +175,8 @@ def test_check_respects_ignore_with_multiple_checks(distro_file):
         check,
         [
             os.path.join(TEST_DATA_DIR, distro_file),
-            "--ignore=path-contains-spaces,too-many-files",
+            "--ignore=path-contains-spaces",
+            "--ignore=too-many-files",
             "--max-allowed-files=1",
             "--max-allowed-size-compressed=1B",
         ],
@@ -194,7 +195,8 @@ def test_check_respects_ignore_with_multiple_checks(distro_file):
         check,
         [
             os.path.join(TEST_DATA_DIR, distro_file),
-            "--ignore=too-many-files,distro-too-large-compressed",
+            "--ignore=distro-too-large-compressed",
+            "--ignore=too-many-files",
             "--max-allowed-files=1",
         ],
     )
@@ -208,7 +210,8 @@ def test_check_fails_with_expected_error_if_one_check_is_unrecognized(distro_fil
         check,
         [
             os.path.join(TEST_DATA_DIR, distro_file),
-            "--ignore=too-many-files,random-nonsense",
+            "--ignore=random-nonsense",
+            "--ignore=too-many-files",
         ],
     )
     assert result.exit_code == 1
@@ -229,7 +232,10 @@ def test_check_fails_with_expected_error_if_multiple_checks_are_unrecognized(
         check,
         [
             os.path.join(TEST_DATA_DIR, distro_file),
-            "--ignore=garbage,too-many-files,random-nonsense,other-trash",
+            "--ignore=garbage",
+            "--ignore=other-trash",
+            "--ignore=random-nonsense",
+            "--ignore=too-many-files",
         ],
     )
     assert result.exit_code == 1
@@ -594,6 +600,54 @@ def test_unexpected_files_check_works(distro_file):
         pattern=(
             r"^12\. \[unexpected\-files\] Found unexpected file "
             r"'problematic\-package\-0\.1\.0/problematic_package/\.gitignore'\."
+        ),
+    )
+
+    _assert_log_matches_pattern(
+        result=result, pattern=r"errors found while checking\: [0-9]{1}"
+    )
+
+
+@pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
+def test_unexpected_files_correctly_respects_multiple_cli_args(distro_file):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--expected-files=!*.gitignore",
+            "--expected-files=!*.git/HEAD",
+            "--expected-directories=src/",
+        ],
+    )
+    assert result.exit_code == 1
+
+    # directories: should report that the expected directory was not found
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=r"\[expected\-files\] Did not find any directories matching pattern 'src/'",
+    )
+
+    # files: should find BOTH .gitignore files
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"\[unexpected\-files\] Found unexpected file 'problematic\-package\-0\.1\.0/\.gitignore"
+        ),
+    )
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"\[unexpected\-files\] Found unexpected file "
+            r"'problematic\-package\-0\.1\.0/problematic_package/\.gitignore"
+        ),
+    )
+
+    # files: should find the one .git/HEAD file
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"\[unexpected\-files\] Found unexpected file 'problematic\-package\-0\.1\.0/\.git/HEAD"
         ),
     )
 

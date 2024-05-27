@@ -7,7 +7,7 @@ import os
 from collections import defaultdict
 from fnmatch import fnmatchcase
 from tempfile import TemporaryDirectory
-from typing import List, Protocol
+from typing import List, Protocol, Sequence
 
 from .distribution_summary import _DistributionSummary
 from .file_utils import _extract_subset_of_files_from_archive
@@ -241,8 +241,8 @@ class _ExpectedFilesCheck(_CheckProtocol):
 
     def __init__(
         self,
-        directory_patterns: List[str],
-        file_patterns: List[str],
+        directory_patterns: Sequence[str],
+        file_patterns: Sequence[str],
     ):
         self.directory_patterns = [
             d for d in directory_patterns if not d.startswith("!")
@@ -283,8 +283,8 @@ class _UnexpectedFilesCheck(_CheckProtocol):
 
     def __init__(
         self,
-        directory_patterns: List[str],
-        file_patterns: List[str],
+        directory_patterns: Sequence[str],
+        file_patterns: Sequence[str],
     ):
         self.directory_patterns = [
             d[1:] for d in directory_patterns if d.startswith("!")

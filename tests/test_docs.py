@@ -28,6 +28,15 @@ def test_default_toml_config():
 
     # values should exactly match the defaults
     config = _Config().update_from_toml(defaults_example_file)
+
+    # The default in _Config class is a tuple because 'dataclasses' requires something immutable,
+    # but it's read in as a list from pyproject.toml.
+    #
+    # This allows for that deviation.
+    config.expected_directories = tuple(config.expected_directories)
+    config.expected_files = tuple(config.expected_files)
+    config.ignore = ()
+
     assert (
         config == _Config()
     ), "values in 'docs/_static/defaults.toml' do not match actual defaults used by pydistcheck"
