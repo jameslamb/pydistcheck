@@ -86,7 +86,7 @@ class ExitCodes:
         "Prefix with '!' to indicate a pattern which should NOT match any of the distribution's "
         "contents. Other than that possible leading '!', patterns should be in the format understood by "
         "``fnmatch.fnmatchcase()`` (https://docs.python.org/3/library/fnmatch.html). "
-        "Can be provided multiple times."
+        "Can be passed multiple times."
     ),
 )
 @click.option(  # type: ignore[misc]
@@ -99,7 +99,7 @@ class ExitCodes:
         "Prefix with '!' to indicate a pattern which should NOT match any of the distribution's "
         "contents. Other than that possible leading '!', patterns should be in the format understood by "
         "``fnmatch.fnmatchcase()`` (https://docs.python.org/3/library/fnmatch.html). "
-        "Can be provided multiple times."
+        "Can be passed multiple times."
     ),
 )
 @click.option(  # type: ignore[misc]
