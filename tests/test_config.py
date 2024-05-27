@@ -148,22 +148,11 @@ def test_update_from_toml_works_with_all_config_values(
         ]
         f.write("\n".join(lines))
     base_config.update_from_toml(toml_file=temp_file)
-    assert base_config.expected_directories == "!tests/*"
-    assert base_config.expected_files == "!*.pq,!*/tests/data/*.csv"
+    assert base_config.expected_directories == ["!tests/*"]
+    assert base_config.expected_files == ["!*.pq", "!*/tests/data/*.csv"]
     assert base_config.ignore == ["path-contains-spaces", "too-many-files"]
     assert base_config.inspect is True
     assert base_config.max_allowed_files == 8
     assert base_config.max_allowed_size_compressed == "3G"
     assert base_config.max_allowed_size_uncompressed == "4.12G"
     assert base_config.max_path_length == 25
-
-
-def test_update_from_toml_converts_lists_to_comma_delimited_string(base_config, tmpdir):
-    temp_file = os.path.join(tmpdir, f"{uuid.uuid4().hex}.toml")
-    with open(temp_file, "w") as f:
-        f.write(
-            "[tool.pylint]\n[tool.pydistcheck]\n"
-            "max_allowed_size_compressed = [\n'2.5G',\n'1.56K',\n'4.236B'\n]\n"
-        )
-    base_config.update_from_toml(toml_file=temp_file)
-    assert base_config.max_allowed_size_compressed == "2.5G,1.56K,4.236B"

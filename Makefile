@@ -1,6 +1,6 @@
 .PHONY: build
 build:
-	rm -r ./dist || true
+	rm -r ./dist
 	pipx run build --sdist --wheel
 
 .PHONY: check-test-packages

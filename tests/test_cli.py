@@ -609,6 +609,54 @@ def test_unexpected_files_check_works(distro_file):
 
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
+def test_unexpected_files_correctly_respects_multiple_cli_args(distro_file):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--expected-files=!*.gitignore",
+            "--expected-files=!*.git/HEAD",
+            "--expected-directories=src/",
+        ],
+    )
+    assert result.exit_code == 1
+
+    # directories: should report that the expected directory was not found
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=r"\[expected\-files\] Did not find any directories matching pattern 'src/'",
+    )
+
+    # files: should find BOTH .gitignore files
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"\[unexpected\-files\] Found unexpected file 'problematic\-package\-0\.1\.0/\.gitignore"
+        ),
+    )
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"\[unexpected\-files\] Found unexpected file "
+            r"'problematic\-package\-0\.1\.0/problematic_package/\.gitignore"
+        ),
+    )
+
+    # files: should find the one .git/HEAD file
+    _assert_log_matches_pattern(
+        result=result,
+        pattern=(
+            r"\[unexpected\-files\] Found unexpected file 'problematic\-package\-0\.1\.0/\.git/HEAD"
+        ),
+    )
+
+    _assert_log_matches_pattern(
+        result=result, pattern=r"errors found while checking\: [0-9]{1}"
+    )
+
+
+@pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
 def test_expected_files_check_works(distro_file):
     runner = CliRunner()
     result = runner.invoke(

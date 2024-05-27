@@ -33,9 +33,8 @@ def test_default_toml_config():
     # but it's read in as a list from pyproject.toml.
     #
     # This allows for that deviation.
-    assert (
-        config.ignore == []
-    ), "Empty array is no longer being parsed as a list, this test should be updated."
+    config.expected_directories = tuple(config.expected_directories)
+    config.expected_files = tuple(config.expected_files)
     config.ignore = ()
 
     assert (
