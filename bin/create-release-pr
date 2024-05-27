@@ -27,12 +27,12 @@ VERSION=$(
         tr -d ' "'
 )
 
-git checkout -b release/v${VERSION}
+git checkout -b "release/v${VERSION}"
 git add ./src/pydistcheck/__init__.py
 
 commit_msg="release v${VERSION}"
 git commit -m "${commit_msg}"
-git push origin release/v${VERSION}
+git push origin "release/v${VERSION}"
 
 gh pr create \
     --repo jameslamb/pydistcheck \
