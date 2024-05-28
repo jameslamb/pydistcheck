@@ -65,6 +65,8 @@ For example, as of this writing (May 2024), PyPI placed the following restrictio
 * files: ``< 100 MiB`` (`link <https://github.com/pypi/support/blob/f62f0ee62096ecefda543bb69bc48cd1126bfffa/.github/ISSUE_TEMPLATE/limit-request-file.yml#L4>`__)
 * projects (sum of all files): ``< 10 GiB`` (`link <https://github.com/pypi/support/blob/f62f0ee62096ecefda543bb69bc48cd1126bfffa/.github/ISSUE_TEMPLATE/limit-request-project.yml#L4>`__)
 
+For reference, https://pypi.org/stats/ displays the total size (compressed) of some of the largest projects on PyPI.
+
 distro-too-large-uncompressed
 *****************************
 
