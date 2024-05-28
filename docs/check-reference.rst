@@ -54,12 +54,40 @@ The package distribution is larger (compressed) than the allowed size.
 
 Change that limit using configuration option ``max-distro-size-compressed``.
 
+The compressed size of the distribution affects the following:
+
+* download speed and bandwidth usage
+* storage footprint
+    - *including for package registries like PyPI*
+
+For example, as of this writing (May 2024), PyPI placed the following restrictions on projects by default:
+
+* files: ``< 100 MiB`` (`link <https://github.com/pypi/support/blob/f62f0ee62096ecefda543bb69bc48cd1126bfffa/.github/ISSUE_TEMPLATE/limit-request-file.yml#L4>`__)
+* projects (sum of all files): ``< 10 GiB`` (`link <https://github.com/pypi/support/blob/f62f0ee62096ecefda543bb69bc48cd1126bfffa/.github/ISSUE_TEMPLATE/limit-request-project.yml#L4>`__)
+
 distro-too-large-uncompressed
 *****************************
 
 The package distribution is larger (uncompressed) than the allowed size.
 
 Change that limit using configuration option ``max-distro-size-uncompressed``.
+
+The uncompressed size of the distribution affects the following:
+
+* installation time
+* storage footprint for installed packages
+    - *including in things like VM and Docker images*
+
+This can especially matter in storage-constrained environments.
+
+For example, several cloud function-as-a-service services allow uploading additional
+Python packages for use in function execution, with the following limits on their uncompressed size:
+
+* AWS Lambda: ``250 MB`` (`AWS docs <https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html>`__)
+* Google Cloud Functions: ``500 MB`` (`GCP docs <https://cloud.google.com/functions/quotas>`__)
+
+For a thorough discussion of some issues caused by larger distribution size, see `"FEEDBACK: PyArrow as a required dependency and PyArrow backed strings
+" (pandas-dev/pandas#54466) <https://github.com/pandas-dev/pandas/issues/54466>`__.
 
 expected-files
 **************
@@ -193,3 +221,6 @@ With ``pydistcheck``'s default settings, this check raises errors for the inclus
 
 Which files are "expected" is highly project-specific.
 See :doc:`configuration` for a list of the files ``pydistcheck`` complains about by default, and for information about how to customize that list.
+
+This can be used to test that changes to ``MANIFEST.in``, ``package_data``, and similar don't
+accidentally result in the exclusion of any expected files.
