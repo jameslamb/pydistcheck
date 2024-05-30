@@ -28,7 +28,4 @@ jobs:
               requests \
               types-requests \
               yamllint
-          sudo apt-get update
-          sudo apt-get install --no-install-recommends -y \
-            shfmt
           make lint

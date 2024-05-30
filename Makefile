@@ -28,14 +28,6 @@ clean:
 	rm -rf ./tests/data/baseballmetrics/baseballmetrics.egg-info
 	rm -rf ./tests/data/baseballmetrics/_skbuild
 
-.PHONY: format
-format:
-	shfmt \
-		--write \
-		--indent 4 \
-		--space-redirects \
-		./bin
-
 .PHONY: install
 install:
 	pipx install --force '.[conda]'
@@ -43,11 +35,6 @@ install:
 .PHONY: lint
 lint:
 	pre-commit run --all-files
-	shfmt \
-		-d \
-		-i 4 \
-		-sr \
-		./bin
 	yamllint \
 		--strict \
 		-d '{extends: default, rules: {braces: {max-spaces-inside: 1}, truthy: {check-keys: false}, line-length: {max: 120}}}' \

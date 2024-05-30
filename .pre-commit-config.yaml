@@ -22,7 +22,7 @@ repos:
           - types-requests
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.4.5
+    rev: v0.4.6
     hooks:
       # Run the linter.
       - id: ruff
@@ -31,6 +31,11 @@ repos:
       - id: ruff-format
         args: ["--config", "pyproject.toml"]
         types_or: [python, jupyter]
+  - repo: https://github.com/maxwinterstein/shfmt-py
+    rev: v3.7.0.1
+    hooks:
+      - id: shfmt
+        args: ["--indent=4", "--space-redirects", "--write"]
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.10.0.1
     hooks:
