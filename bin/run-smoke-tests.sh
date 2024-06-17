@@ -181,7 +181,7 @@ get-files opencv-python
 shared_args=(
     --ignore=compiled-objects-have-debug-symbols
     --ignore=mixed-file-extensions
-    --max-allowed-files=7500
+    --max-allowed-files=8000
     --max-allowed-size-compressed=90M
     --max-allowed-size-uncompressed=200M
 )
