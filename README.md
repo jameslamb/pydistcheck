@@ -24,7 +24,9 @@ Supported formats:
 * `conda` packages (both `.conda` and `.tar.bz2`)
 * any `.tar.bz2`, `.tar.gz`, or `.zip` archive
 
-See ["How to Test a Python Distribution"](https://pydistcheck.readthedocs.io/en/latest/how-to-test-a-python-distribution.html) to see how it and similar tools like [`auditwheel`](https://github.com/pypa/auditwheel), [`check-wheel-contents`](https://github.com/jwodder/check-wheel-contents), and [`twine check`](https://twine.readthedocs.io/en/stable/#twine-check) fit into Python development workflows.
+See ["Check Reference"](https://pydistcheck.readthedocs.io/en/latest/check-reference.html) for a complete list of the types of issues `pydistcheck` can catch.
+
+See ["How to Test a Python Distribution"](https://pydistcheck.readthedocs.io/en/latest/how-to-test-a-python-distribution.html) to learn how `pydistcheck` and similar tools like [`auditwheel`](https://github.com/pypa/auditwheel), [`check-wheel-contents`](https://github.com/jwodder/check-wheel-contents), and [`twine check`](https://twine.readthedocs.io/en/stable/#twine-check) fit into Python development workflows.
 
 For more background on the value of such a tool, see the SciPy 2022 talk "Does that CSV Belong on PyPI? Probably Not" ([video link](https://www.youtube.com/watch?v=1a7g5l_g_U8)).
 
