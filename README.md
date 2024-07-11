@@ -48,7 +48,18 @@ For more details, see "Installation" ([link](./docs/installation.rst)).
 
 ## Quickstart
 
-Try it out on the test data in this project ...
+Try it out on a package you like.
+
+```shell
+pip download \
+  --no-deps \
+  -d ./downloads \
+  pyarrow
+
+pydistcheck --inspect ./downloads/*.whl
+```
+
+Or on the test data in this repo ...
 
 ```shell
 pydistcheck tests/data/problematic-package-*
