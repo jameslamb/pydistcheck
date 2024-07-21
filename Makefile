@@ -10,7 +10,7 @@ check-test-packages:
 		-v "$${PWD}/tests/data":/opt/test-packages:ro \
 		-v "$${PWD}/bin":/ci-scripts \
 		--workdir /ci-scripts \
-		-it python:3.11 \
+		-it python:latest \
 		./check-test-packages.sh /opt/test-packages
 
 .PHONY: check-wheels
