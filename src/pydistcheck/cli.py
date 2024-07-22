@@ -184,10 +184,9 @@ def check(  # noqa: PLR0913
         "expected_directories": expected_directories,
         "expected_files": expected_files,
     }
-    kwargs_that_differ_from_defaults = {}
-    for k, v in kwargs.items():
-        if v != getattr(conf, k):
-            kwargs_that_differ_from_defaults[k] = v
+    kwargs_that_differ_from_defaults = {
+        k: v for k, v in kwargs.items() if v != getattr(conf, k)
+    }
     if config is not None:
         conf.update_from_toml(toml_file=click.format_filename(config))
     else:

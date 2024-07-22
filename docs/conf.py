@@ -3,11 +3,14 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+from datetime import datetime
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "pydistcheck"
-copyright = "2022-2023, James Lamb"  # noqa: A001
+current_year = datetime.utcnow().year
+copyright = f"2022-{current_year}, James Lamb"  # noqa: A001
 author = "James Lamb"
 
 # -- General configuration ---------------------------------------------------

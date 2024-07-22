@@ -18,6 +18,7 @@ dist/
 *.doc
 *.docx
 *.docm
+downloads/
 .DS_Store
 *.dylib
 *.egg-info/
@@ -47,6 +48,7 @@ __pycache__/
 *.rds
 *.Rdata
 *.rsa
+.ruff_cache/
 scratch.md
 _skbuild/
 smoke-tests/
