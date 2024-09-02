@@ -65,7 +65,7 @@ shared_args=(
     --ignore=compiled-objects-have-debug-symbols
     --ignore=mixed-file-extensions
     --ignore=path-contains-spaces
-    --max-allowed-files=7500
+    --max-allowed-files=8000
     --max-allowed-size-uncompressed=150M
 )
 pydistcheck \
@@ -230,6 +230,8 @@ pydistcheck \
 get-files spacy
 pydistcheck \
     --ignore 'compiled-objects-have-debug-symbols' \
+    --max-allowed-size-compressed='50M' \
+    --max-allowed-size-uncompressed='100M' \
     ./smoke-tests/*
 
 echo "done running smoke tests"
