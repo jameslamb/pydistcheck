@@ -68,7 +68,7 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.isort]
-line_length = 100
+line_length = 88
 profile = "black"
 
 [tool.mypy]
@@ -78,6 +78,7 @@ mypy_path = "./src:./tests/data"
 strict = true
 
 [tool.ruff]
+line-length = 88
 # this should be set to the oldest version of python the project supports
 target-version = "py38"
 
@@ -99,6 +100,8 @@ select = [
     "B",
     # flake8-comprehensions
     "C4",
+    # flake8-datetimez
+    "DTZ",
     # pycodestyle
     "E",
     # eradicate
@@ -123,6 +126,8 @@ select = [
     "S",
     # flake8-simplify
     "SIM",
+    # pyupgrade
+    "UP",
 ]
 
 [tool.ruff.lint.per-file-ignores]
