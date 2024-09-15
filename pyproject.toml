@@ -146,6 +146,8 @@ select = [
     "PLR0912"
 ]
 "tests/*" = [
+    # (flake8-annotations)
+    "ANN",
     # (flake8-bugbear) Found useless expression
     "B018",
     # (flake8-bandit) use of assert detected

@@ -44,7 +44,7 @@ def test_default_toml_config():
 
 def test_all_checks_are_documented_in_check_reference():
     check_ref_file = DOCS_ROOT.joinpath("check-reference.rst")
-    with open(check_ref_file, "r") as f:
+    with open(check_ref_file) as f:
         check_ref_str = f.read()
 
     for check in ALL_CHECKS:
