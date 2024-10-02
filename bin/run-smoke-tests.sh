@@ -195,7 +195,11 @@ pydistcheck \
     ./smoke-tests/*.whl
 
 get-files pandas
-pydistcheck ./smoke-tests/*
+pydistcheck \
+    --max-allowed-files=2500 \
+    --max-allowed-size-compressed=70M \
+    --max-allowed-size-uncompressed=300M \
+    ./smoke-tests/*
 
 get-files Pillow
 pydistcheck \

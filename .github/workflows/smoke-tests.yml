@@ -33,8 +33,7 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v3
         with:
           activate-environment: pydistcheck-tests
-          miniforge-variant: Mambaforge
-          use-mamba: true
+          miniforge-version: latest
           python-version: ${{ matrix.python_version }}
       - name: Install extra tools on Linux
         if: startsWith(matrix.os, 'ubuntu')
