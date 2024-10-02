@@ -22,6 +22,7 @@ jobs:
         with:
           environment-file: docs/env.yml
           activate-environment: pydistcheck-docs
+          channels: nodefaults,conda-forge
       - name: build docs
         shell: bash -l {0}
         run: |
