@@ -57,7 +57,7 @@ jobs:
       - uses: conda-incubator/setup-miniconda@v3
         with:
           activate-environment: pydistcheck-tests
-          channels: nodefaults,conda-forge
+          miniforge-version: latest
           python-version: ${{ matrix.python_version }}
       - name: Install extra tools on Linux
         if: startsWith(matrix.os, 'ubuntu')
