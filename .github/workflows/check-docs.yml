@@ -22,8 +22,7 @@ jobs:
         with:
           environment-file: docs/env.yml
           activate-environment: pydistcheck-docs
-          miniforge-variant: Mambaforge
-          use-mamba: true
+          miniforge-version: latest
       - name: build docs
         shell: bash -l {0}
         run: |
