@@ -45,8 +45,6 @@ jobs:
         shell: bash -l {0}
         run: |
           conda install \
-            --override-channels \
-            --channel conda-forge \
             --yes \
               pipx \
               requests
