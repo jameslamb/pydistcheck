@@ -5,6 +5,12 @@
 # a complete list.
 ignore = []
 
+# List of checks to run.
+# If non-empty, then only these checks will run.
+# See https://pydistcheck.readthedocs.io/en/latest/check-reference.html for
+# a complete list.
+select = []
+
 # Set to true to print a summary of the distribution, like its total
 # size and largest files.
 inspect = false
