@@ -74,7 +74,6 @@ profile = "black"
 
 [tool.mypy]
 exclude = 'docs/conf\.py$|build/*'
-explicit_package_bases = true
 ignore_missing_imports = true
 mypy_path = "./src:./tests/data"
 strict = true
