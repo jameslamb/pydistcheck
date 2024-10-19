@@ -78,6 +78,12 @@ ignore_missing_imports = true
 mypy_path = "./src:./tests/data"
 strict = true
 
+[tool.rstcheck]
+ignore_directives = [
+    # rstcheck does not understand directives from extension 'sphinx-click'
+    "click"
+]
+
 [tool.ruff]
 line-length = 88
 # this should be set to the oldest version of python the project supports

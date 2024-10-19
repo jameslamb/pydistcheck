@@ -118,6 +118,7 @@ Some programs may use file extensions, instead of more reliable mechanisms like 
 .. code-block:: python
 
     if filepath.endswith(".yaml"):
+        x = yaml.safe_load(filepath)
 
 In such cases, having a mix of file extensions can lead to only a subset of relevant files being matched.
 
