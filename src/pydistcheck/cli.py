@@ -193,6 +193,7 @@ def check(  # noqa: PLR0913
         "max_allowed_size_compressed": max_allowed_size_compressed,
         "max_allowed_size_uncompressed": max_allowed_size_uncompressed,
         "max_path_length": max_path_length,
+        "select": select,
         "expected_directories": expected_directories,
         "expected_files": expected_files,
     }
@@ -255,11 +256,11 @@ def check(  # noqa: PLR0913
         _NonAsciiCharacterCheck(),
     ]
 
-    # if 'select' is non-empty, use that value and ignore
+    # if 'select' is non-empty, use only the checks indicated by that option
     if selected_checks:
         checks = [c for c in checks if c.check_name in selected_checks]
+    # otherwise, run all checks except those indicated by 'ignore'
     elif checks_to_ignore:
-        # filter out ignored checks
         checks = [c for c in checks if c.check_name not in checks_to_ignore]
 
     any_errors_found = False

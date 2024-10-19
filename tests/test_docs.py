@@ -14,7 +14,7 @@ DOCS_ROOT = Path(__file__).parents[1].joinpath("docs")
 
 def test_default_toml_config():
     # NOTE: this intentionally does not use pydistcheck._Config.update_from_toml(),
-    #       to ensure that's bugs in that class don't also cause this test to accidentally pass.
+    #       to ensure that bugs in that class don't also cause this test to accidentally pass.
     defaults_example_file = DOCS_ROOT.joinpath("_static/defaults.toml")
     with open(defaults_example_file, "rb") as f:
         config_dict = tomllib.load(f)
@@ -36,6 +36,7 @@ def test_default_toml_config():
     config.expected_directories = tuple(config.expected_directories)
     config.expected_files = tuple(config.expected_files)
     config.ignore = ()
+    config.select = ()
 
     assert (
         config == _Config()
