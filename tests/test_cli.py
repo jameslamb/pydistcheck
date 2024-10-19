@@ -796,7 +796,7 @@ def test_debug_symbols_check_works(distro_file):
     if "macosx" in distro_file:
         # macOS wheels
         lib_file = r"\"lib/lib_baseballmetrics\.dylib\"'"
-        if platform.startswith("cygwin") or platform.startswith("win"):
+        if platform.startswith(("cygwin", "win")):
             debug_cmd = r"'llvm\-nm \-a " + lib_file
         else:
             # dsymutil works on both macOS and Linux
@@ -804,7 +804,7 @@ def test_debug_symbols_check_works(distro_file):
     elif "osx-64" in distro_file:
         # macOS conda packages
         lib_file = r"\"lib/python3\.9/site-packages/lib/lib_baseballmetrics\.dylib\"'\."
-        if platform.startswith("cygwin") or platform.startswith("win"):
+        if platform.startswith(("cygwin", "win")):
             debug_cmd = r"'llvm\-nm \-a " + lib_file
         else:
             # dsymutil works on both macOS and Linux

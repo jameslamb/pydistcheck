@@ -44,7 +44,7 @@ def test_file_size_from_number_switches_unit_str_based_on_size():
 
 
 @pytest.mark.parametrize(
-    "file_size,expected_str",
+    ("file_size", "expected_str"),
     [
         (_FileSize.from_number(110), "0.1K"),
         (_FileSize.from_number(150), "0.1K"),
