@@ -19,6 +19,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
     "Topic :: Software Development",
@@ -88,6 +89,10 @@ ignore = [
     "E501",
     # (pylint) Magic value used in comparison, consider replacing with a constant
     "PLR2004",
+    # (flake8-pytest-style) scope='function' is implied in @pytest.fixture()
+    "PT003",
+    # (flake8-pytest-style) Wrong values type in @pytest.mark.parametrize expected list of tuple
+    "PT007",
     # (flake8-bandit) subprocess call: check for execution of untrusted input
     "S603",
     # (flake8-simplify) use ternary operator instead of if-else
@@ -114,8 +119,12 @@ select = [
     "PERF",
     # pygrep-hooks
     "PGH",
+    # flake8-pie
+    "PIE",
     # pylint
     "PL",
+    # flake8-pytest-style
+    "PT",
     # flake8-pyi
     "PYI",
     # flake8-return
@@ -148,6 +157,8 @@ select = [
 "tests/*" = [
     # (flake8-annotations)
     "ANN",
+    # (pydocstyle)
+    "D",
     # (flake8-bugbear) Found useless expression
     "B018",
     # (flake8-bandit) use of assert detected

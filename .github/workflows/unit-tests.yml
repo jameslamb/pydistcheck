@@ -31,20 +31,22 @@ jobs:
             python_version: '3.11'
           - os: ubuntu-latest
             python_version: '3.12'
+          - os: ubuntu-latest
+            python_version: '3.13'
           #########
           # macOS #
           #########
           - os: macOS-13
             python_version: '3.8'
           - os: macOS-latest
-            python_version: '3.10'
+            python_version: '3.13'
           ###########
           # Windows #
           ###########
           - os: windows-latest
             python_version: '3.8'
           - os: windows-latest
-            python_version: '3.10'
+            python_version: '3.13'
     steps:
       - name: Prevent conversion of line endings on Windows
         if: startsWith(matrix.os, 'windows')
@@ -91,8 +93,6 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            python_version: '3.9'
-          - os: ubuntu-latest
             python_version: '3.10'
     steps:
       - name: check out repository
@@ -130,9 +130,9 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            python_version: '3.11'
+            python_version: '3.12'
           - os: macOS-13
-            python_version: '3.10'
+            python_version: '3.11'
     steps:
       - name: check out repository
         uses: actions/checkout@v4

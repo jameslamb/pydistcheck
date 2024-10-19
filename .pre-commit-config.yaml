@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
       - id: check-toml
       - id: end-of-file-fixer
@@ -13,16 +13,18 @@ repos:
         name: isort (python)
         args: ["--settings-path", "pyproject.toml"]
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.11.2
+    rev: v1.12.0
     hooks:
       - id: mypy
         args: ["--config-file", "pyproject.toml"]
         exclude: "tests"
         additional_dependencies:
+          - click
+          - tomli
           - types-requests
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.6.8
+    rev: v0.7.0
     hooks:
       # Run the linter.
       - id: ruff
