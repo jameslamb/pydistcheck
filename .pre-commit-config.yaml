@@ -43,3 +43,12 @@ repos:
     hooks:
       - id: shellcheck
         args: ["--exclude=SC2002"]
+  - repo: https://github.com/rstcheck/rstcheck
+    rev: v6.2.4
+    hooks:
+    - id: rstcheck
+      args: ["--config=pyproject.toml"]
+      additional_dependencies:
+        - click
+        - sphinx>=7.3
+        - sphinx-click>=6.0
