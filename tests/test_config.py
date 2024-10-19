@@ -54,6 +54,7 @@ def test_update_from_dict_works_even_if_dict_does_not_include_all_config_values(
 
 
 def test_update_from_dict_works_when_changing_all_values(base_config):
+    assert base_config.ignore == ()
     assert base_config.inspect is False
     assert base_config.max_allowed_files == 7
     assert base_config.max_allowed_size_compressed == "1G"
@@ -61,7 +62,7 @@ def test_update_from_dict_works_when_changing_all_values(base_config):
     patch_dict = {
         "expected_directories": "!*/tests",
         "expected_files": "!*.xlsx,!data/*.csv",
-        "ignore": "path-contains-spaces,too-many-files",
+        "ignore": ["path-contains-spaces", "too-many-files"],
         "inspect": True,
         "max_allowed_files": 8,
         "max_allowed_size_compressed": "2G",
@@ -74,6 +75,7 @@ def test_update_from_dict_works_when_changing_all_values(base_config):
     base_config.update_from_dict(patch_dict)
     assert base_config.expected_directories == "!*/tests"
     assert base_config.expected_files == "!*.xlsx,!data/*.csv"
+    assert base_config.ignore == ["path-contains-spaces", "too-many-files"]
     assert base_config.inspect is True
     assert base_config.max_allowed_files == 8
     assert base_config.max_allowed_size_compressed == "2G"
