@@ -19,6 +19,8 @@ repos:
         args: ["--config-file", "pyproject.toml"]
         exclude: "tests"
         additional_dependencies:
+          - click
+          - tomli
           - types-requests
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.

@@ -35,20 +35,20 @@ class ExitCodes:
     UNSUPPORTED_FILE_TYPE = 2
 
 
-@click.command()  # type: ignore[misc]
-@click.argument(  # type: ignore[misc]
+@click.command()
+@click.argument(
     "filepaths",
     type=click.Path(exists=True),
     nargs=-1,
 )
-@click.option(  # type: ignore[misc]
+@click.option(
     "--version",
     is_flag=True,
     show_default=False,
     default=False,
     help="Print the version of pydistcheck and exit.",
 )
-@click.option(  # type: ignore[misc]
+@click.option(
     "--config",
     type=click.Path(exists=True),
     default=None,
@@ -57,7 +57,7 @@ class ExitCodes:
         "If provided, pyproject.toml will be ignored."
     ),
 )
-@click.option(  # type: ignore[misc]
+@click.option(
     "--ignore",
     multiple=True,
     default=_Config.ignore,
@@ -67,7 +67,7 @@ class ExitCodes:
         "complete list of valid options. Can be passed multiple times."
     ),
 )
-@click.option(  # type: ignore[misc]
+@click.option(
     "--inspect",
     is_flag=True,
     show_default=False,
@@ -76,7 +76,7 @@ class ExitCodes:
         "Print a summary of the distribution, like its total size and largest files."
     ),
 )
-@click.option(  # type: ignore[misc]
+@click.option(
     "--expected-directories",
     multiple=True,
     default=_Config.expected_directories,
@@ -89,7 +89,7 @@ class ExitCodes:
         "Can be passed multiple times."
     ),
 )
-@click.option(  # type: ignore[misc]
+@click.option(
     "--expected-files",
     multiple=True,
     default=_Config.expected_files,
@@ -102,14 +102,14 @@ class ExitCodes:
         "Can be passed multiple times."
     ),
 )
-@click.option(  # type: ignore[misc]
+@click.option(
     "--max-allowed-files",
     default=_Config.max_allowed_files,
     show_default=True,
     type=int,
     help="maximum number of files allowed in the distribution",
 )
-@click.option(  # type: ignore[misc]
+@click.option(
     "--max-allowed-size-compressed",
     default=_Config.max_allowed_size_compressed,
     show_default=True,
@@ -123,7 +123,7 @@ class ExitCodes:
         "  - G = gigabytes"
     ),
 )
-@click.option(  # type: ignore[misc]
+@click.option(
     "--max-allowed-size-uncompressed",
     default=_Config.max_allowed_size_uncompressed,
     show_default=True,
@@ -137,7 +137,7 @@ class ExitCodes:
         "  - G = gigabytes"
     ),
 )
-@click.option(  # type: ignore[misc]
+@click.option(
     "--max-path-length",
     default=_Config.max_path_length,
     show_default=True,
