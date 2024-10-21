@@ -1,10 +1,12 @@
 import os
 import re
 from sys import platform
+from unittest.mock import MagicMock
 
 import pytest
 from click.testing import CliRunner, Result
 
+import pydistcheck.cli
 from pydistcheck.cli import check
 
 BASE_PACKAGES = [
@@ -52,6 +54,13 @@ def _assert_log_matches_pattern(
         f"found {num_matches_found} in {log_lines}."
     )
     assert num_matches_found == num_times, msg
+
+
+def _always_fail_check(check_name: str):
+    def _f(*args, **kwargs):
+        raise RuntimeError(f"mocking a failure in {check_name}")
+
+    return _f
 
 
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES + BASEBALL_PACKAGES)
@@ -205,7 +214,9 @@ def test_check_respects_ignore_with_multiple_checks(distro_file):
 
 
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES)
-def test_check_fails_with_expected_error_if_one_check_is_unrecognized(distro_file):
+def test_check_fails_with_expected_error_if_one_check_in_ignore_is_unrecognized(
+    distro_file,
+):
     result = CliRunner().invoke(
         check,
         [
@@ -225,9 +236,163 @@ def test_check_fails_with_expected_error_if_one_check_is_unrecognized(distro_fil
 
 
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES)
-def test_check_fails_with_expected_error_if_multiple_checks_are_unrecognized(
+def test_check_fails_with_expected_error_if_multiple_checks_in_ignore_are_unrecognized(
     distro_file,
 ):
+    result = CliRunner().invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--ignore=garbage",
+            "--ignore=other-trash",
+            "--ignore=random-nonsense",
+            "--ignore=too-many-files",
+        ],
+    )
+    assert result.exit_code == 1
+    _assert_log_matches_pattern(
+        result,
+        (
+            r"ERROR\: found the following unrecognized checks passed via '\-\-ignore'\: "
+            r"garbage,other\-trash,random\-nonsense"
+        ),
+    )
+
+
+@pytest.mark.parametrize("distro_file", BASE_PACKAGES)
+def test_check_respects_select_with_one_check(distro_file, monkeypatch):
+    runner = CliRunner()
+
+    # make 1 check always fail, so that failure can be used to observed that it ran
+    monkeypatch.setattr(
+        pydistcheck.cli._DistroTooLargeCompressedCheck,
+        "__call__",
+        _always_fail_check("distro-too-large-compressed"),
+    )
+
+    # double-check that the mocking really works
+    # (so "this check failed" can be used to test "this check was run")
+    result = runner.invoke(check, [os.path.join(TEST_DATA_DIR, distro_file)])
+    assert result.exit_code == 1
+    assert isinstance(result.exception, RuntimeError)
+    assert str(result.exception) == "mocking a failure in distro-too-large-compressed"
+
+    # expected check should run if indicated via '--select'
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--select=distro-too-large-compressed",
+        ],
+    )
+    assert result.exit_code == 1
+    assert isinstance(result.exception, RuntimeError)
+    assert str(result.exception) == "mocking a failure in distro-too-large-compressed"
+
+    # if a check is present in '--select', it doesn't matter that it's present in '--ignore'
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--ignore=distro-too-large-compressed",
+            "--select=distro-too-large-compressed",
+        ],
+    )
+    assert result.exit_code == 1
+    assert isinstance(result.exception, RuntimeError)
+    assert str(result.exception) == "mocking a failure in distro-too-large-compressed"
+
+    # passing '--select' switches pydistcheck to opt-in mode... no other checks should run
+    # except those mentioned in '--select'
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--select=too-many-files",
+        ],
+    )
+    assert result.exit_code == 0
+    _assert_log_matches_pattern(result, "errors found while checking\\: 0")
+
+
+@pytest.mark.parametrize("distro_file", BASE_PACKAGES)
+def test_check_respects_select_with_multiple_checks(distro_file):
+    raise RuntimeError("fix me")
+    runner = CliRunner()
+
+    # fails when running all checks
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--max-allowed-files=1",
+            "--max-allowed-size-compressed=1B",
+        ],
+    )
+    assert result.exit_code == 1
+
+    # fails with --ignore if all of the failing checks aren't mentioned in --ignore
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--ignore=path-contains-spaces",
+            "--ignore=too-many-files",
+            "--max-allowed-files=1",
+            "--max-allowed-size-compressed=1B",
+        ],
+    )
+    _assert_log_matches_pattern(
+        result,
+        (
+            r"^1\. \[distro\-too\-large\-compressed\] Compressed size [0-9]+\.[0-9]+K is "
+            r"larger than the allowed size \(1\.0B\)\.$"
+        ),
+    )
+    assert result.exit_code == 1
+
+    # succeeds if the failing checks are mentioned in --ignore
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--ignore=distro-too-large-compressed",
+            "--ignore=too-many-files",
+            "--max-allowed-files=1",
+        ],
+    )
+    assert result.exit_code == 0
+    _assert_log_matches_pattern(result, "errors found while checking\\: 0")
+
+
+@pytest.mark.parametrize("distro_file", BASE_PACKAGES)
+def test_check_fails_with_expected_error_if_one_check_in_select_is_unrecognized(
+    distro_file,
+):
+    raise RuntimeError("fix this")
+    result = CliRunner().invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--ignore=random-nonsense",
+            "--ignore=too-many-files",
+        ],
+    )
+    assert result.exit_code == 1
+    _assert_log_matches_pattern(
+        result,
+        (
+            r"ERROR\: found the following unrecognized checks passed via '\-\-ignore'\: "
+            r"random\-nonsense"
+        ),
+    )
+
+
+@pytest.mark.parametrize("distro_file", BASE_PACKAGES)
+def test_check_fails_with_expected_error_if_multiple_checks_in_select_are_unrecognized(
+    distro_file,
+):
+    raise RuntimeError("fix this")
     result = CliRunner().invoke(
         check,
         [
