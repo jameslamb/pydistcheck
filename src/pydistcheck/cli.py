@@ -68,6 +68,17 @@ class ExitCodes:
     ),
 )
 @click.option(
+    "--select",
+    multiple=True,
+    default=_Config.select,
+    help=(
+        "ID of a check to include, e.g. 'compiled-objects-have-debug-symbols'. "
+        "If this is provided even once, pydistcheck will only run the checks specified this way. "
+        "See https://pydistcheck.readthedocs.io/en/docs-fix/check-reference.html for a "
+        "complete list of valid options. Can be passed multiple times."
+    ),
+)
+@click.option(
     "--inspect",
     is_flag=True,
     show_default=False,
@@ -157,6 +168,7 @@ def check(  # noqa: PLR0913
     max_allowed_size_compressed: str,
     max_allowed_size_uncompressed: str,
     max_path_length: int,
+    select: Sequence[str],
 ) -> None:
     """
     Run the contents of a distribution through a set of checks, and warn about
@@ -181,6 +193,7 @@ def check(  # noqa: PLR0913
         "max_allowed_size_compressed": max_allowed_size_compressed,
         "max_allowed_size_uncompressed": max_allowed_size_uncompressed,
         "max_path_length": max_path_length,
+        "select": select,
         "expected_directories": expected_directories,
         "expected_files": expected_files,
     }
@@ -201,6 +214,17 @@ def check(  # noqa: PLR0913
         error_str = ",".join(sorted(unrecognized_checks))
         print(
             f"ERROR: found the following unrecognized checks passed via '--ignore': {error_str}"
+        )
+        sys.exit(1)
+
+    selected_checks = {x for x in conf.select if x.strip()}
+    unrecognized_checks = selected_checks - ALL_CHECKS
+    if unrecognized_checks:
+        # converting to list + sorting here so outputs are deterministic
+        # (since sets don't guarantee ordering)
+        error_str = ",".join(sorted(unrecognized_checks))
+        print(
+            f"ERROR: found the following unrecognized checks passed via '--select': {error_str}"
         )
         sys.exit(1)
 
@@ -232,8 +256,12 @@ def check(  # noqa: PLR0913
         _NonAsciiCharacterCheck(),
     ]
 
-    # filter out ignored checks
-    checks = [c for c in checks if c.check_name not in checks_to_ignore]
+    # if 'select' is non-empty, use only the checks indicated by that option
+    if selected_checks:
+        checks = [c for c in checks if c.check_name in selected_checks]
+    # otherwise, run all checks except those indicated by 'ignore'
+    elif checks_to_ignore:
+        checks = [c for c in checks if c.check_name not in checks_to_ignore]
 
     any_errors_found = False
     for filepath in filepaths_to_check:

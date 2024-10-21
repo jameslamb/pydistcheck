@@ -24,6 +24,7 @@ _ALLOWED_CONFIG_VALUES = {
     "max_allowed_size_compressed",
     "max_allowed_size_uncompressed",
     "max_path_length",
+    "select",
 }
 
 _EXPECTED_DIRECTORIES = (
@@ -67,6 +68,7 @@ class _Config:
     max_allowed_size_compressed: str = "50M"
     max_allowed_size_uncompressed: str = "75M"
     max_path_length: int = 200
+    select: Sequence[str] = ()
 
     def __setattr__(self, name: str, value: Any) -> None:
         attr_name = name.replace("-", "_")

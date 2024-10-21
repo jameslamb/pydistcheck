@@ -1,10 +1,12 @@
 import os
 import re
 from sys import platform
+from unittest.mock import MagicMock, patch
 
 import pytest
 from click.testing import CliRunner, Result
 
+import pydistcheck.cli  # noqa: F401
 from pydistcheck.cli import check
 
 BASE_PACKAGES = [
@@ -52,6 +54,15 @@ def _assert_log_matches_pattern(
         f"found {num_matches_found} in {log_lines}."
     )
     assert num_matches_found == num_times, msg
+
+
+def _mock_check_num_calls(mock_check: MagicMock) -> int:
+    """returns count of times the __call__() method of a mocked check class instance was called"""
+    return sum(
+        1
+        for mc in mock_check.method_calls
+        if str(mc).startswith("call()(distro_summary=")
+    )
 
 
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES + BASEBALL_PACKAGES)
@@ -205,7 +216,9 @@ def test_check_respects_ignore_with_multiple_checks(distro_file):
 
 
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES)
-def test_check_fails_with_expected_error_if_one_check_is_unrecognized(distro_file):
+def test_check_fails_with_expected_error_if_one_check_in_ignore_is_unrecognized(
+    distro_file,
+):
     result = CliRunner().invoke(
         check,
         [
@@ -225,7 +238,7 @@ def test_check_fails_with_expected_error_if_one_check_is_unrecognized(distro_fil
 
 
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES)
-def test_check_fails_with_expected_error_if_multiple_checks_are_unrecognized(
+def test_check_fails_with_expected_error_if_multiple_checks_in_ignore_are_unrecognized(
     distro_file,
 ):
     result = CliRunner().invoke(
@@ -243,6 +256,152 @@ def test_check_fails_with_expected_error_if_multiple_checks_are_unrecognized(
         result,
         (
             r"ERROR\: found the following unrecognized checks passed via '\-\-ignore'\: "
+            r"garbage,other\-trash,random\-nonsense"
+        ),
+    )
+
+
+@patch("pydistcheck.cli._SpacesInPathCheck", autospec=True)
+@patch("pydistcheck.cli._FileCountCheck", autospec=True)
+@pytest.mark.parametrize("distro_file", BASE_PACKAGES)
+def test_check_respects_select_with_one_check(
+    mock_path_contains_spaces, mock_too_many_files, distro_file
+):
+    # ensure this attribute is actually set, as it's used for filtering (the class attribute
+    # is lost somewhere in all this mocking and patching)
+    mock_path_contains_spaces.return_value.check_name = "path-contains-spaces"
+    mock_too_many_files.return_value.check_name = "too-many-files"
+
+    # initialize the click testing class
+    runner = CliRunner()
+
+    # by default, all checks should be selected and run once
+    result = runner.invoke(check, [os.path.join(TEST_DATA_DIR, distro_file)])
+    assert result.exit_code == 0
+    assert _mock_check_num_calls(mock_path_contains_spaces) == 1
+    assert _mock_check_num_calls(mock_too_many_files) == 1
+    mock_path_contains_spaces.reset_mock()
+    mock_too_many_files.reset_mock()
+
+    # passing '--select' switches pydistcheck to opt-in mode... no other checks should run
+    # except those mentioned in '--select'
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--select=too-many-files",
+        ],
+    )
+    assert result.exit_code == 0
+    _assert_log_matches_pattern(result, "errors found while checking\\: 0")
+    assert _mock_check_num_calls(mock_path_contains_spaces) == 0
+    assert _mock_check_num_calls(mock_too_many_files) == 1
+    mock_path_contains_spaces.reset_mock()
+    mock_too_many_files.reset_mock()
+
+    # if a check is present in '--select', it doesn't matter that it's present in '--ignore'
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--ignore=too-many-files",
+            "--select=too-many-files",
+        ],
+    )
+    assert result.exit_code == 0
+    assert _mock_check_num_calls(mock_path_contains_spaces) == 0
+    assert _mock_check_num_calls(mock_too_many_files) == 1
+    mock_path_contains_spaces.reset_mock()
+    mock_too_many_files.reset_mock()
+
+
+@patch("pydistcheck.cli._PathTooLongCheck", autospec=True)
+@patch("pydistcheck.cli._SpacesInPathCheck", autospec=True)
+@patch("pydistcheck.cli._FileCountCheck", autospec=True)
+@pytest.mark.parametrize("distro_file", BASE_PACKAGES)
+def test_check_respects_select_with_multiple_checks(
+    mock_path_too_long, mock_path_contains_spaces, mock_too_many_files, distro_file
+):
+    # ensure this attribute is actually set, as it's used for filtering (the class attribute
+    # is lost somewhere in all this mocking and patching)
+    mock_path_too_long.return_value.check_name = "path-too-long"
+    mock_path_contains_spaces.return_value.check_name = "path-contains-spaces"
+    mock_too_many_files.return_value.check_name = "too-many-files"
+
+    # initialize the click testing class
+    runner = CliRunner()
+
+    # by default, all checks should be selected and run once
+    result = runner.invoke(check, [os.path.join(TEST_DATA_DIR, distro_file)])
+    assert result.exit_code == 0
+    assert _mock_check_num_calls(mock_path_too_long) == 1
+    assert _mock_check_num_calls(mock_path_contains_spaces) == 1
+    assert _mock_check_num_calls(mock_too_many_files) == 1
+    mock_path_too_long.reset_mock()
+    mock_path_contains_spaces.reset_mock()
+    mock_too_many_files.reset_mock()
+
+    # passing '--select' switches pydistcheck to opt-in mode... no other checks should run
+    # except those mentioned in '--select'
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--select=too-many-files",
+            "--select=path-too-long",
+        ],
+    )
+    assert result.exit_code == 0
+    _assert_log_matches_pattern(result, "errors found while checking\\: 0")
+    assert _mock_check_num_calls(mock_path_too_long) == 1
+    assert _mock_check_num_calls(mock_path_contains_spaces) == 0
+    assert _mock_check_num_calls(mock_too_many_files) == 1
+    mock_path_too_long.reset_mock()
+    mock_path_contains_spaces.reset_mock()
+    mock_too_many_files.reset_mock()
+
+
+@pytest.mark.parametrize("distro_file", BASE_PACKAGES)
+def test_check_fails_with_expected_error_if_one_check_in_select_is_unrecognized(
+    distro_file,
+):
+    result = CliRunner().invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--select=random-nonsense",
+            "--ignore=too-many-files",
+        ],
+    )
+    assert result.exit_code == 1
+    _assert_log_matches_pattern(
+        result,
+        (
+            r"ERROR\: found the following unrecognized checks passed via '\-\-select'\: "
+            r"random\-nonsense"
+        ),
+    )
+
+
+@pytest.mark.parametrize("distro_file", BASE_PACKAGES)
+def test_check_fails_with_expected_error_if_multiple_checks_in_select_are_unrecognized(
+    distro_file,
+):
+    result = CliRunner().invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--select=garbage",
+            "--select=other-trash",
+            "--select=random-nonsense",
+            "--select=too-many-files",
+        ],
+    )
+    assert result.exit_code == 1
+    _assert_log_matches_pattern(
+        result,
+        (
+            r"ERROR\: found the following unrecognized checks passed via '\-\-select'\: "
             r"garbage,other\-trash,random\-nonsense"
         ),
     )
