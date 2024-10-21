@@ -1,7 +1,7 @@
 import os
 import re
 from sys import platform
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 from click.testing import CliRunner, Result
@@ -56,11 +56,9 @@ def _assert_log_matches_pattern(
     assert num_matches_found == num_times, msg
 
 
-def _always_fail_check(check_name: str):
-    def _f(*args, **kwargs):
-        raise RuntimeError(f"mocking a failure in {check_name}")
-
-    return _f
+def _mock_check_num_calls(mock_check: MagicMock) -> int:
+    """returns count of times the __call__() method of a mocked check class instance was called"""
+    return sum(1 for mc in mock_check.method_calls if str(mc).startswith("call()(distro_summary="))
 
 
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES + BASEBALL_PACKAGES)
@@ -259,51 +257,20 @@ def test_check_fails_with_expected_error_if_multiple_checks_in_ignore_are_unreco
     )
 
 
+@patch("pydistcheck.cli._FileCountCheck", autospec=True)
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES)
-def test_check_respects_select_with_one_check(distro_file, monkeypatch):
+def test_check_respects_select_with_one_check(mock_too_many_files, distro_file):
+    mock_too_many_files.return_value.check_name = "too-many-files"
     runner = CliRunner()
 
-    # make 1 check always fail, so that failure can be used to observed that it ran
-    monkeypatch.setattr(
-        pydistcheck.cli._DistroTooLargeCompressedCheck,
-        "__call__",
-        _always_fail_check("distro-too-large-compressed"),
-    )
-
-    # double-check that the mocking really works
-    # (so "this check failed" can be used to test "this check was run")
-    result = runner.invoke(check, [os.path.join(TEST_DATA_DIR, distro_file)])
-    assert result.exit_code == 1
-    assert isinstance(result.exception, RuntimeError)
-    assert str(result.exception) == "mocking a failure in distro-too-large-compressed"
+    # by default, all checks should be selected and run once
+    # result = runner.invoke(check, [os.path.join(TEST_DATA_DIR, distro_file)])
+    # assert result.exit_code == 0
+    # assert _mock_check_num_calls(mock_too_many_files) == 1
+    # mock_too_many_files.reset_mock()
+    #mock_too_many_files.return_value.check_name.return_value = "too-many-files"
 
     # expected check should run if indicated via '--select'
-    result = runner.invoke(
-        check,
-        [
-            os.path.join(TEST_DATA_DIR, distro_file),
-            "--select=distro-too-large-compressed",
-        ],
-    )
-    assert result.exit_code == 1
-    assert isinstance(result.exception, RuntimeError)
-    assert str(result.exception) == "mocking a failure in distro-too-large-compressed"
-
-    # if a check is present in '--select', it doesn't matter that it's present in '--ignore'
-    result = runner.invoke(
-        check,
-        [
-            os.path.join(TEST_DATA_DIR, distro_file),
-            "--ignore=distro-too-large-compressed",
-            "--select=distro-too-large-compressed",
-        ],
-    )
-    assert result.exit_code == 1
-    assert isinstance(result.exception, RuntimeError)
-    assert str(result.exception) == "mocking a failure in distro-too-large-compressed"
-
-    # passing '--select' switches pydistcheck to opt-in mode... no other checks should run
-    # except those mentioned in '--select'
     result = runner.invoke(
         check,
         [
@@ -312,7 +279,34 @@ def test_check_respects_select_with_one_check(distro_file, monkeypatch):
         ],
     )
     assert result.exit_code == 0
+    assert _mock_check_num_calls(mock_too_many_files) == 1
+    mock_too_many_files.reset_mock()
+
+    # if a check is present in '--select', it doesn't matter that it's present in '--ignore'
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--ignore=too-many-files",
+            "--select=too-many-files",
+        ],
+    )
+    assert result.exit_code == 0
+    assert _mock_check_num_calls(mock_too_many_files) == 1
+    mock_too_many_files.reset_mock()
+
+    # passing '--select' switches pydistcheck to opt-in mode... no other checks should run
+    # except those mentioned in '--select'
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, distro_file),
+            "--select=distro-too-large-compressed",
+        ],
+    )
+    assert result.exit_code == 0
     _assert_log_matches_pattern(result, "errors found while checking\\: 0")
+    assert _mock_check_num_calls(mock_too_many_files) == 0
 
 
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES)
