@@ -48,7 +48,7 @@ For more details, see "Installation" ([link](./docs/installation.rst)).
 
 ## Quickstart
 
-Try it out on a package you like.
+Try it out on a package you like...
 
 ```shell
 pip download \
@@ -57,6 +57,50 @@ pip download \
   pyarrow
 
 pydistcheck --inspect ./downloads/*.whl
+```
+
+... to see what it contains.
+
+```text
+----- package inspection summary -----
+file size
+  * compressed size: 25.9M
+  * uncompressed size: 94.0M
+  * compression space saving: 72.4%
+contents
+  * directories: 0
+  * files: 809 (30 compiled)
+size by extension
+  * .dylib - 73.2M (77.9%)
+  * .so - 10.8M (11.4%)
+  * .h - 4.5M (4.8%)
+  * .py - 2.4M (2.5%)
+  * .pyx - 0.8M (0.8%)
+  * .pxi - 0.7M (0.8%)
+  * .cc - 0.4M (0.5%)
+  * .cmake - 0.4M (0.4%)
+  * .pxd - 0.3M (0.3%)
+  * .gz - 0.2M (0.2%)
+  * .hpp - 0.1M (0.1%)
+  * .txt - 0.1M (0.1%)
+  * no-extension - 77.4K (0.1%)
+  * .orc - 48.4K (0.1%)
+  * .parquet - 14.0K (0.0%)
+  * .sh - 7.8K (0.0%)
+  * .md - 3.6K (0.0%)
+  * .yml - 1.5K (0.0%)
+  * .ubuntu - 1.3K (0.0%)
+  * .fedora - 1.0K (0.0%)
+  * .diff - 1.0K (0.0%)
+  * .feather - 0.6K (0.0%)
+largest files
+  * (49.1M) pyarrow/libarrow.1700.dylib
+  * (10.7M) pyarrow/libarrow_flight.1700.dylib
+  * (3.8M) pyarrow/lib.cpython-311-darwin.so
+  * (3.8M) pyarrow/libparquet.1700.dylib
+  * (2.9M) pyarrow/libarrow_substrait.1700.dylib
+
+==================== done running pydistcheck ===============
 ```
 
 Or on the test data in this repo ...
