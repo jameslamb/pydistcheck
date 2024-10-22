@@ -68,6 +68,13 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
+[tool.coverage.report]
+fail_under = 98.00
+exclude_also = [
+    # skip type-checking blocks when calculating code coverage
+    "if TYPE_CHECKING:"
+]
+
 [tool.isort]
 line_length = 88
 profile = "black"
