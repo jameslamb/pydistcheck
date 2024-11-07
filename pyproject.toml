@@ -126,6 +126,8 @@ select = [
     "ERA",
     # pyflakes
     "F",
+    # flake8-fixme
+    "FIX",
     # flynt
     "FLY",
     # perflint

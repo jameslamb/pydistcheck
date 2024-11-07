@@ -60,8 +60,6 @@ def test_update_from_dict_works_when_changing_all_values(base_config):
     assert base_config.max_allowed_size_compressed == "1G"
     assert base_config.max_allowed_size_uncompressed == "18K"
     assert base_config.select == ()
-    # TODO: "ignore" should be a list
-    # TODO: "select" needs to be added
     patch_dict = {
         "expected_directories": "!*/tests",
         "expected_files": "!*.xlsx,!data/*.csv",
