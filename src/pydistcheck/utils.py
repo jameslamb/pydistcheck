@@ -5,6 +5,11 @@ not specific to package distributions
 
 from typing import Tuple
 
+# references:
+#
+#   * https://physics.nist.gov/cuu/Units/binary.html
+#   * https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
+#
 _UNIT_TO_NUM_BYTES = {
     "b": 1,
     "k": 1024,
