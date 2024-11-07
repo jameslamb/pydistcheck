@@ -129,9 +129,12 @@ class ExitCodes:
         "maximum allowed compressed size, a string like '1.5M' indicating"
         " '1.5 megabytes'. Supported units:\n"
         "  - B = bytes\n"
-        "  - K = kilobytes\n"
-        "  - M = megabytes\n"
-        "  - G = gigabytes"
+        "  - KB = kilobytes\n"
+        "  - K, Ki = kibibytes\n"
+        "  - MB = megabytes\n"
+        "  - M, Mi = mebibytes\n"
+        "  - GB = gigabytes\n"
+        "  - G, Gi = gibibytes"
     ),
 )
 @click.option(

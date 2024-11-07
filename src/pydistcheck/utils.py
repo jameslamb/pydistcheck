@@ -5,7 +5,18 @@ not specific to package distributions
 
 from typing import Tuple
 
-_UNIT_TO_NUM_BYTES = {"B": 1, "K": 1024, "M": 1024**2, "G": 1024**3}
+_UNIT_TO_NUM_BYTES = {
+    "b": 1,
+    "k": 1024,
+    "kb": 1000,
+    "ki": 1024,
+    "m": 1024**2,
+    "mb": 1000000,
+    "mi": 1024**2,
+    "g": 1024**3,
+    "gb": 1000000000,
+    "gi": 1024**3,
+}
 
 
 def _recommend_size_str(num_bytes: int) -> Tuple[float, str]:
@@ -35,7 +46,7 @@ class _FileSize:
 
     @property
     def total_size_bytes(self) -> int:
-        return int(self._num * _UNIT_TO_NUM_BYTES[self._unit_str])
+        return int(self._num * _UNIT_TO_NUM_BYTES[self._unit_str.lower()])
 
     def __eq__(self, other: object) -> bool:
         return (
