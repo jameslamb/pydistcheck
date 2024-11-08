@@ -59,6 +59,6 @@ class _FileSize:
         return not self == other
 
     def __str__(self) -> str:
-        return f"{self.total_size_bytes}B"
+        return f"{self.total_size_bytes}"
         # num_bytes, unit_str = _recommend_size_str(self.total_size_bytes)
         # return f"{round(num_bytes, 1)}{unit_str}"
