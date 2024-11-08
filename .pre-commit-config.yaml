@@ -19,8 +19,8 @@ repos:
         args: ["--config-file", "pyproject.toml"]
         exclude: "tests"
         additional_dependencies:
-          - click
-          - tomli
+          - click>=8.0
+          - tomli>=1.1.0
           - types-requests
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
@@ -49,6 +49,6 @@ repos:
       - id: rstcheck
         args: ["--config=pyproject.toml"]
         additional_dependencies:
-          - click
+          - click>=8.0
           - sphinx>=7.3
           - sphinx-click>=6.0
