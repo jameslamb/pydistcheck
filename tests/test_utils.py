@@ -3,9 +3,33 @@ import pytest
 from pydistcheck.utils import _FileSize
 
 
-def test_file_size_minimally_works():
-    fs = _FileSize(num=1.0, unit_str="G")
-    assert fs.total_size_bytes == int(1024**3)
+@pytest.mark.parametrize(
+    ("unit_str", "expected_total_bytes"),
+    [
+        ("B", 3),
+        ("K", 3 * 1024),
+        ("KB", 3e3),
+        ("kB", 3e3),
+        ("kb", 3e3),
+        ("Ki", 3 * 1024),
+        ("ki", 3 * 1024),
+        ("M", 3 * (1024**2)),
+        ("MB", 3e6),
+        ("mB", 3e6),
+        ("mb", 3e6),
+        ("Mi", 3 * (1024**2)),
+        ("mi", 3 * (1024**2)),
+        ("G", 3 * (1024**3)),
+        ("GB", 3e9),
+        ("gB", 3e9),
+        ("gb", 3e9),
+        ("Gi", 3 * (1024**3)),
+        ("gi", 3 * (1024**3)),
+    ],
+)
+def test_file_size_minimally_works(expected_total_bytes, unit_str):
+    fs = _FileSize(num=3.0, unit_str=unit_str)
+    assert fs.total_size_bytes == int(expected_total_bytes)
 
 
 def test_file_size_comparisons_work():

@@ -126,12 +126,15 @@ class ExitCodes:
     show_default=True,
     type=str,
     help=(
-        "maximum allowed compressed size, a string like '1.5M' indicating"
+        "maximum allowed compressed size, a string like '1.5MB' indicating"
         " '1.5 megabytes'. Supported units:\n"
         "  - B = bytes\n"
-        "  - K = kilobytes\n"
-        "  - M = megabytes\n"
-        "  - G = gigabytes"
+        "  - KB = kilobytes\n"
+        "  - K, Ki = kibibytes\n"
+        "  - MB = megabytes\n"
+        "  - M, Mi = mebibytes\n"
+        "  - GB = gigabytes\n"
+        "  - G, Gi = gibibytes"
     ),
 )
 @click.option(
@@ -140,12 +143,15 @@ class ExitCodes:
     show_default=True,
     type=str,
     help=(
-        "maximum allowed uncompressed size, a string like '1.5M' indicating"
+        "maximum allowed uncompressed size, a string like '1.5MB' indicating"
         " '1.5 megabytes'. Supported units:\n"
         "  - B = bytes\n"
-        "  - K = kilobytes\n"
-        "  - M = megabytes\n"
-        "  - G = gigabytes"
+        "  - KB = kilobytes\n"
+        "  - K, Ki = kibibytes\n"
+        "  - MB = megabytes\n"
+        "  - M, Mi = mebibytes\n"
+        "  - GB = gigabytes\n"
+        "  - G, Gi = gibibytes"
     ),
 )
 @click.option(
