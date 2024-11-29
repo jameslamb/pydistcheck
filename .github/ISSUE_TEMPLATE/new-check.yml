@@ -33,7 +33,8 @@ body:
       label: Will this check introduce any additional configuration?
       description: |
         For example, the `too-many-files` checks introduced configuration option
-        `--max-allowed-files` to allow user control over how many files are allowed in a distribution.
+        `--max-allowed-files` to allow user control over how many files are allowed
+        in a distribution.
       options:
         - 'yes'
         - 'no'

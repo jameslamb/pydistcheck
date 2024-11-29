@@ -24,4 +24,4 @@ def _import_zstandard() -> Any:
         raise ModuleNotFoundError(err_msg) from err
 
 
-__all__ = ["tomllib", "_import_zstandard"]
+__all__ = ["_import_zstandard", "tomllib"]
