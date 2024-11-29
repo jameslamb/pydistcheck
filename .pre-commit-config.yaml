@@ -24,7 +24,7 @@ repos:
           - types-requests
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.7.2
+    rev: v0.8.0
     hooks:
       # Run the linter.
       - id: ruff
@@ -52,3 +52,7 @@ repos:
           - click>=8.0
           - sphinx>=7.3
           - sphinx-click>=6.0
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
