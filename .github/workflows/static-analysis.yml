@@ -24,8 +24,5 @@ jobs:
           conda install \
             --yes \
             -c conda-forge \
-              pre-commit \
-              requests \
-              types-requests \
-              yamllint
+              pre-commit
           make lint

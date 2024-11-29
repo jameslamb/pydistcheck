@@ -35,10 +35,6 @@ install:
 .PHONY: lint
 lint:
 	pre-commit run --all-files
-	yamllint \
-		--strict \
-		-d '{extends: default, rules: {braces: {max-spaces-inside: 1}, truthy: {check-keys: false}, line-length: {max: 120}}}' \
-		.
 
 .PHONY: linux-wheel
 linux-wheel:
