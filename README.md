@@ -8,8 +8,6 @@
 [![GitHub Actions](https://github.com/jameslamb/pydistcheck/actions/workflows/unit-tests.yml/badge.svg?branch=main)](https://github.com/jameslamb/pydistcheck/actions/workflows/unit-tests.yml)
 [![GitHub Actions](https://github.com/jameslamb/pydistcheck/actions/workflows/smoke-tests.yml/badge.svg?branch=main)](https://github.com/jameslamb/pydistcheck/actions/workflows/smoke-tests.yml)
 
-https://github.com/microsoft/LightGBM/actions/workflows/python_package.yml/badge.svg?branch=master
-
 ## What is `pydistcheck`?
 
 `pydistcheck` is a command line interface (CLI) that you run on Python packages, which can:
