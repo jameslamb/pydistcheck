@@ -19,7 +19,7 @@ def _import_zstandard() -> Any:
     except ModuleNotFoundError as err:
         err_msg = (
             "Checking zstd-compressed files requires the 'zstandard' library. "
-            "Install it with e.g. 'pip install zstandard'."
+            "Install it with e.g. 'pip install zstandard' or 'conda install conda-forge::zstandard'."
         )
         raise ModuleNotFoundError(err_msg) from err
 
