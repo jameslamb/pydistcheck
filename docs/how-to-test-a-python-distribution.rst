@@ -128,7 +128,7 @@ The following open-source tools can be used to detect (and in some cases repair)
 * ``abi3audit`` (`link <https://github.com/trailofbits/abi3audit>`__) = detect ABI incompatibilities in wheels with CPython extensions
 * ``auditwheel`` (`link <https://github.com/pypa/auditwheel>`__) = detect and repair issues in Linux wheels that link to external shared libraries
 * ``auditwheel-emscripten`` (`link <https://github.com/ryanking13/auditwheel-emscripten>`__) = like ``auditwheel``, but focused on Python-in-a-web-browser applications (e.g. `pyodide auditwheel`_)
-* ``auditwheel-symbols`` (`link <https://github.com/messense/auditwheel-symbols>`__) = detect which symbols in a Linux wheel's shared library are causing ``auditwheel`` to sugggest a more recent ``manylinux`` tag
+* ``auditwheel-symbols`` (`link <https://github.com/messense/auditwheel-symbols>`__) = detect which symbols in a Linux wheel's shared library are causing ``auditwheel`` to suggest a more recent ``manylinux`` tag
 * ``check-manifest`` (`link <https://github.com/mgedmin/check-manifest>`__) = check that sdists contain all the files you expect them to, based on what you've checked into version control
 * ``check-wheel-contents`` (`link <https://github.com/jwodder/check-wheel-contents>`__) = detect unnecessary files, import issues, portability problems in wheels
 * ``conda-verify`` (`link <https://github.com/conda/conda-verify/tree/main>`__) = detect portability and correctness problems in conda packages
