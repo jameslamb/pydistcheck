@@ -59,7 +59,7 @@ class _DistributionSummary:
                         directories.append(_DirectoryInfo(name=tar_info.name))
         elif archive_format == _ArchiveFormat.CONDA:
             # as of Jan 2023, .conda files are a zip archive containing:
-            #   - an uncompresed file 'metadata.json' describing the contents
+            #   - an uncompressed file 'metadata.json' describing the contents
             #   - 2 zstd-compressed tarfiles with the package contents
             #      - 'info-*.tar.zst'
             #      - 'pkg-*.tar.zst'
