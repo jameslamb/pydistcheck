@@ -35,7 +35,6 @@ keywords = [
     "python-packaging",
     "testing"
 ]
-license = {file = "LICENSE"}
 maintainers = [
   {name = "James Lamb", email = "jaylamb20@gmail.com"}
 ]
@@ -43,6 +42,13 @@ name = "pydistcheck"
 readme = "README.md"
 requires-python = ">=3.8"
 dynamic = ["version"]
+
+[tool.setuptools]
+# include-package-data = true
+license-files = [
+    "LICENSE",
+    "LICENSES/*"
+]
 
 [tool.setuptools.dynamic]
 version = {attr = "pydistcheck.__version__"}
@@ -64,7 +70,7 @@ changelog = "https://github.com/jameslamb/pydistcheck/releases"
 [build-system]
 
 requires = [
-    "setuptools>=67",
+    "setuptools>=75.0",
 ]
 build-backend = "setuptools.build_meta"
 

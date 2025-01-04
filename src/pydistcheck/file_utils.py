@@ -123,7 +123,7 @@ def _guess_archive_member_file_format(
     """
     The approach in this function was inspired by similar code in
     https://github.com/matthew-brett/delocate, so that project's license is included
-    in distributions of ``pydistcheck`` at path ``LICENSES/DELOCATE_LICENSE``.
+    in distributions of ``pydistcheck`` as file ``DELOCATE_LICENSE``.
 
     Returns a two-item tuple of the form ``(file_format, is_compiled)``.
     """
