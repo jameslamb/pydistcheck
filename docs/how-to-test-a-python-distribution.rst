@@ -97,7 +97,7 @@ portability-related issues before they even make it into distributions.
         hooks:
         # large files checked into source control
         - id: check-added-large-files
-          args: ['--maxkb=512']
+        args: ['--maxkb=512']
         # files whose names only differ by case
         - id: check-case-conflict
         # symlinks that don't point to anything
@@ -110,10 +110,9 @@ portability-related issues before they even make it into distributions.
         - id: mixed-line-ending
         # superfluous whitespace
         - id: trailing-whitespace
-    - repo: https://github.com/koalaman/shellcheck-precommit
-      rev: v0.7.2
-      hooks:
-        # portability (and other) issues in shell scripts
+    - repo: https://github.com/shellcheck-py/shellcheck-py
+        rev: v0.10.0.1
+        hooks:
         - id: shellcheck
 
 If you use GitHub Actions for continuous integration, consider adding a step
@@ -123,15 +122,15 @@ running prior to publishing packages.
 List of Tools
 *************
 
-The following open-source tools can be used to detect (and in some cases repair) a wide range of Python packaging issues.
+The following open-source tools take packages as input, and can be used to detect (and in some cases repair) a wide range of Python packaging issues.
 
 * ``abi3audit`` (`link <https://github.com/trailofbits/abi3audit>`__) = detect ABI incompatibilities in wheels with CPython extensions
 * ``auditwheel`` (`link <https://github.com/pypa/auditwheel>`__) = detect and repair issues in Linux wheels that link to external shared libraries
 * ``auditwheel-emscripten`` (`link <https://github.com/ryanking13/auditwheel-emscripten>`__) = like ``auditwheel``, but focused on Python-in-a-web-browser applications (e.g. `pyodide auditwheel`_)
 * ``auditwheel-symbols`` (`link <https://github.com/messense/auditwheel-symbols>`__) = detect which symbols in a Linux wheel's shared library are causing ``auditwheel`` to suggest a more recent ``manylinux`` tag
-* ``check-manifest`` (`link <https://github.com/mgedmin/check-manifest>`__) = check that sdists contain all the files you expect them to, based on what you've checked into version control
 * ``check-wheel-contents`` (`link <https://github.com/jwodder/check-wheel-contents>`__) = detect unnecessary files, import issues, portability problems in wheels
 * ``conda-verify`` (`link <https://github.com/conda/conda-verify/tree/main>`__) = detect portability and correctness problems in conda packages
+* ``cph`` (`link <https://github.com/conda/conda-package-handling>`__) = work with conda packages (e.g. ``cph extract`` to decompress them, ``cph list`` to list their contents)
 * ``delocate`` (`link <https://github.com/matthew-brett/delocate>`__) = detect and repair issues in macOS wheels that link to external shared libraries
 * ``delvewheel`` (`link <https://github.com/adang1345/delvewheel>`__) = detect and repair issues in Windows wheels that link to external shared libraries
 * ``pkginfo`` (`link <https://pythonhosted.org/pkginfo>`__) = print sdist and wheel metadata
@@ -140,5 +139,15 @@ The following open-source tools can be used to detect (and in some cases repair)
 * ``repairwheel`` (`link <https://github.com/jvolkman/repairwheel>`__) = repair issues in Linux, macOS, and Windows wheels (wraps ``auditwheel``, ``delocate``, and ``delvewheel``)
 * ``twine`` (`link <https://github.com/pypa/twine>`__) = detect issues in package metadata (via ``twine check``)
 * ``wheel-inspect`` (`link <https://github.com/jwodder/wheel-inspect>`__) = dump summary information about wheels into machine-readable formats
+
+And these take a source tree as input and find problems in the files uses to create packages.
+
+* ``check-manifest`` (`link <https://github.com/mgedmin/check-manifest>`__) = check that sdists contain all the files you expect them to, based on what you've checked into version control
+* ``pre-commit/pre-commit-hooks`` (`link <https://github.com/pre-commit/pre-commit-hooks>__`) = many checks, including the following related to portability:
+    - ``check-added-large-files`` = check for too-large files in source control
+    - ``check-case-conflict`` = check for files whose names only differ by case
+    - ``check-symlinks`` = check for symlinks that don't point to real files
+    - ``destroyed-symlinks`` = check for symlinks replaced with the content of the regular file they previously pointed to
+* ``validate-pyproject`` (`link <https://github.com/abravalheri/validate-pyproject/>__`) = check that ``pyproject.toml`` files are valid
 
 .. _pyodide auditwheel: https://pyodide.org/en/stable/usage/api/pyodide-cli.html
