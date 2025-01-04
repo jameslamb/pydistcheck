@@ -143,11 +143,11 @@ The following open-source tools take packages as input, and can be used to detec
 And these take a source tree as input and find problems in the files uses to create packages.
 
 * ``check-manifest`` (`link <https://github.com/mgedmin/check-manifest>`__) = check that sdists contain all the files you expect them to, based on what you've checked into version control
-* ``pre-commit/pre-commit-hooks`` (`link <https://github.com/pre-commit/pre-commit-hooks>__`) = many checks, including the following related to portability:
+* ``pre-commit/pre-commit-hooks`` (`link <https://github.com/pre-commit/pre-commit-hooks>`__) = many checks, including the following related to portability:
     - ``check-added-large-files`` = check for too-large files in source control
     - ``check-case-conflict`` = check for files whose names only differ by case
     - ``check-symlinks`` = check for symlinks that don't point to real files
     - ``destroyed-symlinks`` = check for symlinks replaced with the content of the regular file they previously pointed to
-* ``validate-pyproject`` (`link <https://github.com/abravalheri/validate-pyproject/>__`) = check that ``pyproject.toml`` files are valid
+* ``validate-pyproject`` (`link <https://github.com/abravalheri/validate-pyproject/>`__) = check that ``pyproject.toml`` files are valid
 
 .. _pyodide auditwheel: https://pyodide.org/en/stable/usage/api/pyodide-cli.html
