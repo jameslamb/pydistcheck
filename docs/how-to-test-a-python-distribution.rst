@@ -97,7 +97,7 @@ portability-related issues before they even make it into distributions.
         hooks:
         # large files checked into source control
         - id: check-added-large-files
-        args: ['--maxkb=512']
+          args: ['--maxkb=512']
         # files whose names only differ by case
         - id: check-case-conflict
         # symlinks that don't point to anything
