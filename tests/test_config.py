@@ -5,7 +5,7 @@ from dataclasses import fields
 
 import pytest
 
-from pydistcheck.config import _ALLOWED_CONFIG_VALUES, _Config
+from pydistcheck._config import _ALLOWED_CONFIG_VALUES, _Config
 
 
 @pytest.fixture(scope="function")
@@ -71,9 +71,9 @@ def test_update_from_dict_works_when_changing_all_values(base_config):
         "max_path_length": 600,
         "select": ["distro-too-large-compressed"],
     }
-    assert (
-        set(patch_dict.keys()) == _ALLOWED_CONFIG_VALUES
-    ), "this test needs to be updated"
+    assert set(patch_dict.keys()) == _ALLOWED_CONFIG_VALUES, (
+        "this test needs to be updated"
+    )
     base_config.update_from_dict(patch_dict)
     assert base_config.expected_directories == "!*/tests"
     assert base_config.expected_files == "!*.xlsx,!data/*.csv"
@@ -143,9 +143,9 @@ def test_update_from_toml_works_with_all_config_values(
         "max_path_length": 25,
         "select": "[\n'mixed-file-extensions',\n'path-contains-non-ascii-characters'\n]",
     }
-    assert (
-        set(patch_dict.keys()) == _ALLOWED_CONFIG_VALUES
-    ), "this test needs to be updated"
+    assert set(patch_dict.keys()) == _ALLOWED_CONFIG_VALUES, (
+        "this test needs to be updated"
+    )
     if use_hyphens:
         patch_dict = {k.replace("_", "-"): v for k, v in patch_dict.items()}
     with open(temp_file, "w") as f:

@@ -9,10 +9,10 @@ from fnmatch import fnmatchcase
 from tempfile import TemporaryDirectory
 from typing import List, Protocol, Sequence
 
-from .distribution_summary import _DistributionSummary
-from .file_utils import _extract_subset_of_files_from_archive
-from .shared_lib_utils import _file_has_debug_symbols
-from .utils import _FileSize
+from ._distribution_summary import _DistributionSummary
+from ._file_utils import _extract_subset_of_files_from_archive
+from ._shared_lib_utils import _file_has_debug_symbols
+from ._utils import _FileSize
 
 # ALL_CHECKS constant is used to validate configuration options like '--ignore' that reference
 # check names. It's a set literal so it doesn't need to be recomputed at runtime, and this project
