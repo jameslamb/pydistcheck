@@ -5,7 +5,7 @@ from dataclasses import fields
 
 import pytest
 
-from pydistcheck.config import _ALLOWED_CONFIG_VALUES, _Config
+from pydistcheck._config import _ALLOWED_CONFIG_VALUES, _Config
 
 
 @pytest.fixture(scope="function")

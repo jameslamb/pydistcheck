@@ -171,7 +171,7 @@ select = [
     # Too many statements
     "PLR0915"
 ]
-"src/pydistcheck/distribution_summary.py" = [
+"src/pydistcheck/_distribution_summary.py" = [
     # Too many branches
     "PLR0912"
 ]

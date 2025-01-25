@@ -12,7 +12,7 @@ from functools import cached_property
 from tempfile import TemporaryDirectory
 from typing import Dict, List
 
-from .file_utils import (
+from ._file_utils import (
     _ArchiveFormat,
     _decompress_zstd_archive,
     _DirectoryInfo,

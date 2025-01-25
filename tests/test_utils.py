@@ -1,6 +1,6 @@
 import pytest
 
-from pydistcheck.utils import _FileSize
+from pydistcheck._utils import _FileSize
 
 
 @pytest.mark.parametrize(

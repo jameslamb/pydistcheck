@@ -3,7 +3,7 @@ import zipfile
 
 import pytest
 
-from pydistcheck.distribution_summary import _DistributionSummary, _FileInfo
+from pydistcheck._distribution_summary import _DistributionSummary, _FileInfo
 
 BASE_PACKAGE_SDISTS = ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"]
 MACOS_SUFFIX = "macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl"

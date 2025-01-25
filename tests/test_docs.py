@@ -5,9 +5,9 @@ state of the project's source code.
 
 from pathlib import Path
 
+from pydistcheck._checks import ALL_CHECKS
 from pydistcheck._compat import tomllib
-from pydistcheck.checks import ALL_CHECKS
-from pydistcheck.config import _ALLOWED_CONFIG_VALUES, _Config
+from pydistcheck._config import _ALLOWED_CONFIG_VALUES, _Config
 
 DOCS_ROOT = Path(__file__).parents[1].joinpath("docs")
 

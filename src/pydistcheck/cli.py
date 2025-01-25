@@ -9,7 +9,7 @@ import click
 
 from pydistcheck import __version__ as _VERSION
 
-from .checks import (
+from ._checks import (
     ALL_CHECKS,
     _CompiledObjectsDebugSymbolCheck,
     _DistroTooLargeCompressedCheck,
@@ -23,10 +23,10 @@ from .checks import (
     _SpacesInPathCheck,
     _UnexpectedFilesCheck,
 )
-from .config import _Config
-from .distribution_summary import _DistributionSummary
-from .inspect import inspect_distribution
-from .utils import _FileSize
+from ._config import _Config
+from ._distribution_summary import _DistributionSummary
+from ._inspect import inspect_distribution
+from ._utils import _FileSize
 
 
 class ExitCodes:
