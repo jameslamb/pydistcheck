@@ -38,9 +38,9 @@ def test_default_toml_config():
     config.ignore = ()
     config.select = ()
 
-    assert (
-        config == _Config()
-    ), "values in 'docs/_static/defaults.toml' do not match actual defaults used by pydistcheck"
+    assert config == _Config(), (
+        "values in 'docs/_static/defaults.toml' do not match actual defaults used by pydistcheck"
+    )
 
 
 def test_all_checks_are_documented_in_check_reference():
@@ -49,6 +49,6 @@ def test_all_checks_are_documented_in_check_reference():
         check_ref_str = f.read()
 
     for check in ALL_CHECKS:
-        assert (
-            f"\n\n{check}\n****" in check_ref_str
-        ), f"'{check}' not yet documented in 'docs/check-reference.rst'"
+        assert f"\n\n{check}\n****" in check_ref_str, (
+            f"'{check}' not yet documented in 'docs/check-reference.rst'"
+        )
