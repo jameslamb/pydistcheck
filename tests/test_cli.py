@@ -557,7 +557,7 @@ def test_check_prefers_keyword_args_to_pyproject_toml_and_defaults(
         result,
         (
             r"^1\. \[distro\-too\-large\-uncompressed\] Uncompressed size [0-9]+\.[0-9]+K is "
-            r"larger than the allowed size \(0\.1K\)\.$"
+            r"larger than the allowed size \(0\.12K\)\.$"
         ),
     )
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
