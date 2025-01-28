@@ -76,4 +76,4 @@ class _FileSize:
 
     def __str__(self) -> str:
         num_bytes, unit_str = _recommend_size_str(self.total_size_bytes)
-        return f"{round(num_bytes, 1)}{unit_str}"
+        return f"{round(num_bytes, 3)}{unit_str}"
