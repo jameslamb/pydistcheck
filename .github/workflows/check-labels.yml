@@ -1,4 +1,4 @@
-name: Label Checker
+name: check-labels
 on:
   pull_request:
     types: [opened, labeled, unlabeled, synchronize]
@@ -6,7 +6,7 @@ on:
   pull_request_target:
     types: [opened, labeled, reopened, synchronize]
 jobs:
-  label:
+  check:
     runs-on: ubuntu-latest
     permissions:
       contents: read
