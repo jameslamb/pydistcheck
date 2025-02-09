@@ -426,6 +426,7 @@ def test_check_respects_max_allowed_files(distro_file):
     [
         "1K",
         "3.999K",
+        "0.005KB",
         "0.0002M",
         "0.00000008G",
         "708B",
@@ -456,8 +457,42 @@ def test_check_respects_max_allowed_size_compressed(size_str, distro_file):
 @pytest.mark.parametrize(
     "size_str",
     [
+        "1",
+        "K",
+        "1-KB",
+        "GB1",
+        "1G-B",
+    ],
+)
+@pytest.mark.parametrize(
+    "cli_arg",
+    [
+        "--max-allowed-size-compressed",
+        "--max-allowed-size-uncompressed",
+    ],
+)
+def test_check_raises_informative_error_for_malformed_file_size_config(
+    cli_arg, size_str
+):
+    with pytest.raises(
+        ValueError, match=rf"Could not parse '{size_str}' as a file size"
+    ):
+        CliRunner().invoke(
+            check,
+            [
+                os.path.join(TEST_DATA_DIR, BASE_PACKAGES[0]),
+                f"{cli_arg}={size_str}",
+            ],
+            catch_exceptions=False,
+        )
+
+
+@pytest.mark.parametrize(
+    "size_str",
+    [
         "1K",
         "3.999K",
+        "0.005KB",
         "0.0002M",
         "0.00000008G",
         "708B",
