@@ -1039,3 +1039,44 @@ def test_inspect_runs_before_checks(distro_file):
     )
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
     _assert_log_matches_pattern(result, r"^size by extension$")
+
+
+def test_inspect_respects_output_file_size_unit_for_all_size_strings():
+    distro_file = os.path.join(TEST_DATA_DIR, BASE_PACKAGES[0])
+
+    # --output-file-size-unit auto
+    result = CliRunner().invoke(
+        check,
+        [
+            "--inspect",
+            distro_file,
+        ],
+    )
+    assert result.exit_code == 0
+
+    # mix of B and K
+    _assert_log_matches_pattern(result, r" compressed size: 4\.938K")
+    _assert_log_matches_pattern(result, r" uncompressed size: 12\.039K")
+    _assert_log_matches_pattern(result, r" \.py \- 70\.0B")
+    _assert_log_matches_pattern(
+        result, r" \(11\.092K\) base-package\-0\.1\.0/LICENSE\.txt"
+    )
+
+    # --output-file-size-unit B
+    result = CliRunner().invoke(
+        check,
+        [
+            "--inspect",
+            "--output-file-size-unit=B",
+            os.path.join(TEST_DATA_DIR, distro_file),
+        ],
+    )
+    assert result.exit_code == 0
+
+    # all B
+    _assert_log_matches_pattern(result, r" compressed size: 5057\.0B")
+    _assert_log_matches_pattern(result, r" uncompressed size: 12328\.0B")
+    _assert_log_matches_pattern(result, r" \.py \- 70\.0B")
+    _assert_log_matches_pattern(
+        result, r" \(11358\.0B\) base-package\-0\.1\.0/LICENSE\.txt"
+    )

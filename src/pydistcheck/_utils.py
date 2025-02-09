@@ -58,7 +58,7 @@ class _FileSize:
         if unit_str == "auto":
             num, unit_str = _recommend_size_str(self.total_size_bytes)
         else:
-            num = self.total_size_bytes / _UNIT_TO_NUM_BYTES[unit_str]
+            num = self.total_size_bytes / _UNIT_TO_NUM_BYTES[unit_str.lower()]
         return f"{round(num, 3)}{unit_str}"
 
     @property
