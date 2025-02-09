@@ -3,6 +3,7 @@ miscellaneous helper classes and functions that are
 not specific to package distributions
 """
 
+import re
 from typing import Tuple
 
 # references:
@@ -47,7 +48,10 @@ class _FileSize:
 
     @classmethod
     def from_string(cls, size_str: str) -> "_FileSize":
-        return cls(num=float(size_str[:-1]), unit_str=size_str[-1])
+        parsed = re.search(r"^([0-9\.]+)([A-Za-z]+)$", size_str.strip())
+        if parsed is None:
+            raise ValueError(f"Could not parse '{size_str}' as a file size.")
+        return cls(num=float(parsed.group(1)), unit_str=parsed.group(2))
 
     @property
     def total_size_bytes(self) -> int:
