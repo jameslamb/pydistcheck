@@ -161,6 +161,23 @@ class ExitCodes:
     type=int,
     help="Maximum allowed filepath length for files or directories in the distribution.",
 )
+@click.option(
+    "--output-file-size-unit",
+    default=_Config.output_file_size_unit,
+    show_default=True,
+    type=str,
+    help=(
+        "Unit for all file sizes reported in outputs (e.g. log messages, --inspect output)"
+        " Supported units:\n"
+        "  - B = bytes\n"
+        "  - KB = kilobytes\n"
+        "  - K, Ki = kibibytes\n"
+        "  - MB = megabytes\n"
+        "  - M, Mi = mebibytes\n"
+        "  - GB = gigabytes\n"
+        "  - G, Gi = gibibytes"
+    ),
+)
 def check(  # noqa: PLR0913
     *,
     filepaths: str,
@@ -174,6 +191,7 @@ def check(  # noqa: PLR0913
     max_allowed_size_compressed: str,
     max_allowed_size_uncompressed: str,
     max_path_length: int,
+    output_file_size_unit: str,
     select: Sequence[str],
 ) -> None:
     """
@@ -199,6 +217,7 @@ def check(  # noqa: PLR0913
         "max_allowed_size_compressed": max_allowed_size_compressed,
         "max_allowed_size_uncompressed": max_allowed_size_uncompressed,
         "max_path_length": max_path_length,
+        "output_file_size_unit": output_file_size_unit,
         "select": select,
         "expected_directories": expected_directories,
         "expected_files": expected_files,
@@ -239,12 +258,14 @@ def check(  # noqa: PLR0913
         _DistroTooLargeCompressedCheck(
             max_allowed_size_bytes=_FileSize.from_string(
                 size_str=conf.max_allowed_size_compressed
-            ).total_size_bytes
+            ).total_size_bytes,
+            output_file_size_unit=conf.output_file_size_unit,
         ),
         _DistroTooLargeUnCompressedCheck(
             max_allowed_size_bytes=_FileSize.from_string(
                 size_str=conf.max_allowed_size_uncompressed
-            ).total_size_bytes
+            ).total_size_bytes,
+            output_file_size_unit=conf.output_file_size_unit,
         ),
         _ExpectedFilesCheck(
             directory_patterns=expected_directories,
@@ -281,7 +302,10 @@ def check(  # noqa: PLR0913
 
         if conf.inspect:
             print("----- package inspection summary -----")
-            inspect_distribution(summary)
+            inspect_distribution(
+                summary=summary,
+                config=conf,
+            )
 
         print("------------ check results -----------")
         errors: List[str] = []

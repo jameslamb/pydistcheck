@@ -37,9 +37,10 @@ def _recommend_size_str(num_bytes: int) -> Tuple[float, str]:
 
 
 class _FileSize:
-    def __init__(self, num: float, unit_str: str):
+    def __init__(self, num: float, unit_str: str, output_unit_str: str = "auto"):
         self._num = num
         self._unit_str = unit_str
+        self._output_unit_str = output_unit_str
 
     @classmethod
     def from_number(cls, num: int) -> "_FileSize":
@@ -52,6 +53,13 @@ class _FileSize:
         if parsed is None:
             raise ValueError(f"Could not parse '{size_str}' as a file size.")
         return cls(num=float(parsed.group(1)), unit_str=parsed.group(2))
+
+    def to_string(self, unit_str: str) -> str:
+        if unit_str == "auto":
+            num, unit_str = _recommend_size_str(self.total_size_bytes)
+        else:
+            num = self.total_size_bytes / _UNIT_TO_NUM_BYTES[unit_str.lower()]
+        return f"{round(num, 3)}{unit_str}"
 
     @property
     def total_size_bytes(self) -> int:
@@ -79,5 +87,4 @@ class _FileSize:
         return not self == other
 
     def __str__(self) -> str:
-        num_bytes, unit_str = _recommend_size_str(self.total_size_bytes)
-        return f"{round(num_bytes, 3)}{unit_str}"
+        return self.to_string(unit_str="auto")
