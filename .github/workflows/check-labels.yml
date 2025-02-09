@@ -1,0 +1,27 @@
+name: check-labels
+on:
+  pull_request:
+    types: [opened, labeled, unlabeled, synchronize]
+  # include PRs from forks
+  pull_request_target:
+    types: [opened, labeled, reopened, synchronize]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+    steps:
+      - uses: mheap/github-action-required-labels@v5
+        with:
+          mode: exactly
+          add_comment: false
+          count: 1
+          # this should match release-drafter.yml
+          labels: |
+            breaking
+            doc
+            enhancement
+            fix
+            maintenance
