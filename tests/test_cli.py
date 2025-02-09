@@ -67,14 +67,12 @@ def _mock_check_num_calls(mock_check: MagicMock) -> int:
 
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES + BASEBALL_PACKAGES)
 def test_check_runs_without_error(distro_file):
-    runner = CliRunner()
-    result = runner.invoke(check, [os.path.join(TEST_DATA_DIR, distro_file)])
+    result = CliRunner().invoke(check, [os.path.join(TEST_DATA_DIR, distro_file)])
     assert result.exit_code == 0
 
 
 def test_version_flag_works():
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [
             "--version",
@@ -90,16 +88,14 @@ def test_version_flag_works():
 
 
 def test_check_fails_with_informative_error_if_file_doesnt_exist():
-    runner = CliRunner()
-    result = runner.invoke(check, ["some-garbage.exe"])
+    result = CliRunner().invoke(check, ["some-garbage.exe"])
     # NOTE: this exit code comes from 'click'
     assert result.exit_code >= 1
     _assert_log_matches_pattern(result, r"Path 'some\-garbage\.exe' does not exist\.$")
 
 
 def test_check_runs_for_all_files_before_exiting():
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [
             "--max-allowed-size-compressed=5B",
@@ -124,8 +120,7 @@ def test_check_runs_for_all_files_before_exiting():
 
 @pytest.mark.parametrize("flags", ([], ["--inspect"]))
 def test_check_fails_with_informative_error_if_file_is_an_unrecognized_format(flags):
-    runner = CliRunner()
-    result = runner.invoke(check, [__file__, *flags])
+    result = CliRunner().invoke(check, [__file__, *flags])
     assert result.exit_code == 2
     _assert_log_matches_pattern(
         result, r"error.*File '.*' does not appear to be a Python package distribution"
@@ -531,8 +526,7 @@ def test_check_raises_informative_error_for_malformed_file_size_config(
 )
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES)
 def test_check_respects_max_allowed_size_uncompressed(size_str, distro_file):
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [
             os.path.join(TEST_DATA_DIR, distro_file),
@@ -662,8 +656,7 @@ def test_check_prefers_custom_toml_file_to_root_pyproject_toml(distro_file, tmp_
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
 def test_files_only_differ_by_case_works(distro_file):
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [os.path.join(TEST_DATA_DIR, distro_file)],
     )
@@ -685,8 +678,7 @@ def test_files_only_differ_by_case_works(distro_file):
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
 def test_mixed_file_extension_use_works(distro_file):
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [os.path.join(TEST_DATA_DIR, distro_file)],
     )
@@ -714,8 +706,7 @@ def test_mixed_file_extension_use_works(distro_file):
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
 def test_path_contains_non_ascii_characters_works(distro_file):
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [os.path.join(TEST_DATA_DIR, distro_file)],
     )
@@ -739,8 +730,7 @@ def test_path_contains_non_ascii_characters_works(distro_file):
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
 def test_path_contains_spaces_works(distro_file):
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [os.path.join(TEST_DATA_DIR, distro_file)],
     )
@@ -787,8 +777,7 @@ def test_path_contains_spaces_works(distro_file):
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
 def test_unexpected_files_check_works(distro_file):
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [os.path.join(TEST_DATA_DIR, distro_file)],
     )
@@ -835,8 +824,7 @@ def test_unexpected_files_check_works(distro_file):
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
 def test_unexpected_files_correctly_respects_multiple_cli_args(distro_file):
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [
             os.path.join(TEST_DATA_DIR, distro_file),
@@ -883,8 +871,7 @@ def test_unexpected_files_correctly_respects_multiple_cli_args(distro_file):
 
 @pytest.mark.parametrize("distro_file", PROBLEMATIC_PACKAGES)
 def test_expected_files_check_works(distro_file):
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [
             "--expected-files=*.R",
@@ -917,8 +904,7 @@ def test_expected_files_check_works(distro_file):
 
 @pytest.mark.parametrize("distro_file", BASEBALL_PACKAGES)
 def test_expected_files_does_not_raise_check_failure_if_all_patterns_match(distro_file):
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [
             # (wheel) lib/lib_baseball_metrics
@@ -938,8 +924,7 @@ def test_expected_files_does_not_raise_check_failure_if_directory_pattern_matche
     # conda packages, macOS wheels do not preserve directory members...
     # testing with a manylinux wheel to test that directory functionality works
     distro_file = f"baseballmetrics-0.1.0-py3-none-{MANYLINUX_SUFFIX}"
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [
             "--expected-directories=lib/",
@@ -955,8 +940,7 @@ def test_expected_files_does_not_raise_check_failure_if_directory_pattern_matche
 
 @pytest.mark.parametrize("distro_file", BASEBALL_CONDA_PACKAGES)
 def test_path_too_long_check_works_for_conda_packages(distro_file):
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [
             "--max-path-length=5",
@@ -976,8 +960,7 @@ def test_path_too_long_check_works_for_conda_packages(distro_file):
 
 @pytest.mark.parametrize("distro_file", BASEBALL_WHEELS)
 def test_path_too_long_check_works_for_wheels(distro_file):
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [
             "--max-path-length=5",
@@ -999,8 +982,7 @@ def test_path_too_long_check_works_for_wheels(distro_file):
 def test_cli_raises_exactly_the_expected_number_of_errors_for_the_problematic_package(
     distro_file,
 ):
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [os.path.join(TEST_DATA_DIR, distro_file)],
     )
@@ -1012,8 +994,7 @@ def test_cli_raises_exactly_the_expected_number_of_errors_for_the_problematic_pa
 
 @pytest.mark.parametrize("distro_file", PACKAGES_WITH_DEBUG_SYMBOLS)
 def test_debug_symbols_check_works(distro_file):
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [os.path.join(TEST_DATA_DIR, distro_file)],
     )
@@ -1054,8 +1035,7 @@ def test_debug_symbols_check_works(distro_file):
 
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES)
 def test_inspect_runs_before_checks(distro_file):
-    runner = CliRunner()
-    result = runner.invoke(
+    result = CliRunner().invoke(
         check,
         [
             "--inspect",
