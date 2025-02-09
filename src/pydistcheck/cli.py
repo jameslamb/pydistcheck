@@ -258,12 +258,14 @@ def check(  # noqa: PLR0913
         _DistroTooLargeCompressedCheck(
             max_allowed_size_bytes=_FileSize.from_string(
                 size_str=conf.max_allowed_size_compressed
-            ).total_size_bytes
+            ).total_size_bytes,
+            output_file_size_unit=conf.output_file_size_unit,
         ),
         _DistroTooLargeUnCompressedCheck(
             max_allowed_size_bytes=_FileSize.from_string(
                 size_str=conf.max_allowed_size_uncompressed
-            ).total_size_bytes
+            ).total_size_bytes,
+            output_file_size_unit=conf.output_file_size_unit,
         ),
         _ExpectedFilesCheck(
             directory_patterns=expected_directories,

@@ -454,6 +454,37 @@ def test_check_respects_max_allowed_size_compressed(size_str, distro_file):
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
 
 
+@pytest.mark.parametrize("unit_str", ["B", "K", "KB", "Mi", "GB", "Gi"])
+def test_check_error_messages_supports_output_file_size_unit(unit_str):
+    runner = CliRunner()
+    result = runner.invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, BASE_PACKAGES[1]),
+            "--max-allowed-size-compressed=1B",
+            "--max-allowed-size-uncompressed=1B",
+            f"--output-file-size-unit={unit_str}",
+        ],
+    )
+    assert result.exit_code == 1
+
+    _assert_log_matches_pattern(
+        result,
+        (
+            rf"^1\. \[distro\-too\-large\-compressed\] Compressed size [0-9]+\.[0-9]+{unit_str} is "
+            rf"larger than the allowed size \([0-9]+\.[0-9]+{unit_str}\)\.$"
+        ),
+    )
+    _assert_log_matches_pattern(
+        result,
+        (
+            rf"^2\. \[distro\-too\-large\-uncompressed\] Uncompressed size [0-9]+\.[0-9]+{unit_str} is "
+            rf"larger than the allowed size \([0-9]+\.[0-9]+{unit_str}\)\.$"
+        ),
+    )
+    _assert_log_matches_pattern(result, "errors found while checking\\: 2")
+
+
 @pytest.mark.parametrize(
     "size_str",
     [
