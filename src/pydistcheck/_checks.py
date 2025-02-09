@@ -77,7 +77,7 @@ class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
 class _DistroTooLargeCompressedCheck(_CheckProtocol):
     check_name = "distro-too-large-compressed"
 
-    def __init__(self, max_allowed_size_bytes: int, output_file_size_unit: str):
+    def __init__(self, *, max_allowed_size_bytes: int, output_file_size_unit: str):
         self.max_allowed_size_bytes = max_allowed_size_bytes
         self.output_file_size_unit = output_file_size_unit
 
@@ -99,7 +99,7 @@ class _DistroTooLargeCompressedCheck(_CheckProtocol):
 class _DistroTooLargeUnCompressedCheck(_CheckProtocol):
     check_name = "distro-too-large-uncompressed"
 
-    def __init__(self, max_allowed_size_bytes: int, output_file_size_unit: str):
+    def __init__(self, *, max_allowed_size_bytes: int, output_file_size_unit: str):
         self.max_allowed_size_bytes = max_allowed_size_bytes
         self.output_file_size_unit = output_file_size_unit
 
@@ -123,7 +123,7 @@ class _DistroTooLargeUnCompressedCheck(_CheckProtocol):
 class _FileCountCheck(_CheckProtocol):
     check_name = "too-many-files"
 
-    def __init__(self, max_allowed_files: int):
+    def __init__(self, *, max_allowed_files: int):
         self.max_allowed_files = max_allowed_files
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
@@ -213,7 +213,7 @@ class _MixedFileExtensionCheck(_CheckProtocol):
 class _PathTooLongCheck(_CheckProtocol):
     check_name = "path-too-long"
 
-    def __init__(self, max_path_length: int):
+    def __init__(self, *, max_path_length: int):
         self.max_path_length = max_path_length
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
@@ -247,6 +247,7 @@ class _ExpectedFilesCheck(_CheckProtocol):
 
     def __init__(
         self,
+        *,
         directory_patterns: Sequence[str],
         file_patterns: Sequence[str],
     ):
@@ -289,6 +290,7 @@ class _UnexpectedFilesCheck(_CheckProtocol):
 
     def __init__(
         self,
+        *,
         directory_patterns: Sequence[str],
         file_patterns: Sequence[str],
     ):
