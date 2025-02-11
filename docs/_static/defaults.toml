@@ -38,6 +38,10 @@ max_allowed_size_uncompressed = '75M'
 # https://pydistcheck.readthedocs.io/en/latest/check-reference.html#path-too-long
 max_path_length = 200
 
+# Number of significant digits to use when rounding file sizes
+# in printed output.
+output_file_size_precision = 3
+
 # Units to use in output that reports file sizes.
 #
 # If 'auto' (the default), units are adjusted based on the total size.
