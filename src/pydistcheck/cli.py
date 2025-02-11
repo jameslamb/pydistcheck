@@ -162,6 +162,15 @@ class ExitCodes:
     help="Maximum allowed filepath length for files or directories in the distribution.",
 )
 @click.option(
+    "--output-file-size-precision",
+    default=_Config.output_file_size_precision,
+    show_default=True,
+    type=int,
+    help=(
+        "Number of significant digits to use when rounding file sizes in printed output."
+    ),
+)
+@click.option(
     "--output-file-size-unit",
     default=_Config.output_file_size_unit,
     show_default=True,
@@ -191,6 +200,7 @@ def check(  # noqa: PLR0913
     max_allowed_size_compressed: str,
     max_allowed_size_uncompressed: str,
     max_path_length: int,
+    output_file_size_precision: int,
     output_file_size_unit: str,
     select: Sequence[str],
 ) -> None:
@@ -217,6 +227,7 @@ def check(  # noqa: PLR0913
         "max_allowed_size_compressed": max_allowed_size_compressed,
         "max_allowed_size_uncompressed": max_allowed_size_uncompressed,
         "max_path_length": max_path_length,
+        "output_file_size_precision": output_file_size_precision,
         "output_file_size_unit": output_file_size_unit,
         "select": select,
         "expected_directories": expected_directories,
@@ -259,12 +270,14 @@ def check(  # noqa: PLR0913
             max_allowed_size_bytes=_FileSize.from_string(
                 size_str=conf.max_allowed_size_compressed
             ).total_size_bytes,
+            output_file_size_precision=conf.output_file_size_precision,
             output_file_size_unit=conf.output_file_size_unit,
         ),
         _DistroTooLargeUnCompressedCheck(
             max_allowed_size_bytes=_FileSize.from_string(
                 size_str=conf.max_allowed_size_uncompressed
             ).total_size_bytes,
+            output_file_size_precision=conf.output_file_size_precision,
             output_file_size_unit=conf.output_file_size_unit,
         ),
         _ExpectedFilesCheck(

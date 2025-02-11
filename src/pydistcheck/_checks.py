@@ -77,8 +77,15 @@ class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
 class _DistroTooLargeCompressedCheck(_CheckProtocol):
     check_name = "distro-too-large-compressed"
 
-    def __init__(self, *, max_allowed_size_bytes: int, output_file_size_unit: str):
+    def __init__(
+        self,
+        *,
+        max_allowed_size_bytes: int,
+        output_file_size_precision: int,
+        output_file_size_unit: str,
+    ):
         self.max_allowed_size_bytes = max_allowed_size_bytes
+        self.output_file_size_precision = output_file_size_precision
         self.output_file_size_unit = output_file_size_unit
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
@@ -86,8 +93,14 @@ class _DistroTooLargeCompressedCheck(_CheckProtocol):
         max_size = _FileSize(num=self.max_allowed_size_bytes, unit_str="B")
         actual_size = _FileSize(num=distro_summary.compressed_size_bytes, unit_str="B")
         if actual_size > max_size:
-            actual_size_str = actual_size.to_string(unit_str=self.output_file_size_unit)
-            max_size_str = max_size.to_string(unit_str=self.output_file_size_unit)
+            actual_size_str = actual_size.to_string(
+                precision=self.output_file_size_precision,
+                unit_str=self.output_file_size_unit,
+            )
+            max_size_str = max_size.to_string(
+                precision=self.output_file_size_precision,
+                unit_str=self.output_file_size_unit,
+            )
             msg = (
                 f"[{self.check_name}] Compressed size {actual_size_str} is larger "
                 f"than the allowed size ({max_size_str})."
@@ -99,8 +112,15 @@ class _DistroTooLargeCompressedCheck(_CheckProtocol):
 class _DistroTooLargeUnCompressedCheck(_CheckProtocol):
     check_name = "distro-too-large-uncompressed"
 
-    def __init__(self, *, max_allowed_size_bytes: int, output_file_size_unit: str):
+    def __init__(
+        self,
+        *,
+        max_allowed_size_bytes: int,
+        output_file_size_precision: int,
+        output_file_size_unit: str,
+    ):
         self.max_allowed_size_bytes = max_allowed_size_bytes
+        self.output_file_size_precision = output_file_size_precision
         self.output_file_size_unit = output_file_size_unit
 
     def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
@@ -110,8 +130,14 @@ class _DistroTooLargeUnCompressedCheck(_CheckProtocol):
             num=distro_summary.uncompressed_size_bytes, unit_str="B"
         )
         if actual_size > max_size:
-            actual_size_str = actual_size.to_string(unit_str=self.output_file_size_unit)
-            max_size_str = max_size.to_string(unit_str=self.output_file_size_unit)
+            actual_size_str = actual_size.to_string(
+                precision=self.output_file_size_precision,
+                unit_str=self.output_file_size_unit,
+            )
+            max_size_str = max_size.to_string(
+                precision=self.output_file_size_precision,
+                unit_str=self.output_file_size_unit,
+            )
             msg = (
                 f"[{self.check_name}] Uncompressed size {actual_size_str} is larger "
                 f"than the allowed size ({max_size_str})."

@@ -24,6 +24,7 @@ _ALLOWED_CONFIG_VALUES = {
     "max_allowed_size_compressed",
     "max_allowed_size_uncompressed",
     "max_path_length",
+    "output_file_size_precision",
     "output_file_size_unit",
     "select",
 }
@@ -69,6 +70,7 @@ class _Config:
     max_allowed_size_compressed: str = "50M"
     max_allowed_size_uncompressed: str = "75M"
     max_path_length: int = 200
+    output_file_size_precision: int = 3
     output_file_size_unit: str = "auto"
     select: Sequence[str] = ()
 

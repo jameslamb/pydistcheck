@@ -91,6 +91,32 @@ def test_file_size_from_number_switches_unit_str_based_on_size():
 
 
 @pytest.mark.parametrize(
+    ("precision", "unit_str", "expected_str"),
+    [
+        # 1 significant digit
+        (1, "B", "1234567.0B"),
+        (2, "B", "1234567.0B"),
+        (4, "B", "1234567.0B"),
+        (7, "B", "1234567.0B"),
+        # 3 significant digits
+        (1, "KB", "1234.6KB"),
+        (2, "KB", "1234.57KB"),
+        (4, "KB", "1234.567KB"),
+        (7, "KB", "1234.567KB"),
+        # 9 significant digits
+        (1, "GB", "0.0GB"),
+        (2, "GB", "0.0GB"),
+        (4, "GB", "0.0012GB"),
+        (7, "GB", "0.0012346GB"),
+        (9, "GB", "0.001234567GB"),
+    ],
+)
+def test_file_size_to_string_works(precision, unit_str, expected_str):
+    fs = _FileSize(num=1234567, unit_str="B")
+    assert fs.to_string(precision=precision, unit_str=unit_str) == expected_str
+
+
+@pytest.mark.parametrize(
     ("file_size", "expected_str"),
     [
         (_FileSize.from_number(110), "0.107K"),

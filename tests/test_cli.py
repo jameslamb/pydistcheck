@@ -480,6 +480,65 @@ def test_check_error_messages_supports_output_file_size_unit(unit_str):
     _assert_log_matches_pattern(result, "errors found while checking\\: 2")
 
 
+def test_check_error_messages_supports_output_file_size_precision():
+    # default precision
+    result = CliRunner().invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, BASE_PACKAGES[1]),
+            "--max-allowed-size-compressed=256B",
+            "--max-allowed-size-uncompressed=256B",
+            "--output-file-size-unit=MB",
+        ],
+    )
+    assert result.exit_code == 1
+
+    _assert_log_matches_pattern(
+        result,
+        (
+            r"^1\. \[distro\-too\-large\-compressed\] Compressed size 0\.007MB is "
+            r"larger than the allowed size \(0\.0MB\)\.$"
+        ),
+    )
+    _assert_log_matches_pattern(
+        result,
+        (
+            r"^2\. \[distro\-too\-large\-uncompressed\] Uncompressed size 0\.012MB is "
+            r"larger than the allowed size \(0\.0MB\)\.$"
+        ),
+    )
+    _assert_log_matches_pattern(result, "errors found while checking\\: 2")
+
+    # precision 5
+    result = CliRunner().invoke(
+        check,
+        [
+            os.path.join(TEST_DATA_DIR, BASE_PACKAGES[1]),
+            "--max-allowed-size-compressed=256B",
+            "--max-allowed-size-uncompressed=256B",
+            "--output-file-size-precision=5",
+            "--output-file-size-unit=MB",
+        ],
+    )
+    assert result.exit_code == 1
+
+    _assert_log_matches_pattern(
+        result,
+        (
+            r"^1\. \[distro\-too\-large\-compressed\] Compressed size 0\.00681MB is "
+            r"larger than the allowed size \(0\.00026MB\)\.$"
+        ),
+    )
+    _assert_log_matches_pattern(
+        result,
+        (
+            r"^2\. \[distro\-too\-large\-uncompressed\] Uncompressed size 0\.01233MB is "
+            r"larger than the allowed size \(0\.00026MB\)\.$"
+        ),
+    )
+    _assert_log_matches_pattern(result, "errors found while checking\\: 2")
+
+
 @pytest.mark.parametrize(
     "size_str",
     [
@@ -1090,4 +1149,45 @@ def test_inspect_respects_output_file_size_unit_for_all_size_strings():
     _assert_log_matches_pattern(result, r" \.py \- 70\.0B")
     _assert_log_matches_pattern(
         result, r" \(11358\.0B\) base-package\-0\.1\.0/LICENSE\.txt"
+    )
+
+
+def test_inspect_respects_output_file_size_precision_for_all_size_strings():
+    distro_file = os.path.join(TEST_DATA_DIR, BASE_PACKAGES[0])
+
+    # --output-file-size-unit auto
+    result = CliRunner().invoke(
+        check,
+        [
+            "--inspect",
+            distro_file,
+        ],
+    )
+    assert result.exit_code == 0
+
+    # default precision
+    _assert_log_matches_pattern(result, r" compressed size: 4\.938K")
+    _assert_log_matches_pattern(result, r" uncompressed size: 12\.039K")
+    _assert_log_matches_pattern(result, r" \.py \- 70\.0B")
+    _assert_log_matches_pattern(
+        result, r" \(11\.092K\) base-package\-0\.1\.0/LICENSE\.txt"
+    )
+
+    # --output-file-size-precision 2
+    result = CliRunner().invoke(
+        check,
+        [
+            "--inspect",
+            "--output-file-size-precision=2",
+            os.path.join(TEST_DATA_DIR, distro_file),
+        ],
+    )
+    assert result.exit_code == 0
+
+    # precision 2
+    _assert_log_matches_pattern(result, r" compressed size: 4\.94K")
+    _assert_log_matches_pattern(result, r" uncompressed size: 12\.04K")
+    _assert_log_matches_pattern(result, r" \.py \- 70\.0B")
+    _assert_log_matches_pattern(
+        result, r" \(11\.09K\) base-package\-0\.1\.0/LICENSE\.txt"
     )
