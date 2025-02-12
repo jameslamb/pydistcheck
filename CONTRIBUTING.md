@@ -16,7 +16,7 @@ make build install
 1. Create a pull request with a version bump.
 
 ```shell
-bin/create-release-pr '0.6.0'
+bin/create-release-pr '0.10.0'
 ```
 
 2. Merge that PR.
