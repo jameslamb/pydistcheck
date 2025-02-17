@@ -75,7 +75,7 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.coverage.report]
-fail_under = 99.5.0
+fail_under = 99.50
 exclude_also = [
     # skip type-checking blocks when calculating code coverage
     "if TYPE_CHECKING:"
