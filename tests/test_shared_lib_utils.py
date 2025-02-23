@@ -1,7 +1,8 @@
 # shared_lib_utils.py changes
 
 import subprocess
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
+
 from pydistcheck._shared_lib_utils import _run_command
 
 
@@ -18,7 +19,7 @@ def test_run_command_handles_binary_output():
         result = _run_command(["some", "command"])
         # latin1 encoding should preserve all bytes.
         assert len(result) == len(mock_output)
-        # Check valid parts of thw string.
+        # Check valid parts of the string.
         assert "hello" in result
         assert "world" in result
 
