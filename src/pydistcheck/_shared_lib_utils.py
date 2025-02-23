@@ -10,6 +10,11 @@ _COMMAND_FAILED = "__command_failed__"
 _NO_DEBUG_SYMBOLS = "__no_debug_symbols_found__"
 _TOOL_NOT_AVAILABLE = "__tool_not_available__"
 
+# This specific debug symbol is added by Apple's "strip" on
+# Mach-O files and is a red herring for our purposes. See:
+# https://github.com/jameslamb/pydistcheck/issues/235
+_MACHO_STRIP_SYMBOL = "radr://5614542"
+
 
 def _run_command(args: List[str]) -> str:
     try:
@@ -58,7 +63,7 @@ def _look_for_debug_symbols(lib_file: str) -> Tuple[bool, str]:
 def _get_symbols(cmd_args: List[str], lib_file: str) -> str:
     syms = _run_command(args=[*cmd_args, lib_file])
     return "\n".join(
-        [line for line in syms.split("\n") if not (" a " in line or "\ta\t" in line)]
+        [line for line in syms.split("\n") if line and _MACHO_STRIP_SYMBOL not in line]
     )
 
 
