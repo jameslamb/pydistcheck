@@ -5,9 +5,9 @@ with a wide range of dependency versions.
 
 from typing import Any
 
-try:
+try:  # pragma: no cover
     import tomllib
-except ModuleNotFoundError:
+except ModuleNotFoundError:  # pragma: no cover
     import tomli as tomllib  # type: ignore[no-redef]
 
 
