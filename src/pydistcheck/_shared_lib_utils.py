@@ -84,7 +84,7 @@ def _file_has_debug_symbols(file_absolute_path: str) -> Tuple[bool, str]:
             tool_name=nm_tool,
             lib_file=file_absolute_path,
         )
-        if has_debug_symbols:
+        if has_debug_symbols:  # pragma: no cover
             return True, cmd_str
 
     # at this point, none of the checks found debug symbols
