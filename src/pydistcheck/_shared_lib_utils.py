@@ -11,7 +11,7 @@ _NO_DEBUG_SYMBOLS = "__no_debug_symbols_found__"
 _TOOL_NOT_AVAILABLE = "__tool_not_available__"
 
 # This specific debug symbol is added by Apple's "strip" on
-# Mach-O files and is a red herring for our purposes. See:
+# Mach-O files and can safely be ignored for the purpose of detecting debug symbols. See:
 # https://github.com/jameslamb/pydistcheck/issues/235
 _MACHO_STRIP_SYMBOL = "radr://5614542"
 
