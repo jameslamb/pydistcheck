@@ -1,0 +1,10 @@
+# URL-encoded form of a link with {} interpolation in
+# bin/get-conda-release-files.py
+https://api.anaconda.org/package/%7BCONDA_CHANNEL%7D
+
+# part of a regex in docs/conf.py
+https://github.com/pypi/support/blob/
+
+# special symbol added by 'strip' on macOS
+# (not actually a URL)
+radr://.*
