@@ -1,7 +1,11 @@
 import subprocess
 from unittest.mock import Mock, patch
 
-from pydistcheck._shared_lib_utils import _run_command, _MACHO_STRIP_SYMBOL, _get_symbols
+from pydistcheck._shared_lib_utils import (
+    _MACHO_STRIP_SYMBOL,
+    _get_symbols,
+    _run_command,
+)
 
 
 def test_run_command_handles_binary_output():
