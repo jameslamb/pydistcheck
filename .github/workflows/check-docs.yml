@@ -10,7 +10,7 @@ on:
       - main
 
 jobs:
-  test:
+  check-docs:
     name: check-docs
     runs-on: ubuntu-latest
     steps:
@@ -28,3 +28,42 @@ jobs:
         run: |
           pip install .
           make -C ./docs html
+  check-links:
+    name: check-docs
+    runs-on: ubuntu-latest
+    steps:
+      # cache Lychee results to avoid hitting rate limits
+      - name: Restore lychee cache
+        uses: actions/cache@v4
+        with:
+          path: .lycheecache
+          key: cache-lychee-${{ github.sha }}
+          restore-keys: cache-lychee-
+      - uses: actions/checkout@v4
+      - name: Lychee URL checker
+        uses: lycheeverse/lychee-action@v2.3.0
+        with:
+          args: >-
+            --cache
+            --no-progress
+            --timeout 10
+            --max-retries 2
+            --accept 200,429
+            './**/*.rst'
+            './**/*.md'
+            './**/*.py'
+            './**/*.toml'
+            './**/*.yml'
+          # fail the action on broken links
+          fail: true
+          failIfEmpty: true
+  all-smoke-tests-successful:
+    if: always()
+    runs-on: ubuntu-latest
+    needs:
+      - test
+    steps:
+      - name: Decide whether the needed jobs succeeded or failed
+        uses: re-actors/alls-green@v1.2.2
+        with:
+          jobs: ${{ toJSON(needs) }}

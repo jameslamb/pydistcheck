@@ -53,6 +53,8 @@ _EXPECTED_FILES = (
     "!*/.gitignore",
     "!*/.gitpod.yml",
     "!*/.hadolint.yaml",
+    "!*/.lycheecache",
+    "!*/.lycheeignore",
     "!*/.readthedocs.yaml",
     "!*/.travis.yml",
     "!*/vsts-ci.yml",

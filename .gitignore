@@ -30,6 +30,8 @@ htmlcov/
 .idea/
 *.js
 *.json
+linkcheck_output/
+.lycheecache
 *.lzma
 .mypy_cache/
 *.npy

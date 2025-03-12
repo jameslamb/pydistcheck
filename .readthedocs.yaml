@@ -5,6 +5,8 @@ build:
   tools:
     python: "mambaforge-latest"
   jobs:
+    pre_build:
+      - python -m sphinx -b linkcheck -D linkcheck_timeout=5 --fail-on-warning ./docs/ ./linkcheck_output
     post_create_environment:
       - pip install .
 conda:

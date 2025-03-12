@@ -27,3 +27,10 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
+
+# -- Options for linkcheck -------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-linkcheck_anchors_ignore_for_url
+linkcheck_anchors_ignore_for_url = [
+    "https://github.com/conda/conda-build.*",
+    "https://github.com/pypi/support/blob/.*",
+]
