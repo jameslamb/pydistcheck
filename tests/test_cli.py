@@ -42,6 +42,11 @@ PACKAGES_WITH_DEBUG_SYMBOLS = [
 ]
 TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
+# see https://github.com/jameslamb/pydistcheck/issues/206
+NUMPY_WIN_DEBUG_WHL = "numpy-1.26.3-cp310-cp310-win_amd64.whl"
+if os.path.isfile(os.path.join(TEST_DATA_DIR, NUMPY_WIN_DEBUG_WHL)):
+    PACKAGES_WITH_DEBUG_SYMBOLS.append(NUMPY_WIN_DEBUG_WHL)
+
 
 def _assert_log_matches_pattern(
     result: Result, pattern: str, num_times: int = 1
@@ -1074,6 +1079,10 @@ def test_debug_symbols_check_works(distro_file):
         else:
             # dsymutil works on both macOS and Linux
             debug_cmd = r"'dsymutil \-s " + lib_file
+    elif NUMPY_WIN_DEBUG_WHL in distro_file:
+        # windows wheels
+        lib_file = r"\"numpy\.libs/libopenblas64__v0\.3\.23-293-gc2f4bdbb-gcc_10_3_0-2bde3a66a51006b2b53eb373ff767a3f\.dll\"'"
+        debug_cmd = r"'objdump \-\-all\-headers " + lib_file
     else:
         # linux wheels
         debug_cmd = r"'objdump \-\-all\-headers \"lib/lib_baseballmetrics\.so\"'\."
