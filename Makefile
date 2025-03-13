@@ -88,7 +88,7 @@ test-data-conda-dot-conda-packages:
 $(NUMPY_WIN_DEBUG_WHL):
 	curl \
 		https://files.pythonhosted.org/packages/be/b0/611101990ddac767e54e2d27d1f4576ae1662cca64e2d55ef0e62558ec26/numpy-1.26.3-cp310-cp310-win_amd64.whl \
-		-o tests/data/numpy-1.26.3-cp310-cp310-win_amd64.whl
+		-o $(NUMPY_WIN_DEBUG_WHL)
 
 .PHONY: test
 test: $(NUMPY_WIN_DEBUG_WHL)
