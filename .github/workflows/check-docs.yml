@@ -28,8 +28,9 @@ jobs:
         run: |
           pip install .
           make -C ./docs html
+          python -m sphinx -b linkcheck -D linkcheck_timeout=5 --fail-on-warning ./docs ./linkcheck_output
   check-links:
-    name: check-docs
+    name: check-links
     runs-on: ubuntu-latest
     steps:
       # cache Lychee results to avoid hitting rate limits
