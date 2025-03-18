@@ -33,4 +33,5 @@ html_static_path = ["_static"]
 linkcheck_anchors_ignore_for_url = [
     "https://github.com/conda/conda-build.*",
     "https://github.com/pypi/support/blob/.*",
+    "https://github.com/wch/r-source/blob/.*/check.R",
 ]
