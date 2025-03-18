@@ -19,7 +19,9 @@ _MACHO_STRIP_SYMBOL = "radr://5614542"
 def _run_command(args: List[str]) -> str:
     try:
         stdout = subprocess.run(args, capture_output=True, check=True).stdout
-        return stdout.decode("utf-8")
+        # Use latin1 encoding, which can handle any byte value without data loss.
+        # See https://github.com/jameslamb/pydistcheck/issues/206 for rationale.
+        return stdout.decode("latin1")
     except subprocess.CalledProcessError:
         return _COMMAND_FAILED
     except FileNotFoundError:
