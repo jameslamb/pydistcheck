@@ -50,6 +50,7 @@ jobs:
             --timeout 10
             --max-retries 2
             --accept 200,429
+            --exclude-path docs/conf.py
             './**/*.rst'
             './**/*.md'
             './**/*.py'
