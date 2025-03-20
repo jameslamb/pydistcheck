@@ -45,7 +45,7 @@ For a LOT more information about this topic, see these discussions in other open
 And these other resources.
 
 * `"Adding debugging information to your native extension" (memray docs) <https://bloomberg.github.io/memray/native_mode.html#adding-debugging-information-to-your-native-extension>`_
-* `"How can I tell if a binary was compiled with debug symbols?" (vscode-lldb docs) <https://github.com/vadimcn/vscode-lldb/wiki/How-can-I-tell-if-a-binary-was-compiled-with-debug-symbols%3F>`_
+* `"How can I tell if a binary was compiled with debug symbols?" (codelldb docs) <https://github.com/vadimcn/codelldb/wiki/How-can-I-tell-if-a-binary-was-compiled-with-debug-symbols%3F>`_
 
 distro-too-large-compressed
 ***************************
@@ -135,7 +135,7 @@ For more information, see:
 
 * `"Archives Containing Non-ASCII Filenames" (Oracle docs) <https://docs.oracle.com/cd/E36784_01/html/E36823/glnlx.html>`_
 * `example issue from pillow/PIL <https://github.com/python-pillow/Pillow/issues/5077>`_
-* `"Unix and non-ASCII file names, a summary of issues" <https://www.lesbonscomptes.com/recoll/faqsandhowtos/NonAsciiFileNames.html>`_
+* `"Unix and non-ASCII file names, a summary of issues" <https://www.recoll.org//faqsandhowtos/NonAsciiFileNames.html>`_
 * ``jqlang/jq#811``: `"File names with non ASCII characters" <https://github.com/jqlang/jq/issues/811>`_
 
 path-contains-spaces
@@ -185,7 +185,7 @@ See below for details.
 
     *This allows the* ``open()`` *function, the os module and most other path functionality to accept and return paths longer than 260 characters."*
 
-`Filename too long in Git for Windows (Stack Overflow answer) <https://stackoverflow.com/a/22575737/3986677>`__:
+`Filename too long in Git for Windows (Stack Overflow answer) <https://stackoverflow.com/questions/22575662/filename-too-long-in-git-for-windows/22575737>`__:
 
     *"Git has a limit of 4096 characters for a filename, except on Windows when Git is compiled with msys.*
     *It uses an older version of the Windows API and there's a limit of 260 characters for a filename.*
@@ -198,7 +198,7 @@ Other relevant discussions:
 * `"Comparison of Filesystems: Limits" (Wikipedia) <https://en.wikipedia.org/wiki/Comparison_of_file_systems#Limits>`__
 * `"Could the 100 byte path length limit be lifted?" (r-pkg-devel, 2023) <https://stat.ethz.ch/pipermail/r-package-devel/2023q4/010203.html>`__
 * `"R CMD check NOTE - Long paths in package" (r-pkg-devel, 2015) <https://stat.ethz.ch/pipermail/r-package-devel/2015q4/000511.html>`__
-* `"Filename length limits on linux?" (serverfault answer, 2009-2016) <https://serverfault.com/a/9548>`__
+* `"Filename length limits on linux?" (serverfault answer, 2009-2016) <https://serverfault.com/questions/9546/filename-length-limits-on-linux/9548>`__
 * `"Command prompt (Cmd. exe) command-line string limitation" (Windows docs, 2023) <https://learn.microsoft.com/en-us/troubleshoot/windows-client/shell-experience/command-line-string-limitation>`__
 * `conda-build discussion about 255-character prefix limit (conda/conda-build#1482) <https://github.com/conda/conda-build/issues/1482#issuecomment-256530225>`__
 * `discussion about paths lengths (Python Discourse, 2023) <https://discuss.python.org/t/you-can-now-download-pypi-locally/32662/8>`__

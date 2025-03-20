@@ -29,6 +29,14 @@ html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
 
 # -- Options for linkcheck -------------------------------------------------
+
+# These UUIDs were randomly generated. They're just here because providing a non-empty dictionary
+# is necessary to achieve the behavior "fail on all redirects".
+# ref: https://github.com/sphinx-doc/sphinx/issues/13439
+linkcheck_allowed_redirects = {
+    "b4eb55a0-4de4-4643-a6fb-f95ec4bb1f54": "932edc12-3965-4d22-9dd7-b02e9210bf2c"
+}
+
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-linkcheck_anchors_ignore_for_url
 linkcheck_anchors_ignore_for_url = [
     "https://github.com/conda/conda-build.*",

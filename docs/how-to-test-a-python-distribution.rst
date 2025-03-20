@@ -124,7 +124,7 @@ List of Tools
 
 The following open-source tools take packages as input, and can be used to detect (and in some cases repair) a wide range of Python packaging issues.
 
-* ``abi3audit`` (`link <https://github.com/trailofbits/abi3audit>`__) = detect ABI incompatibilities in wheels with CPython extensions
+* ``abi3audit`` (`link <https://github.com/pypa/abi3audit>`__) = detect ABI incompatibilities in wheels with CPython extensions
 * ``auditwheel`` (`link <https://github.com/pypa/auditwheel>`__) = detect and repair issues in Linux wheels that link to external shared libraries
 * ``auditwheel-emscripten`` (`link <https://github.com/ryanking13/auditwheel-emscripten>`__) = like ``auditwheel``, but focused on Python-in-a-web-browser applications (e.g. `pyodide auditwheel`_)
 * ``auditwheel-symbols`` (`link <https://github.com/messense/auditwheel-symbols>`__) = detect which symbols in a Linux wheel's shared library are causing ``auditwheel`` to suggest a more recent ``manylinux`` tag
@@ -138,7 +138,7 @@ The following open-source tools take packages as input, and can be used to detec
 * ``pyroma`` (`link <https://github.com/regebro/pyroma>`__) = detect incomplete or malformed metadata in sdists
 * ``repairwheel`` (`link <https://github.com/jvolkman/repairwheel>`__) = repair issues in Linux, macOS, and Windows wheels (wraps ``auditwheel``, ``delocate``, and ``delvewheel``)
 * ``twine`` (`link <https://github.com/pypa/twine>`__) = detect issues in package metadata (via ``twine check``)
-* ``wheel-inspect`` (`link <https://github.com/jwodder/wheel-inspect>`__) = dump summary information about wheels into machine-readable formats
+* ``wheel-inspect`` (`link <https://github.com/wheelodex/wheel-inspect>`__) = dump summary information about wheels into machine-readable formats
 
 And these take a source tree as input and find problems in the files uses to create packages.
 
