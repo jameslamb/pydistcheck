@@ -18,6 +18,8 @@ sed \
 
 rm -f ./src/pydistcheck/*.bak
 
+git checkout main
+git pull origin main
 git checkout -b ci/dev-version
 git add ./src/pydistcheck/__init__.py
 
