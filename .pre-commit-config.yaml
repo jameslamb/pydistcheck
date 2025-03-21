@@ -10,7 +10,7 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
   - repo: https://github.com/pycqa/isort
-    rev: 6.0.0
+    rev: 6.0.1
     hooks:
       - id: isort
         name: isort (python)
@@ -27,7 +27,7 @@ repos:
           - types-requests
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.9.6
+    rev: v0.11.1
     hooks:
       # Run the linter.
       - id: ruff
@@ -37,7 +37,7 @@ repos:
         args: ["--config", "pyproject.toml"]
         types_or: [python, jupyter]
   - repo: https://github.com/maxwinterstein/shfmt-py
-    rev: v3.7.0.1
+    rev: v3.11.0.2
     hooks:
       - id: shfmt
         args: ["--indent=4", "--space-redirects", "--write"]
@@ -56,7 +56,7 @@ repos:
           - sphinx>=7.3
           - sphinx-click>=6.0
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.35.1
+    rev: v1.36.2
     hooks:
       - id: yamllint
         additional_dependencies: [pyyaml]
@@ -67,7 +67,7 @@ repos:
         additional_dependencies: [tomli]
         args: ["--toml", "pyproject.toml"]
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: v0.23
+    rev: v0.24
     hooks:
       - id: validate-pyproject
   - repo: https://github.com/cheshirekow/cmake-format-precommit

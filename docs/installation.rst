@@ -3,7 +3,7 @@ Installation
 
 ``pydistcheck`` is a command-line interface (CLI) written in Python.
 
-Because of this, the preferred way to install it from PyPI is with ``pipx`` (`docs <https://pypa.github.io/pipx/>`_).
+Because of this, the preferred way to install it from PyPI is with ``pipx`` (`docs <https://pipx.pypa.io/stable/>`_).
 
 .. code-block:: shell
 
