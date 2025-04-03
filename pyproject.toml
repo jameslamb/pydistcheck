@@ -6,7 +6,6 @@ authors = [
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: BSD License",
     "Operating System :: MacOS",
     "Operating System :: POSIX",
     "Operating System :: Unix",
@@ -35,6 +34,11 @@ keywords = [
     "python-packaging",
     "testing"
 ]
+license = "BSD-3-Clause"
+license-files = [
+    "LICENSE",
+    "LICENSES/*"
+]
 maintainers = [
   {name = "James Lamb", email = "jaylamb20@gmail.com"}
 ]
@@ -42,13 +46,6 @@ name = "pydistcheck"
 readme = "README.md"
 requires-python = ">=3.8"
 dynamic = ["version"]
-
-[tool.setuptools]
-# include-package-data = true
-license-files = [
-    "LICENSE",
-    "LICENSES/*"
-]
 
 [tool.setuptools.dynamic]
 version = {attr = "pydistcheck.__version__"}
@@ -70,7 +67,7 @@ changelog = "https://github.com/jameslamb/pydistcheck/releases"
 [build-system]
 
 requires = [
-    "setuptools>=75.0",
+    "setuptools>=77.0",
 ]
 build-backend = "setuptools.build_meta"
 
