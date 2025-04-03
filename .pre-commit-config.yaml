@@ -27,7 +27,7 @@ repos:
           - types-requests
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.11.1
+    rev: v0.11.2
     hooks:
       # Run the linter.
       - id: ruff
@@ -56,7 +56,7 @@ repos:
           - sphinx>=7.3
           - sphinx-click>=6.0
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.36.2
+    rev: v1.37.0
     hooks:
       - id: yamllint
         additional_dependencies: [pyyaml]
@@ -67,7 +67,7 @@ repos:
         additional_dependencies: [tomli]
         args: ["--toml", "pyproject.toml"]
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: v0.24
+    rev: v0.24.1
     hooks:
       - id: validate-pyproject
   - repo: https://github.com/cheshirekow/cmake-format-precommit

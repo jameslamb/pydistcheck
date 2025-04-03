@@ -140,7 +140,7 @@ The following open-source tools take packages as input, and can be used to detec
 * ``twine`` (`link <https://github.com/pypa/twine>`__) = detect issues in package metadata (via ``twine check``)
 * ``wheel-inspect`` (`link <https://github.com/wheelodex/wheel-inspect>`__) = dump summary information about wheels into machine-readable formats
 
-And these take a source tree as input and find problems in the files uses to create packages.
+These take a source tree as input and find problems in the files uses to create packages.
 
 * ``check-manifest`` (`link <https://github.com/mgedmin/check-manifest>`__) = check that sdists contain all the files you expect them to, based on what you've checked into version control
 * ``pre-commit/pre-commit-hooks`` (`link <https://github.com/pre-commit/pre-commit-hooks>`__) = many checks, including the following related to portability:
@@ -149,5 +149,21 @@ And these take a source tree as input and find problems in the files uses to cre
     - ``check-symlinks`` = check for symlinks that don't point to real files
     - ``destroyed-symlinks`` = check for symlinks replaced with the content of the regular file they previously pointed to
 * ``validate-pyproject`` (`link <https://github.com/abravalheri/validate-pyproject/>`__) = check that ``pyproject.toml`` files are valid
+
+These take compiled files like ELF (``.so``), Mach-O (``.dylib``), or PE (``.dll``, ``.exe``) files as input and can be used to test and modify them.
+
+* ``dsymutil`` (`link <https://llvm.org/docs/CommandGuide/dsymutil.html>`__) = CLI for dumping DWARF debug symbols and linking debug information into an executable
+* ``install_name_tool`` (could not find an authoritative link, PR to add one welcome!) = CLI for modifying Mach-O files, shipped with macOS developer tools
+* ``machomangler`` (`link <https://github.com/njsmith/machomachomangler>`__) = CLI for patching Mach-O and PE files
+* ``llvm-install-name-tool`` (`link <https://llvm.org/docs/CommandGuide/llvm-install-name-tool.html>`__) = ``install_name_tool`` re-implementation from the LLVM project
+* ``llvm-objdump`` (`link <https://llvm.org/docs/CommandGuide/llvm-objdump.html>`__) = ``objdump`` re-implementation from the LLVM project
+* ``llvm-otool`` (`link <https://llvm.org/docs/CommandGuide/llvm-otool.html>`__) = ``otool`` re-implementation from the LLVM project
+* ``llvm-readelf`` (`link <https://llvm.org/docs/CommandGuide/llvm-readelf.html>`__) = ``readelf`` re-implementation from the LLVM project
+* ``objdump`` (`link <https://man7.org/linux/man-pages/man1/objdump.1.html>`__) = CLI for displaying information about object files, including ELF files
+* ``otool`` (could not find an authoritative link, PR to add one welcome!) = CLI for displaying information about Mach-O files, shipped with macOS developer tools
+* ``pecheck`` (`link <https://github.com/DidierStevens/DidierStevensSuite/blob/78d34c9f59730a10f40ff14889131cc108a3300b/pecheck.py>`__) = single-file Python module that can be used to print some information about PE files
+* ``peframe`` (`link <https://github.com/guelfoweb/peframe>`__) = static analyzer used to find malware in PE files
+* ``pyelftools`` (`link <https://github.com/eliben/pyelftools>`__) = Python library for inspecting and modifying ELF files, including a Python re-implementation of ``readelf``
+* ``readelf`` (`link <https://man7.org/linux/man-pages/man1/readelf.1.html>`__) = CLI for displaying information about ELF files (multiple implementations exist)
 
 .. _pyodide auditwheel: https://pyodide.org/en/stable/usage/api/pyodide-cli.html
