@@ -32,10 +32,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - uses: conda-incubator/setup-miniconda@v3
+      - uses: actions/setup-python@v5
         with:
-          activate-environment: pydistcheck-tests
-          miniforge-version: latest
           python-version: ${{ matrix.python_version }}
       - name: Install extra tools on Linux
         if: startsWith(matrix.os, 'ubuntu')
@@ -46,8 +44,7 @@ jobs:
       - name: run tests
         shell: bash -l {0}
         run: |
-          conda install \
-            --yes \
+          pip install \
               pipx \
               requests
           make install
