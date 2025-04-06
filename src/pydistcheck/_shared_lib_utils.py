@@ -4,7 +4,6 @@ functions used to analyze compiled objects
 
 import re
 import subprocess
-from typing import List, Tuple
 
 _COMMAND_FAILED = "__command_failed__"
 _NO_DEBUG_SYMBOLS = "__no_debug_symbols_found__"
@@ -16,7 +15,7 @@ _TOOL_NOT_AVAILABLE = "__tool_not_available__"
 _MACHO_STRIP_SYMBOL = "radr://5614542"
 
 
-def _run_command(args: List[str]) -> str:
+def _run_command(args: list[str]) -> str:
     try:
         stdout = subprocess.run(args, capture_output=True, check=True).stdout
         # Use latin1 encoding, which can handle any byte value without data loss.
@@ -50,7 +49,7 @@ _COMMANDS_TO_PATTERNS = [
 # fmt: on
 
 
-def _look_for_debug_symbols(lib_file: str) -> Tuple[bool, str]:
+def _look_for_debug_symbols(lib_file: str) -> tuple[bool, str]:
     for cmd_args, pattern in _COMMANDS_TO_PATTERNS:
         stdout = _run_command(args=[*cmd_args, lib_file])
         contains_debug_symbols = any(
@@ -62,20 +61,20 @@ def _look_for_debug_symbols(lib_file: str) -> Tuple[bool, str]:
     return False, _NO_DEBUG_SYMBOLS
 
 
-def _get_symbols(cmd_args: List[str], lib_file: str) -> str:
+def _get_symbols(cmd_args: list[str], lib_file: str) -> str:
     syms = _run_command(args=[*cmd_args, lib_file])
     return "\n".join(
         [line for line in syms.split("\n") if line and _MACHO_STRIP_SYMBOL not in line]
     )
 
 
-def _nm_reports_debug_symbols(tool_name: str, lib_file: str) -> Tuple[bool, str]:
+def _nm_reports_debug_symbols(tool_name: str, lib_file: str) -> tuple[bool, str]:
     exported_symbols = _get_symbols(cmd_args=[tool_name], lib_file=lib_file)
     all_symbols = _get_symbols(cmd_args=[tool_name, "-a"], lib_file=lib_file)
     return exported_symbols != all_symbols, f"{tool_name} -a"
 
 
-def _file_has_debug_symbols(file_absolute_path: str) -> Tuple[bool, str]:
+def _file_has_debug_symbols(file_absolute_path: str) -> tuple[bool, str]:
     # test with tools that produce debug symbols that can be matched with a regex
     has_debug_symbols, cmd_str = _look_for_debug_symbols(lib_file=file_absolute_path)
     if has_debug_symbols:

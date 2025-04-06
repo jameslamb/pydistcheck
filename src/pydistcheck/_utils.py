@@ -4,7 +4,6 @@ not specific to package distributions
 """
 
 import re
-from typing import Tuple
 
 # references:
 #
@@ -25,7 +24,7 @@ _UNIT_TO_NUM_BYTES = {
 }
 
 
-def _recommend_size_str(num_bytes: int) -> Tuple[float, str]:
+def _recommend_size_str(num_bytes: int) -> tuple[float, str]:
     if num_bytes < int(0.1 * 1024):
         return float(num_bytes), "B"
     if num_bytes <= (0.1 * 1024**2):
