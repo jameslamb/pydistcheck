@@ -10,7 +10,6 @@ from collections import OrderedDict, defaultdict
 from dataclasses import dataclass
 from functools import cached_property
 from tempfile import TemporaryDirectory
-from typing import Dict, List
 
 from ._file_utils import (
     _ArchiveFormat,
@@ -25,16 +24,16 @@ from ._file_utils import (
 class _DistributionSummary:
     archive_format: str
     compressed_size_bytes: int
-    directories: List[_DirectoryInfo]
-    files: List[_FileInfo]
+    directories: list[_DirectoryInfo]
+    files: list[_FileInfo]
     original_file: str
 
     @classmethod
     def from_file(cls, filename: str) -> "_DistributionSummary":
         archive_format = _guess_archive_format(filename)
         compressed_size_bytes = os.path.getsize(filename)
-        directories: List[_DirectoryInfo] = []
-        files: List[_FileInfo] = []
+        directories: list[_DirectoryInfo] = []
+        files: list[_FileInfo] = []
         if archive_format == _ArchiveFormat.GZIP_TAR:
             with tarfile.open(filename, mode="r:gz") as tf:
                 for tar_info in tf.getmembers():
@@ -65,9 +64,10 @@ class _DistributionSummary:
             #      - 'pkg-*.tar.zst'
             #
             # ref: https://docs.conda.io/projects/conda/en/latest/user-guide/concepts/packages.html#conda-file-format
-            with zipfile.ZipFile(
-                filename, mode="r"
-            ) as f, TemporaryDirectory() as tmp_dir:
+            with (
+                zipfile.ZipFile(filename, mode="r") as f,
+                TemporaryDirectory() as tmp_dir,
+            ):
                 for zip_info in f.infolist():
                     # case 1 - is a directory
                     if zip_info.is_dir():
@@ -132,33 +132,33 @@ class _DistributionSummary:
         )
 
     @property
-    def all_paths(self) -> List[str]:
+    def all_paths(self) -> list[str]:
         return self.file_paths + self.directory_paths
 
     @property
-    def compiled_objects(self) -> List[_FileInfo]:
+    def compiled_objects(self) -> list[_FileInfo]:
         return [f for f in self.files if f.is_compiled is True]
 
     @cached_property
-    def count_by_file_extension(self) -> Dict[str, int]:
+    def count_by_file_extension(self) -> dict[str, int]:
         return {
             file_extension: len(file_list)
             for file_extension, file_list in self.files_by_extension.items()
         }
 
     @property
-    def directory_paths(self) -> List[str]:
+    def directory_paths(self) -> list[str]:
         return [d.name for d in self.directories]
 
     @cached_property
-    def files_by_extension(self) -> Dict[str, List[_FileInfo]]:
-        out: Dict[str, List[_FileInfo]] = defaultdict(list)
+    def files_by_extension(self) -> dict[str, list[_FileInfo]]:
+        out: dict[str, list[_FileInfo]] = defaultdict(list)
         for f in self.files:
             out[f.file_extension].append(f)
         return out
 
     @property
-    def file_paths(self) -> List[str]:
+    def file_paths(self) -> list[str]:
         return [f.name for f in self.files]
 
     @property
@@ -169,7 +169,7 @@ class _DistributionSummary:
     def num_files(self) -> int:
         return len(self.files)
 
-    def get_largest_files(self, n: int) -> List[_FileInfo]:
+    def get_largest_files(self, n: int) -> list[_FileInfo]:
         return sorted(
             self.files, key=lambda f: f.uncompressed_size_bytes, reverse=True
         )[:n]
