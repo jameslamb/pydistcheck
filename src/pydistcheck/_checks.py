@@ -5,9 +5,10 @@ performs on distributions.
 
 import os
 from collections import defaultdict
+from collections.abc import Sequence
 from fnmatch import fnmatchcase
 from tempfile import TemporaryDirectory
-from typing import List, Protocol, Sequence
+from typing import Protocol
 
 from ._distribution_summary import _DistributionSummary
 from ._file_utils import _extract_subset_of_files_from_archive
@@ -37,15 +38,15 @@ class _CheckProtocol(Protocol):
 
     def __call__(
         self, distro_summary: _DistributionSummary
-    ) -> List[str]:  # pragma: no cover
+    ) -> list[str]:  # pragma: no cover
         ...
 
 
 class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
     check_name = "compiled-objects-have-debug-symbols"
 
-    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
-        out: List[str] = []
+    def __call__(self, distro_summary: _DistributionSummary) -> list[str]:
+        out: list[str] = []
         compiled_object_paths = [
             file_info.name for file_info in distro_summary.compiled_objects
         ]
@@ -88,8 +89,8 @@ class _DistroTooLargeCompressedCheck(_CheckProtocol):
         self.output_file_size_precision = output_file_size_precision
         self.output_file_size_unit = output_file_size_unit
 
-    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
-        out: List[str] = []
+    def __call__(self, distro_summary: _DistributionSummary) -> list[str]:
+        out: list[str] = []
         max_size = _FileSize(num=self.max_allowed_size_bytes, unit_str="B")
         actual_size = _FileSize(num=distro_summary.compressed_size_bytes, unit_str="B")
         if actual_size > max_size:
@@ -123,8 +124,8 @@ class _DistroTooLargeUnCompressedCheck(_CheckProtocol):
         self.output_file_size_precision = output_file_size_precision
         self.output_file_size_unit = output_file_size_unit
 
-    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
-        out: List[str] = []
+    def __call__(self, distro_summary: _DistributionSummary) -> list[str]:
+        out: list[str] = []
         max_size = _FileSize(num=self.max_allowed_size_bytes, unit_str="B")
         actual_size = _FileSize(
             num=distro_summary.uncompressed_size_bytes, unit_str="B"
@@ -152,8 +153,8 @@ class _FileCountCheck(_CheckProtocol):
     def __init__(self, *, max_allowed_files: int):
         self.max_allowed_files = max_allowed_files
 
-    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
-        out: List[str] = []
+    def __call__(self, distro_summary: _DistributionSummary) -> list[str]:
+        out: list[str] = []
         num_files = distro_summary.num_files
         if num_files > self.max_allowed_files:
             msg = (
@@ -167,13 +168,13 @@ class _FileCountCheck(_CheckProtocol):
 class _FilesOnlyDifferByCaseCheck(_CheckProtocol):
     check_name = "files-only-differ-by-case"
 
-    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
-        out: List[str] = []
+    def __call__(self, distro_summary: _DistributionSummary) -> list[str]:
+        out: list[str] = []
         path_lower_to_raw = defaultdict(list)
         for file_path in distro_summary.all_paths:
             path_lower_to_raw[file_path.lower()].append(file_path)
 
-        duplicates_list: List[str] = []
+        duplicates_list: list[str] = []
         for filepaths in path_lower_to_raw.values():
             if len(filepaths) > 1:
                 duplicates_list += filepaths
@@ -191,8 +192,8 @@ class _FilesOnlyDifferByCaseCheck(_CheckProtocol):
 class _NonAsciiCharacterCheck(_CheckProtocol):
     check_name = "path-contains-non-ascii-characters"
 
-    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
-        out: List[str] = []
+    def __call__(self, distro_summary: _DistributionSummary) -> list[str]:
+        out: list[str] = []
         for file_path in distro_summary.all_paths:
             if not file_path.isascii():
                 ascii_converted_str = file_path.encode("ascii", "replace").decode(
@@ -218,8 +219,8 @@ class _MixedFileExtensionCheck(_CheckProtocol):
         {".yaml", ".YAML", ".yml", ".YML"},
     )
 
-    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
-        out: List[str] = []
+    def __call__(self, distro_summary: _DistributionSummary) -> list[str]:
+        out: list[str] = []
         file_extensions_in_distro = set(distro_summary.files_by_extension.keys())
         for file_ext_group in self.file_ext_groups:
             extensions_found = file_ext_group.intersection(file_extensions_in_distro)
@@ -242,8 +243,8 @@ class _PathTooLongCheck(_CheckProtocol):
     def __init__(self, *, max_path_length: int):
         self.max_path_length = max_path_length
 
-    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
-        out: List[str] = []
+    def __call__(self, distro_summary: _DistributionSummary) -> list[str]:
+        out: list[str] = []
         bad_paths = [
             p for p in distro_summary.all_paths if len(p) > self.max_path_length
         ]
@@ -259,8 +260,8 @@ class _PathTooLongCheck(_CheckProtocol):
 class _SpacesInPathCheck(_CheckProtocol):
     check_name = "path-contains-spaces"
 
-    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
-        out: List[str] = []
+    def __call__(self, distro_summary: _DistributionSummary) -> list[str]:
+        out: list[str] = []
         for file_path in distro_summary.all_paths:
             if file_path != file_path.replace(" ", ""):
                 msg = f"[{self.check_name}] Found path with spaces: '{file_path}'"
@@ -282,8 +283,8 @@ class _ExpectedFilesCheck(_CheckProtocol):
         ]
         self.file_patterns = [f for f in file_patterns if not f.startswith("!")]
 
-    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
-        out: List[str] = []
+    def __call__(self, distro_summary: _DistributionSummary) -> list[str]:
+        out: list[str] = []
         for pattern in self.file_patterns:
             found_any = False
             for file_path in distro_summary.file_paths:
@@ -325,8 +326,8 @@ class _UnexpectedFilesCheck(_CheckProtocol):
         ]
         self.file_patterns = [f[1:] for f in file_patterns if f.startswith("!")]
 
-    def __call__(self, distro_summary: _DistributionSummary) -> List[str]:
-        out: List[str] = []
+    def __call__(self, distro_summary: _DistributionSummary) -> list[str]:
+        out: list[str] = []
         for file_path in distro_summary.file_paths:
             for pattern in self.file_patterns:
                 if fnmatchcase(file_path, pattern):

@@ -3,7 +3,7 @@ import pathlib
 import tarfile
 import zipfile
 from dataclasses import dataclass
-from typing import List, Tuple, Union
+from typing import Union
 
 from ._compat import _import_zstandard
 
@@ -119,7 +119,7 @@ class _FileFormat:
 
 def _guess_archive_member_file_format(
     *, archive_file: Union[tarfile.TarFile, zipfile.ZipFile], member_name: str
-) -> Tuple[str, bool]:
+) -> tuple[str, bool]:
     """
     The approach in this function was inspired by similar code in
     https://github.com/matthew-brett/delocate, so that project's license is included
@@ -160,7 +160,7 @@ def _decompress_zstd_archive(*, tar_zst_file: str, decompressed_tar_path: str) -
 
 
 def _extract_subset_of_files_from_archive(
-    *, archive_file: str, archive_format: str, relative_paths: List[str], out_dir: str
+    *, archive_file: str, archive_format: str, relative_paths: list[str], out_dir: str
 ) -> None:
     """
     Extract a subset of files from an archive to a destination directory.

@@ -3,7 +3,7 @@ CLI entrypoints
 """
 
 import sys
-from typing import List, Sequence
+from collections.abc import Sequence
 
 import click
 
@@ -321,7 +321,7 @@ def check(  # noqa: PLR0913
             )
 
         print("------------ check results -----------")
-        errors: List[str] = []
+        errors: list[str] = []
         for this_check in checks:
             errors += this_check(distro_summary=summary)
 
