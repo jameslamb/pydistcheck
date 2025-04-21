@@ -46,7 +46,6 @@ pydistcheck \
     ./smoke-tests/*.conda
 pydistcheck \
     "${shared_args[@]}" \
-    --expected-directories='*/.github' \
     --expected-files='*/.gitignore' \
     ./smoke-tests/*.tar.gz
 pydistcheck \
