@@ -7,6 +7,6 @@ https://api.anaconda.org/package/%7BCONDA_CHANNEL%7D
 radr://.*
 
 # Stack Exchange sites started throwing 403s around June 2025
-*serverfault.com*
-*stackoverflow.com*
-*superuser.com*
+https://serverfault.com*
+https://stackoverflow.com*
+https://superuser.com*
