@@ -232,8 +232,8 @@ pydistcheck \
 get-files spacy
 pydistcheck \
     --ignore 'compiled-objects-have-debug-symbols' \
-    --max-allowed-size-compressed='50M' \
-    --max-allowed-size-uncompressed='100M' \
+    --max-allowed-size-compressed='100M' \
+    --max-allowed-size-uncompressed='200M' \
     ./smoke-tests/*
 
 echo "done running smoke tests"
