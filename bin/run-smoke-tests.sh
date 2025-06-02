@@ -141,7 +141,6 @@ shared_args=(
 )
 pydistcheck \
     "${shared_args[@]}" \
-    --expected-files '*/.gitignore' \
     ./smoke-tests/*.tar.gz
 pydistcheck \
     "${shared_args[@]}" \

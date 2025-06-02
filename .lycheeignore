@@ -5,3 +5,8 @@ https://api.anaconda.org/package/%7BCONDA_CHANNEL%7D
 # special symbol added by 'strip' on macOS
 # (not actually a URL)
 radr://.*
+
+# Stack Exchange sites started throwing 403s around June 2025
+*serverfault.com*
+*stackoverflow.com*
+*superuser.com*
