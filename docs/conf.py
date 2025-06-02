@@ -43,3 +43,9 @@ linkcheck_anchors_ignore_for_url = [
     "https://github.com/pypi/support/blob/.*",
     "https://github.com/wch/r-source/blob/.*/check.R",
 ]
+
+linkcheck_ignore = [
+    r".*serverfault\.com.*",
+    r".*stackoverflow\.com.*",
+    r".*superuser\.com.*",
+]
