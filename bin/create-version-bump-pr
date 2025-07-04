@@ -27,6 +27,14 @@ commit_msg="bump development version"
 git commit -m "${commit_msg}"
 git push origin ci/dev-version
 
+if [[ ! gh auth status ]]; then
+    gh auth login               \
+        --web                   \
+        --git-protocol ssh      \
+        --hostname "github.com" \
+        --skip-ssh-key >&2;
+fi
+
 gh pr create \
     --repo jameslamb/pydistcheck \
     --base 'main' \
