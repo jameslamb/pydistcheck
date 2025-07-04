@@ -37,6 +37,11 @@ jobs:
     runs-on: ubuntu-latest
     # publish whenever a GitHub release is published
     if: github.event_name == 'release' && github.event.action == 'published'
+    environment:
+      name: pypi
+      url: https://pypi.org/p/pydistcheck
+    permissions:
+      id-token: write
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -47,9 +52,6 @@ jobs:
           name: wheel
           path: dist
       - uses: pypa/gh-action-pypi-publish@v1.12.4
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_KEY }}
 
   upload_github:
     needs: [upload_pypi]
