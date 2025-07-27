@@ -116,6 +116,23 @@ def test_file_size_to_string_works(precision, unit_str, expected_str):
     assert fs.to_string(precision=precision, unit_str=unit_str) == expected_str
 
 
+def test_file_is_hashable():
+    # same compare as same
+    assert {_FileSize(num=708, unit_str="Ki"), _FileSize(num=708, unit_str="Ki")} == {
+        _FileSize(num=708, unit_str="Ki")
+    }
+
+    # different (based on 'num') compare as different
+    assert (
+        len({_FileSize(num=100, unit_str="Ki"), _FileSize(num=999, unit_str="Ki")}) == 2
+    )
+
+    # different (based on 'unit_str') compare as different
+    assert (
+        len({_FileSize(num=100, unit_str="Ki"), _FileSize(num=100, unit_str="Mi")}) == 2
+    )
+
+
 @pytest.mark.parametrize(
     ("file_size", "expected_str"),
     [

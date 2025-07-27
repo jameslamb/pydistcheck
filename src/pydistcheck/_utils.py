@@ -74,6 +74,9 @@ class _FileSize:
             and self.total_size_bytes == other.total_size_bytes
         )
 
+    def __hash__(self) -> int:
+        return hash((self._num, self._unit_str))
+
     def __ge__(self, other: "_FileSize") -> bool:
         return self.total_size_bytes >= other.total_size_bytes
 
