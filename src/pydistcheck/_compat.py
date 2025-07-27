@@ -13,7 +13,7 @@ except ModuleNotFoundError:  # pragma: no cover
 
 def _import_zstandard() -> Any:
     try:
-        import zstandard
+        import zstandard  # noqa: PLC0415
 
         return zstandard
     except ModuleNotFoundError as err:
