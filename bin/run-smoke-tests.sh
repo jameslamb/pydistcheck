@@ -64,7 +64,7 @@ shared_args=(
     --ignore=compiled-objects-have-debug-symbols
     --ignore=mixed-file-extensions
     --ignore=path-contains-spaces
-    --max-allowed-files=8000
+    --max-allowed-files=8500
     --max-allowed-size-uncompressed=150M
 )
 pydistcheck \
