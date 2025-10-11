@@ -22,29 +22,29 @@ jobs:
           # Linux #
           #########
           - os: ubuntu-latest
-            python_version: '3.9'
-          - os: ubuntu-latest
-            python_version: '3.10'
+            python_version: &oldest_python '3.9'
           - os: ubuntu-latest
             python_version: '3.11'
           - os: ubuntu-latest
             python_version: '3.12'
           - os: ubuntu-latest
             python_version: '3.13'
+          - os: ubuntu-latest
+            python_version: &latest_python '3.14'
           #########
           # macOS #
           #########
           - os: macOS-13
-            python_version: '3.9'
+            python_version: *oldest_python
           - os: macOS-latest
-            python_version: '3.13'
+            python_version: *latest_python
           ###########
           # Windows #
           ###########
           - os: windows-latest
-            python_version: '3.9'
+            python_version: *oldest_python
           - os: windows-latest
-            python_version: '3.13'
+            python_version: *latest_python
     steps:
       - name: Prevent conversion of line endings on Windows
         if: startsWith(matrix.os, 'windows')
@@ -90,8 +90,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          # available versions:
+          # https://github.com/actions/setup-python/blob/main/docs/advanced-usage.md#available-versions-of-python-pypy-and-graalpy
           - os: ubuntu-latest
-            python_version: '3.10'
+            python_version: '3.11'
     steps:
       - name: check out repository
         uses: actions/checkout@v5
