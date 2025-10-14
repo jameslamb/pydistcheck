@@ -1,5 +1,5 @@
 """
-Central location for weird import stuff used to make the project compatible
+Central location for import stuff used to make the project compatible
 with a wide range of dependency versions.
 """
 
@@ -11,7 +11,7 @@ except ModuleNotFoundError:  # pragma: no cover
     import tomli as tomllib  # type: ignore[no-redef]
 
 
-def _import_zstandard() -> Any:
+def _import_zstandard() -> Any:  # pragma: no cover
     try:
         import zstandard  # noqa: PLC0415
 
@@ -19,7 +19,7 @@ def _import_zstandard() -> Any:
     except ModuleNotFoundError as err:
         err_msg = (
             "Checking zstd-compressed files requires the 'zstandard' library. "
-            "Install it with e.g. 'pip install zstandard' or 'conda install conda-forge::zstandard'."
+            "Install it with e.g. 'pip install zstandard' or 'conda install -c conda-forge zstandard'."
         )
         raise ModuleNotFoundError(err_msg) from err
 

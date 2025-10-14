@@ -5,4 +5,4 @@ pytest-cov
 requests
 twine
 types-requests
-zstandard
+zstandard ; python_version < '3.14'

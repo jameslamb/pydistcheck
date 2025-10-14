@@ -150,13 +150,24 @@ def _guess_archive_member_file_format(
     return _FileFormat.OTHER, False
 
 
-def _decompress_zstd_archive(*, tar_zst_file: str, decompressed_tar_path: str) -> None:
+def _decompress_zstd_archive(
+    *, tar_zst_file: str, decompressed_tar_path: str
+) -> None:  # pragma: no cover
     """Given a path to a .tar.zst file, decompress its contents to a .tar file"""
-    zstandard = _import_zstandard()
-    with open(tar_zst_file, "rb") as compressed:
-        decompressor = zstandard.ZstdDecompressor()
-        with open(decompressed_tar_path, "wb") as destination:
-            decompressor.copy_stream(compressed, destination)
+    # from Python 3.14 onwards, use the zstd support from the standard library
+    try:
+        import compression.zstd  # noqa: PLC0415
+
+        with compression.zstd.open(tar_zst_file, "rb") as decompressed:  # noqa: SIM117
+            with open(decompressed_tar_path, "wb") as destination:
+                destination.write(decompressed.read())
+    except ImportError:
+        # if 'compression.zstd' isn't available or importing it fails for some other reason, use 'zstandard' library
+        zstandard = _import_zstandard()
+        with open(tar_zst_file, "rb") as compressed:
+            decompressor = zstandard.ZstdDecompressor()
+            with open(decompressed_tar_path, "wb") as destination:
+                decompressor.copy_stream(compressed, destination)
 
 
 def _extract_subset_of_files_from_archive(
