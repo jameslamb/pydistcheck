@@ -55,7 +55,7 @@ pydistcheck = "pydistcheck.cli:check"
 
 [project.optional-dependencies]
 conda = [
-    "zstandard>=0.22.0"
+    "zstandard>=0.22.0 ; python_version < '3.14'"
 ]
 
 [project.urls]
