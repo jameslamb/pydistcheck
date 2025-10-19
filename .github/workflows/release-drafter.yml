@@ -5,12 +5,6 @@ on:
   push:
     branches:
       - main
-  # pull_request event is required only for autolabeler
-  pull_request:
-    types: [opened, reopened, synchronize]
-  # include PRs from forks
-  pull_request_target:
-    types: [opened, reopened, synchronize]
 
 permissions:
   contents: read
@@ -19,9 +13,10 @@ jobs:
   update_release_draft:
     permissions:
       contents: write
-      pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v6
+      - uses: release-drafter/release-drafter@b1476f6e6eb133afa41ed8589daba6dc69b4d3f5 # v6.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          disable-autolabeler: true

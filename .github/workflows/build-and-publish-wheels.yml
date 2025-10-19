@@ -7,12 +7,31 @@ on:
     types:
       - published
 
+permissions:
+  actions: none
+  checks: none
+  contents: read
+  deployments: none
+  discussions: none
+  id-token: none
+  issues: none
+  packages: none
+  pages: none
+  pull-requests: none
+  repository-projects: none
+  security-events: none
+  statuses: none
+
 jobs:
   build_wheels:
     name: build wheels
     runs-on: ubuntu-latest
+    permissions:
+      content: write
     steps:
       - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Build wheels
         run: pipx run build --wheel
       - uses: actions/upload-artifact@v4
@@ -23,8 +42,12 @@ jobs:
   build_sdist:
     name: Build source distribution
     runs-on: ubuntu-latest
+    permissions:
+      content: write
     steps:
       - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Build sdist
         run: pipx run build --sdist
       - uses: actions/upload-artifact@v4
@@ -51,13 +74,16 @@ jobs:
         with:
           name: wheel
           path: dist
-      - uses: pypa/gh-action-pypi-publish@v1.13.0
+      - uses: pypa/gh-action-pypi-publish@ed0c53931b1dc9bd32cbe73a98c7f6766f8a527e # v1.13.0
 
   upload_github:
     needs: [upload_pypi]
     runs-on: ubuntu-latest
     # publish whenever a GitHub release is published
     if: github.event_name == 'release' && github.event.action == 'published'
+    permissions:
+      content: write
+      id-token: write
     steps:
       - uses: actions/download-artifact@v5
         with:
@@ -68,9 +94,9 @@ jobs:
           name: wheel
           path: dist
       - name: upload distributions to release
-        uses: svenstaro/upload-release-action@v2
+        uses: svenstaro/upload-release-action@81c65b7cd4de9b2570615ce3aad67a41de5b1a13 # 2.11.2
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          repo_token: ${{ github.token }}
           file: dist/*
           file_glob: true
           tag: ${{ github.ref }}
