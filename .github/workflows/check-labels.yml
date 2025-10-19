@@ -1,10 +1,28 @@
 name: check-labels
+
 on:
   pull_request:
-    types: [opened, labeled, unlabeled, synchronize]
-  # include PRs from forks
-  pull_request_target:
-    types: [opened, labeled, reopened, synchronize]
+    types:
+      - labeled
+      - opened
+      - synchronize
+      - unlabeled
+
+permissions:
+  actions: none
+  checks: none
+  contents: read
+  deployments: none
+  discussions: none
+  id-token: none
+  issues: none
+  packages: none
+  pages: none
+  pull-requests: none
+  repository-projects: none
+  security-events: none
+  statuses: none
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -13,7 +31,7 @@ jobs:
       issues: read
       pull-requests: read
     steps:
-      - uses: mheap/github-action-required-labels@v5
+      - uses: mheap/github-action-required-labels@fb29a14a076b0f74099f6198f77750e8fc236016 # v5.5.0
         with:
           mode: exactly
           add_comment: false

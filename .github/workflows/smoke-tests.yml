@@ -12,6 +12,21 @@ on:
   schedule:
     - cron: '0 0 * * 3'
 
+permissions:
+  actions: none
+  checks: none
+  contents: read
+  deployments: none
+  discussions: none
+  id-token: none
+  issues: none
+  packages: none
+  pages: none
+  pull-requests: none
+  repository-projects: none
+  security-events: none
+  statuses: none
+
 jobs:
   test:
     name: smoke-tests (${{ matrix.os }}, ${{ matrix.python_version }})
@@ -32,7 +47,8 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 1
-      - uses: conda-incubator/setup-miniconda@v3
+          persist-credentials: false
+      - uses: conda-incubator/setup-miniconda@835234971496cad1653abb28a638a281cf32541f # v3.1.0
         with:
           activate-environment: pydistcheck-tests
           miniforge-version: latest
@@ -59,6 +75,6 @@ jobs:
       - test
     steps:
       - name: Decide whether the needed jobs succeeded or failed
-        uses: re-actors/alls-green@v1.2.2
+        uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
         with:
           jobs: ${{ toJSON(needs) }}

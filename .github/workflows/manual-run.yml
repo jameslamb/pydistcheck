@@ -9,6 +9,21 @@ on:
         required: true
         type: string
 
+permissions:
+  actions: none
+  checks: none
+  contents: read
+  deployments: none
+  discussions: none
+  id-token: none
+  issues: none
+  packages: none
+  pages: none
+  pull-requests: none
+  repository-projects: none
+  security-events: none
+  statuses: none
+
 jobs:
   check-package:
     name: check-package
@@ -18,7 +33,10 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 1
+          persist-credentials: false
       - name: check '${{ inputs.package_name }}'
+        env:
+          INPUT_PACKAGE_NAME: ${{ inputs.package_name }}
         run: |
           sudo apt-get update -y
           sudo apt-get install -y \
@@ -31,6 +49,6 @@ jobs:
           make install
           mkdir -p ./tmp-dir
           python bin/get-pypi-files.py\
-            ${{ inputs.package_name }} \
+            "${INPUT_PACKAGE_NAME}" \
             ./tmp-dir
           pydistcheck ./tmp-dir/*
