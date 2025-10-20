@@ -163,6 +163,8 @@ select = [
     "S202"
 ]
 "src/pydistcheck/cli.py" = [
+    # 'import' should be at the top-level of a file
+    "PLC0415",
     # Too many branches
     "PLR0912",
     # Too many statements
