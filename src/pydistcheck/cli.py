@@ -3,11 +3,12 @@ CLI entrypoints
 """
 
 import sys
-from collections.abc import Sequence
+from typing import TYPE_CHECKING
 
 import click
 
-from pydistcheck import __version__ as _VERSION
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 from ._checks import (
     ALL_CHECKS,
@@ -25,7 +26,6 @@ from ._checks import (
 )
 from ._config import _Config
 from ._distribution_summary import _DistributionSummary
-from ._inspect import inspect_distribution
 from ._utils import _FileSize
 
 
@@ -192,9 +192,9 @@ def check(  # noqa: PLR0913
     filepaths: str,
     version: bool,
     config: str,
-    expected_directories: Sequence[str],
-    expected_files: Sequence[str],
-    ignore: Sequence[str],
+    expected_directories: "Sequence[str]",
+    expected_files: "Sequence[str]",
+    ignore: "Sequence[str]",
     inspect: bool,
     max_allowed_files: int,
     max_allowed_size_compressed: str,
@@ -202,7 +202,7 @@ def check(  # noqa: PLR0913
     max_path_length: int,
     output_file_size_precision: int,
     output_file_size_unit: str,
-    select: Sequence[str],
+    select: "Sequence[str]",
 ) -> None:
     """
     Run the contents of a distribution through a set of checks, and warn about
@@ -214,6 +214,8 @@ def check(  # noqa: PLR0913
       1 = issues detected
     """
     if version:
+        from pydistcheck import __version__ as _VERSION
+
         print(f"pydistcheck {_VERSION}")
         sys.exit(ExitCodes.OK)
 
@@ -314,6 +316,8 @@ def check(  # noqa: PLR0913
             sys.exit(ExitCodes.UNSUPPORTED_FILE_TYPE)
 
         if conf.inspect:
+            from ._inspect import inspect_distribution
+
             print("----- package inspection summary -----")
             inspect_distribution(
                 summary=summary,
