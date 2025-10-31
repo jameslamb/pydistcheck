@@ -32,11 +32,12 @@ def _guess_archive_format(filename: str) -> str:
     if filename.lower().endswith(".whl"):
         return _ArchiveFormat.ZIP
 
-    raise ValueError(
+    msg = (
         f"File '{filename}' does not appear to be a Python package distribution in "
         "one of the formats supported by 'pydistcheck'. "
         "Supported formats: .conda, .tar.bz2, .tar.gz, .whl, .zip"
     )
+    raise ValueError(msg)
 
 
 @dataclass

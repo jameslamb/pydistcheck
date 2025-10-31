@@ -117,6 +117,8 @@ ignore = [
 select = [
     # flake8-builtins
     "A",
+    # flake8-annotations
+    "ANN",
     # flake8-bugbear
     "B",
     # flake8-comprehensions
@@ -125,6 +127,8 @@ select = [
     "DTZ",
     # pycodestyle
     "E",
+    # flake8-errmsg
+    "EM",
     # eradicate
     "ERA",
     # pyflakes
@@ -157,21 +161,28 @@ select = [
     "UP",
 ]
 
+[tool.ruff.lint.flake8-annotations]
+mypy-init-return = true
+
 [tool.ruff.lint.per-file-ignores]
 "src/pydistcheck/*.py" = [
-    # uses of tarfile.extractall()
+    # (flake8-bandit) uses of tarfile.extractall()
     "S202"
 ]
 "src/pydistcheck/cli.py" = [
-    # 'import' should be at the top-level of a file
+    # (pylint) 'import' should be at the top-level of a file
     "PLC0415",
-    # Too many branches
+    # (pylint) Too many branches
     "PLR0912",
-    # Too many statements
+    # (pylint) Too many statements
     "PLR0915"
 ]
+"src/pydistcheck/_compat.py" = [
+    # (flake8-annotations) typing.Any disallowed ... a bit complicated when a function returns a module
+    "ANN401"
+]
 "src/pydistcheck/_distribution_summary.py" = [
-    # Too many branches
+    # (pylint) Too many branches
     "PLR0912"
 ]
 "tests/*" = [

@@ -54,7 +54,8 @@ class _FileSize:
     def from_string(cls, size_str: str) -> "_FileSize":
         parsed = re.search(r"^([0-9\.]+)([A-Za-z]+)$", size_str.strip())
         if parsed is None:
-            raise ValueError(f"Could not parse '{size_str}' as a file size.")
+            msg = f"Could not parse '{size_str}' as a file size."
+            raise ValueError(msg)
         return cls(num=float(parsed.group(1)), unit_str=parsed.group(2))
 
     def to_string(self, precision: int, unit_str: str) -> str:
