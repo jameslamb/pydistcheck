@@ -8,7 +8,6 @@ Manages configuration of ``pydistcheck` CLI, including:
 import os
 from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Any
 
 from ._compat import tomllib
 
@@ -77,15 +76,14 @@ class _Config:
     output_file_size_unit: str = "auto"
     select: Sequence[str] = ()
 
-    def __setattr__(self, name: str, value: Any) -> None:
+    def __setattr__(self, name: str, value: object) -> None:
         attr_name = name.replace("-", "_")
         if attr_name not in _ALLOWED_CONFIG_VALUES:
-            raise ValueError(
-                f"Configuration value '{name}' is not recognized by pydistcheck"
-            )
+            msg = f"Configuration value '{name}' is not recognized by pydistcheck"
+            raise ValueError(msg)
         object.__setattr__(self, attr_name, value)
 
-    def update_from_dict(self, input_dict: dict[str, Any]) -> "_Config":
+    def update_from_dict(self, input_dict: dict[str, object]) -> "_Config":
         for k, v in input_dict.items():
             setattr(self, k, v)
         return self
@@ -94,7 +92,7 @@ class _Config:
         if not os.path.exists(toml_file):
             return self
 
-        tool_options: dict[str, Any] = {}
+        tool_options: dict[str, object] = {}
         with open(toml_file, "rb") as f:
             config_dict = tomllib.load(f)
             tool_options = config_dict.get("tool", {}).get("pydistcheck", {})
