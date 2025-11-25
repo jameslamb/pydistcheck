@@ -86,7 +86,7 @@ For example, several cloud function-as-a-service services allow uploading additi
 Python packages for use in function execution, with the following limits on their uncompressed size:
 
 * AWS Lambda: ``250 MB`` (`AWS docs <https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html>`__)
-* Google Cloud Functions: ``500 MB`` (`GCP docs <https://cloud.google.com/functions/quotas>`__)
+* Google Cloud Functions: ``500 MB`` (`GCP docs <https://docs.cloud.google.com/functions/quotas>`__)
 
 For a thorough discussion of some issues caused by larger distribution size, see `"FEEDBACK: PyArrow as a required dependency and PyArrow backed strings
 " (pandas-dev/pandas#54466) <https://github.com/pandas-dev/pandas/issues/54466>`__.
