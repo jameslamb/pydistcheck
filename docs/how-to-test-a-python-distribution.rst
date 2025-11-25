@@ -93,7 +93,7 @@ portability-related issues before they even make it into distributions.
 
     repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
-        rev: v4.5.0
+        rev: v6.0.0
         hooks:
         # large files checked into source control
         - id: check-added-large-files
@@ -111,7 +111,7 @@ portability-related issues before they even make it into distributions.
         # superfluous whitespace
         - id: trailing-whitespace
     - repo: https://github.com/shellcheck-py/shellcheck-py
-        rev: v0.10.0.1
+        rev: v0.11.0.1
         hooks:
         - id: shellcheck
 
@@ -152,6 +152,8 @@ These take a source tree as input and find problems in the files uses to create 
 
 These take compiled files like ELF (``.so``), Mach-O (``.dylib``), or PE (``.dll``, ``.exe``) files as input and can be used to test and modify them.
 
+* ``bloaty`` (`link <https://github.com/google/bloaty>`__) = analyze contents of ELF, Mach-O, PE, and other binary files. Answers "why is this file so big?".
+* ``cubloaty`` (`link <https://github.com/flashinfer-ai/cubloaty>`__) = like ``bloaty``, but for CUDA binaries (ELF and cubin)
 * ``dsymutil`` (`link <https://llvm.org/docs/CommandGuide/dsymutil.html>`__) = dump DWARF debug symbols or link debug information into an executable
 * ``dumpbin`` (`link <https://learn.microsoft.com/en-us/cpp/build/reference/dumpbin-reference?view=msvc-170>`__) = describe COFF files (including PE files)
 * ``install_name_tool`` (`link <https://manp.gs/mac/1/install_name_tool>`__) = modify Mach-O files (shipped with macOS developer tools)
