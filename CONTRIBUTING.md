@@ -21,7 +21,8 @@ bin/create-release-pr '0.11.0'
 
 2. Merge that PR.
 3. navigate to https://github.com/jameslamb/pydistcheck/releases
-4. edit the draft release there
+4. create a draft release
+    - click "generate release notes"
     - remove any changelog items that are just "changed the version number" PRs
     - ensure that the tag that'll be created matches the version number, in the form `v{major}.{minor}.{patch}`
 5. click "publish"
