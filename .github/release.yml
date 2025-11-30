@@ -1,5 +1,8 @@
 changelog:
   categories:
+    - title: '🛠 Maintenance'
+      label:
+        - maintenance
     - title: '💡 New Features'
       labels:
         - enhancement
@@ -12,6 +15,3 @@ changelog:
     - title: '📖 Documentation'
       label:
         - doc
-    - title: '🛠 Maintenance'
-      label:
-        - maintenance
