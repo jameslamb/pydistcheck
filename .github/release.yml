@@ -2,16 +2,16 @@ changelog:
   categories:
     - title: '💡 New Features'
       labels:
-        - enhancement
+        - 'enhancement'
     - title: '😬 Breaking'
       labels:
-        - breaking
+        - 'breaking'
     - title: '🙈 Bug Fixes'
       label:
-        - fix
+        - 'fix'
     - title: '📖 Documentation'
       label:
-        - doc
+        - 'doc'
     - title: '🛠 Maintenance'
       label:
-        - maintenance
+        - 'maintenance'
