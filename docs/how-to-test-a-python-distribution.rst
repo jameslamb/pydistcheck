@@ -154,10 +154,10 @@ These take a source tree as input and find problems in the files uses to create 
 
 These take compiled files like ELF (``.so``), Mach-O (``.dylib``), or PE (``.dll``, ``.exe``) files as input and can be used to test and modify them.
 
+* ``abicompat`` (`link <https://sourceware.org/libabigail/manual/abicompat.html>`__) = check that an application is ABI-compatible with different versions of the same shared library
+* ``abidb`` (`link <https://sourceware.org/libabigail/manual/abidb.html>`__) = track XML files describing ABIs of ELF files (like those produced by ``abidw``) in a git repository and compare binaries against them
 * ``abidiff`` (`link <https://sourceware.org/libabigail/manual/abidiff.html>`__) = compare the ABIs of ELF files
 * ``abidw`` (`link <https://sourceware.org/libabigail/manual/abidw.html>`__) = get an XML representation of the ABI of an ELF file
-* ``abidb`` (`link <https://sourceware.org/libabigail/manual/abidb.html>`__) = track XML files describing ABIs of ELF files (like those produced by ``abidw``) in a git repository and compare binaries against them
-* ``abicompat`` (`link <https://sourceware.org/libabigail/manual/abicompat.html>`__) = check that an application is ABI-compatible with different versions of the same shared library
 * ``bloaty`` (`link <https://github.com/google/bloaty>`__) = analyze contents of ELF, Mach-O, PE, and other binary files. Answers "why is this file so big?".
 * ``cubloaty`` (`link <https://github.com/flashinfer-ai/cubloaty>`__) = like ``bloaty``, but for CUDA binaries (ELF and cubin)
 * ``dsymutil`` (`link <https://llvm.org/docs/CommandGuide/dsymutil.html>`__) = dump DWARF debug symbols or link debug information into an executable
