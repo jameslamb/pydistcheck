@@ -125,6 +125,7 @@ List of Tools
 The following open-source tools take packages as input, and can be used to detect (and in some cases repair) a wide range of Python packaging issues.
 
 * ``abi3audit`` (`link <https://github.com/pypa/abi3audit>`__) = detect ABI incompatibilities in wheels with CPython extensions
+* ``abipkgdiff`` (`link <https://sourceware.org/libabigail/manual/abipkgdiff.html>`__) = like ``abidiff``, but for comparing all ELF files found in two packages (Debs, RPMs, or tar files)
 * ``auditwheel`` (`link <https://github.com/pypa/auditwheel>`__) = detect and repair issues in Linux wheels that link to external shared libraries
 * ``auditwheel-emscripten`` (`link <https://github.com/ryanking13/auditwheel-emscripten>`__) = like ``auditwheel``, but focused on Python-in-a-web-browser applications (e.g. `pyodide auditwheel`_)
 * ``auditwheel-symbols`` (`link <https://github.com/messense/auditwheel-symbols>`__) = detect which symbols in a Linux wheel's shared library are causing ``auditwheel`` to suggest a more recent ``manylinux`` tag
@@ -133,6 +134,7 @@ The following open-source tools take packages as input, and can be used to detec
 * ``cph`` (`link <https://github.com/conda/conda-package-handling>`__) = work with conda packages (e.g. ``cph extract`` to decompress them, ``cph list`` to list their contents)
 * ``delocate`` (`link <https://github.com/matthew-brett/delocate>`__) = detect and repair issues in macOS wheels that link to external shared libraries
 * ``delvewheel`` (`link <https://github.com/adang1345/delvewheel>`__) = detect and repair issues in Windows wheels that link to external shared libraries
+* ``fedabipkgdiff`` (`link <https://sourceware.org/libabigail/manual/fedabipkgdiff.html>`__) = like ``abipkgdiff``, but for Fedora packages
 * ``pkginfo`` (`link <https://pythonhosted.org/pkginfo>`__) = print sdist and wheel metadata
 * ``pydistcheck`` (`link <https://github.com/jameslamb/pydistcheck>`__) = detect portability problems in conda packages, wheels, and sdists
 * ``pyroma`` (`link <https://github.com/regebro/pyroma>`__) = detect incomplete or malformed metadata in sdists
@@ -152,6 +154,10 @@ These take a source tree as input and find problems in the files uses to create 
 
 These take compiled files like ELF (``.so``), Mach-O (``.dylib``), or PE (``.dll``, ``.exe``) files as input and can be used to test and modify them.
 
+* ``abicompat`` (`link <https://sourceware.org/libabigail/manual/abicompat.html>`__) = check that an application is ABI-compatible with different versions of the same shared library
+* ``abidb`` (`link <https://sourceware.org/libabigail/manual/abidb.html>`__) = track XML files describing ABIs of ELF files (like those produced by ``abidw``) in a git repository and compare binaries against them
+* ``abidiff`` (`link <https://sourceware.org/libabigail/manual/abidiff.html>`__) = compare the ABIs of ELF files
+* ``abidw`` (`link <https://sourceware.org/libabigail/manual/abidw.html>`__) = get an XML representation of the ABI of an ELF file
 * ``bloaty`` (`link <https://github.com/google/bloaty>`__) = analyze contents of ELF, Mach-O, PE, and other binary files. Answers "why is this file so big?".
 * ``cubloaty`` (`link <https://github.com/flashinfer-ai/cubloaty>`__) = like ``bloaty``, but for CUDA binaries (ELF and cubin)
 * ``dsymutil`` (`link <https://llvm.org/docs/CommandGuide/dsymutil.html>`__) = dump DWARF debug symbols or link debug information into an executable
