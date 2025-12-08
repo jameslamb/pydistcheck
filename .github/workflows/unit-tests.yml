@@ -36,15 +36,15 @@ jobs:
           #########
           # Linux #
           #########
-          - os: ubuntu-latest
+          - os: ubuntu-slim
             python_version: &oldest_python '3.9'
-          - os: ubuntu-latest
+          - os: ubuntu-slim
             python_version: '3.11'
-          - os: ubuntu-latest
+          - os: ubuntu-slim
             python_version: '3.12'
-          - os: ubuntu-latest
+          - os: ubuntu-slim
             python_version: '3.13'
-          - os: ubuntu-latest
+          - os: ubuntu-slim
             python_version: &latest_python '3.14'
           #########
           # macOS #
@@ -108,7 +108,7 @@ jobs:
         include:
           # available versions:
           # https://github.com/actions/setup-python/blob/main/docs/advanced-usage.md#available-versions-of-python-pypy-and-graalpy
-          - os: ubuntu-latest
+          - os: ubuntu-slim
             python_version: '3.11'
     steps:
       - name: check out repository
@@ -146,7 +146,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-slim
             python_version: '3.12'
           - os: macOS-13
             python_version: '3.11'
@@ -164,7 +164,7 @@ jobs:
           bin/check-test-packages.sh ${GITHUB_WORKSPACE}/tests/data
   all-unit-tests-successful:
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs:
       - test-cpython
       - test-pypy

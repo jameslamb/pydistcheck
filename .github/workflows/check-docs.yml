@@ -27,7 +27,7 @@ permissions:
 jobs:
   check-docs:
     name: check-docs
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: check out repository
         uses: actions/checkout@v6
@@ -47,7 +47,7 @@ jobs:
           python -m sphinx -b linkcheck -D linkcheck_timeout=5 --fail-on-warning ./docs ./linkcheck_output
   check-links:
     name: check-links
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       # cache Lychee results to avoid hitting rate limits
       - name: Restore lychee cache
@@ -79,7 +79,7 @@ jobs:
           failIfEmpty: true
   all-docs-tests-successful:
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs:
       - check-docs
       - check-links
