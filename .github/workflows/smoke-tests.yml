@@ -70,7 +70,7 @@ jobs:
           make smoke-tests
   all-smoke-tests-successful:
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs:
       - test
     steps:
