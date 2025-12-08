@@ -88,7 +88,7 @@ jobs:
       - name: build and check dists
         shell: bash -l {0}
         run: |
-          pip install -r ./requirements-tests.txt
+          pip install -r ./requirements-tests.txt || exit 1
           make build check-dists
       - name: install
         shell: bash -l {0}
@@ -108,7 +108,7 @@ jobs:
         include:
           # available versions:
           # https://github.com/actions/setup-python/blob/main/docs/advanced-usage.md#available-versions-of-python-pypy-and-graalpy
-          - os: ubuntu-slim
+          - os: ubuntu-latest
             python_version: '3.11'
     steps:
       - name: check out repository

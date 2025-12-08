@@ -27,7 +27,7 @@ permissions:
 jobs:
   lint:
     name: lint
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     steps:
       - name: check out repository
         uses: actions/checkout@v6
