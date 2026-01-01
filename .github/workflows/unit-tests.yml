@@ -49,7 +49,7 @@ jobs:
           #########
           # macOS #
           #########
-          - os: macOS-13
+          - os: macOS-15-intel
             python_version: *oldest_python
           - os: macOS-latest
             python_version: *latest_python
@@ -148,7 +148,7 @@ jobs:
         include:
           - os: ubuntu-slim
             python_version: '3.12'
-          - os: macOS-13
+          - os: macOS-15-intel
             python_version: '3.11'
     steps:
       - name: check out repository
