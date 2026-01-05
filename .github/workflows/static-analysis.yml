@@ -34,11 +34,4 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
-      - name: run linting
-        run: |
-          export PATH="/usr/share/miniconda/bin:${PATH}"
-          conda install \
-            --yes \
-            -c conda-forge \
-              pre-commit
-          make lint
+      - uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd #v3.0.1

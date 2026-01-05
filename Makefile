@@ -35,10 +35,6 @@ clean:
 install:
 	pipx install --force '.[conda]'
 
-.PHONY: lint
-lint:
-	pre-commit run --all-files
-
 .PHONY: linux-wheel
 linux-wheel:
 	docker run \

@@ -41,11 +41,8 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y \
             llvm
-          export PATH="/usr/share/miniconda/bin:${PATH}"
-          conda install \
-            --yes \
-            -c conda-forge \
-              pipx
+          python -m pip install \
+            pipx
           make install
           mkdir -p ./tmp-dir
           python bin/get-pypi-files.py\

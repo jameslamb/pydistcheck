@@ -48,10 +48,8 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
-      - uses: conda-incubator/setup-miniconda@835234971496cad1653abb28a638a281cf32541f # v3.1.0
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
         with:
-          activate-environment: pydistcheck-tests
-          miniforge-version: latest
           python-version: ${{ matrix.python_version }}
       - name: Install extra tools on Linux
         if: startsWith(matrix.os, 'ubuntu')
@@ -62,8 +60,7 @@ jobs:
       - name: run tests
         shell: bash -l {0}
         run: |
-          conda install \
-            --yes \
+          python -m pip install \
               pipx \
               requests
           make install
