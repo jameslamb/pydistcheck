@@ -47,9 +47,6 @@ readme = "README.md"
 requires-python = ">=3.9"
 dynamic = ["version"]
 
-[tool.setuptools.dynamic]
-version = {attr = "pydistcheck.__version__"}
-
 [project.scripts]
 pydistcheck = "pydistcheck.cli:check"
 
@@ -65,11 +62,21 @@ repository = "https://github.com/jameslamb/pydistcheck"
 changelog = "https://github.com/jameslamb/pydistcheck/releases"
 
 [build-system]
-
 requires = [
-    "setuptools>=75.3.2",
+    "hatchling>=1.28.0"
 ]
-build-backend = "setuptools.build_meta"
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.sdist]
+ignore-vcs = true
+packages = ["src/pydistcheck"]
+
+[tool.hatch.build.targets.wheel]
+ignore-vcs = true
+packages = ["src/pydistcheck"]
+
+[tool.hatch.version]
+path = "src/pydistcheck/__init__.py"
 
 [tool.coverage.report]
 fail_under = 99.00
