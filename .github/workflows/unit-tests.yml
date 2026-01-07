@@ -99,6 +99,12 @@ jobs:
       - name: install
         shell: bash -l {0}
         run: |
+          echo "--- PATH ---"
+          echo "${PATH}"
+          echo "--- which pip ---"
+          which pip
+          echo "--- which python ---"
+          which python
           python -m pip install -v dist/*.whl
       - name: test
         shell: bash -l {0}
