@@ -5,7 +5,7 @@ import zipfile
 from dataclasses import dataclass
 from typing import Union
 
-from ._compat import _import_zstandard
+from ._compat import _import_zstandard, _py_gt_312
 
 
 @dataclass
@@ -171,8 +171,12 @@ def _decompress_zstd_archive(
                 decompressor.copy_stream(compressed, destination)
 
 
-def _extract_subset_of_files_from_archive(
-    *, archive_file: str, archive_format: str, relative_paths: list[str], out_dir: str
+def _extract_subset_of_files_from_archive(  # noqa: PLR0912
+    *,
+    archive_file: str,
+    archive_format: str,
+    relative_paths: list[str],
+    out_dir: str,
 ) -> None:
     """
     Extract a subset of files from an archive to a destination directory.
@@ -184,18 +188,34 @@ def _extract_subset_of_files_from_archive(
             zf.extractall(path=out_dir, members=relative_paths)
     elif archive_format == _ArchiveFormat.BZIP2_TAR:
         with tarfile.open(archive_file, mode="r:bz2") as tf:
-            tf.extractall(
-                path=out_dir,
-                members=[tf.getmember(p) for p in relative_paths],
-                filter="data",
-            )
+            # passing filter="data" to tarfile.extractall() makes it more secure, but
+            # that option wasn't available prior to Python 3.12
+            if _py_gt_312():
+                tf.extractall(
+                    path=out_dir,
+                    members=[tf.getmember(p) for p in relative_paths],
+                    filter="data",
+                )
+            else:
+                tf.extractall(
+                    path=out_dir,
+                    members=[tf.getmember(p) for p in relative_paths],
+                )
     elif archive_format == _ArchiveFormat.GZIP_TAR:
         with tarfile.open(archive_file, mode="r:gz") as tf:
-            tf.extractall(
-                path=out_dir,
-                members=[tf.getmember(p) for p in relative_paths],
-                filter="data",
-            )
+            # passing filter="data" to tarfile.extractall() makes it more secure, but
+            # that option wasn't available prior to Python 3.12
+            if _py_gt_312():
+                tf.extractall(
+                    path=out_dir,
+                    members=[tf.getmember(p) for p in relative_paths],
+                    filter="data",
+                )
+            else:
+                tf.extractall(
+                    path=out_dir,
+                    members=[tf.getmember(p) for p in relative_paths],
+                )
     elif archive_format == _ArchiveFormat.CONDA:
         inner_tar_zst_files = []
         # extract any files at the outer ZIP level,
@@ -231,8 +251,16 @@ def _extract_subset_of_files_from_archive(
                     for tar_info in tf.getmembers()
                     if tar_info.name in relative_paths
                 ]
-                tf.extractall(
-                    path=out_dir,
-                    members=files_to_extract,
-                    filter="data",
-                )
+                # passing filter="data" to tarfile.extractall() makes it more secure, but
+                # that option wasn't available prior to Python 3.12
+                if _py_gt_312():
+                    tf.extractall(
+                        path=out_dir,
+                        members=files_to_extract,
+                        filter="data",
+                    )
+                else:
+                    tf.extractall(
+                        path=out_dir,
+                        members=files_to_extract,
+                    )
