@@ -70,9 +70,15 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
+      - name: PATH before setup-python
+        run:
+          echo "${PATH}"
       - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
         with:
           python-version: '${{ matrix.python_version }}'
+      - name: PATH after setup-python
+        run:
+          echo "${PATH}"
       - name: check that correct Python version is used
         run: |
           which pip
@@ -91,11 +97,17 @@ jobs:
         if: startsWith(matrix.os, 'windows')
         run: |
           choco install zip
+      - name: PATH before first pipx invocation
+        run: |
+          echo "${PATH}"
       - name: build and check dists
         shell: bash -l {0}
         run: |
-          python -m pip -vv install -r ./requirements-tests.txt || exit 1
+          python -m pip -v install -r ./requirements-tests.txt || exit 1
           make build check-dists
+      - name: PATH after first pipx invocation
+        run: |
+          echo "${PATH}"
       - name: install
         shell: bash -l {0}
         run: |
