@@ -42,7 +42,7 @@ jobs:
       - name: build docs
         shell: bash -l {0}
         run: |
-          pip install .
+          python -m pip install .
           make -C ./docs html
           python -m sphinx -b linkcheck -D linkcheck_timeout=5 --fail-on-warning ./docs ./linkcheck_output
   check-links:

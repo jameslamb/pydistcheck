@@ -75,6 +75,8 @@ jobs:
           python-version: '${{ matrix.python_version }}'
       - name: check that correct Python version is used
         run: |
+          which pip
+          pip --version
           which python
           python --version
           which python3
@@ -92,12 +94,12 @@ jobs:
       - name: build and check dists
         shell: bash -l {0}
         run: |
-          pip install -r ./requirements-tests.txt || exit 1
+          python -m pip install -r ./requirements-tests.txt || exit 1
           make build check-dists
       - name: install
         shell: bash -l {0}
         run: |
-          pip install dist/*.whl
+          python -m pip install dist/*.whl
       - name: test
         shell: bash -l {0}
         run: |
@@ -132,12 +134,12 @@ jobs:
       - name: build and check dists
         shell: bash -l {0}
         run: |
-          pip install -r ./requirements-tests.txt
+          python -m pip install -r ./requirements-tests.txt
           make build check-dists
       - name: install
         shell: bash -l {0}
         run: |
-          pip install dist/*.whl
+          python -m pip install dist/*.whl
       - name: test
         shell: bash -l {0}
         run: |
