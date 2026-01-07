@@ -73,6 +73,12 @@ jobs:
       - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
         with:
           python-version: '${{ matrix.python_version }}'
+      - name: check that correct Python version is used
+        run: |
+          which python
+          python --version
+          which python3
+          python3 --version
       - name: Install extra tools on Linux
         if: startsWith(matrix.os, 'ubuntu')
         run: |
