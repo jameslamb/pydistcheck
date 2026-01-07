@@ -94,12 +94,12 @@ jobs:
       - name: build and check dists
         shell: bash -l {0}
         run: |
-          python -m pip install -r ./requirements-tests.txt || exit 1
+          python -m pip -vv install -r ./requirements-tests.txt || exit 1
           make build check-dists
       - name: install
         shell: bash -l {0}
         run: |
-          python -m pip install dist/*.whl
+          python -m pip install -v dist/*.whl
       - name: test
         shell: bash -l {0}
         run: |
