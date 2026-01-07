@@ -5,7 +5,7 @@ import zipfile
 from dataclasses import dataclass
 from typing import Union
 
-from ._compat import _import_zstandard, _py_gt_312
+from ._compat import _import_zstandard, _tf_extractall_has_filter
 
 
 @dataclass
@@ -188,9 +188,7 @@ def _extract_subset_of_files_from_archive(  # noqa: PLR0912
             zf.extractall(path=out_dir, members=relative_paths)
     elif archive_format == _ArchiveFormat.BZIP2_TAR:
         with tarfile.open(archive_file, mode="r:bz2") as tf:
-            # passing filter="data" to tarfile.extractall() makes it more secure, but
-            # that option wasn't available prior to Python 3.12
-            if _py_gt_312():
+            if _tf_extractall_has_filter():
                 tf.extractall(
                     path=out_dir,
                     members=[tf.getmember(p) for p in relative_paths],
@@ -203,9 +201,7 @@ def _extract_subset_of_files_from_archive(  # noqa: PLR0912
                 )
     elif archive_format == _ArchiveFormat.GZIP_TAR:
         with tarfile.open(archive_file, mode="r:gz") as tf:
-            # passing filter="data" to tarfile.extractall() makes it more secure, but
-            # that option wasn't available prior to Python 3.12
-            if _py_gt_312():
+            if _tf_extractall_has_filter():
                 tf.extractall(
                     path=out_dir,
                     members=[tf.getmember(p) for p in relative_paths],
@@ -251,9 +247,7 @@ def _extract_subset_of_files_from_archive(  # noqa: PLR0912
                     for tar_info in tf.getmembers()
                     if tar_info.name in relative_paths
                 ]
-                # passing filter="data" to tarfile.extractall() makes it more secure, but
-                # that option wasn't available prior to Python 3.12
-                if _py_gt_312():
+                if _tf_extractall_has_filter():
                     tf.extractall(
                         path=out_dir,
                         members=files_to_extract,
