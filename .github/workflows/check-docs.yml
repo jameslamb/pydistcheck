@@ -40,7 +40,7 @@ jobs:
           activate-environment: pydistcheck-docs
           miniforge-version: latest
       - name: build docs
-        shell: bash -l {0}
+        shell: bash
         run: |
           python -m pip install .
           make -C ./docs html
