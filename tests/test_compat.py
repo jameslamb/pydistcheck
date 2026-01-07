@@ -20,7 +20,7 @@ def test_import_zstandard_raises_informative_error_if_it_isnt_found():
 
 
 def test_extractall_has_filter_works():
-    python_major, python_minor, *_ = sysconfig.get_python_version()
+    python_major, python_minor, *_ = sysconfig.get_python_version().split(".")
     # handle versions with letters, like '3.13t'
     python_minor = re.sub(r"[^0-9.]", "", python_minor)
     res = _tf_extractall_has_filter()
