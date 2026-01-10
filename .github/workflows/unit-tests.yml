@@ -70,11 +70,9 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
-      - uses: conda-incubator/setup-miniconda@835234971496cad1653abb28a638a281cf32541f # v3.1.0
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
         with:
-          activate-environment: pydistcheck-tests
-          miniforge-version: latest
-          python-version: ${{ matrix.python_version }}
+          python-version: '${{ matrix.python_version }}'
       - name: Install extra tools on Linux
         if: startsWith(matrix.os, 'ubuntu')
         run: |
@@ -86,16 +84,16 @@ jobs:
         run: |
           choco install zip
       - name: build and check dists
-        shell: bash -l {0}
+        shell: bash
         run: |
-          pip install -r ./requirements-tests.txt || exit 1
+          python -m pip -v install -r ./requirements-tests.txt || exit 1
           make build check-dists
       - name: install
-        shell: bash -l {0}
+        shell: bash
         run: |
-          pip install dist/*.whl
+          python -m pip install -v dist/*.whl
       - name: test
-        shell: bash -l {0}
+        shell: bash
         run: |
           make test
   test-pypy:
@@ -116,9 +114,9 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
         with:
-          python-version: 'pypy${{ matrix.python_version}}'
+          python-version: 'pypy${{ matrix.python_version }}'
       - name: Install extra tools on Linux
         if: startsWith(matrix.os, 'ubuntu')
         run: |
@@ -126,16 +124,16 @@ jobs:
           sudo apt-get install -y \
             llvm
       - name: build and check dists
-        shell: bash -l {0}
+        shell: bash
         run: |
-          pip install -r ./requirements-tests.txt
+          python -m pip install -r ./requirements-tests.txt
           make build check-dists
       - name: install
-        shell: bash -l {0}
+        shell: bash
         run: |
-          pip install dist/*.whl
+          python -m pip install dist/*.whl
       - name: test
-        shell: bash -l {0}
+        shell: bash
         run: |
           make test
   check-test-packages:
@@ -156,9 +154,9 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548 # v6.1.0
         with:
-          python-version: "${{ matrix.python_version}}"
+          python-version: "${{ matrix.python_version }}"
       - name: run tests
         run: |
           bin/check-test-packages.sh ${GITHUB_WORKSPACE}/tests/data
