@@ -63,7 +63,7 @@ changelog = "https://github.com/jameslamb/pydistcheck/releases"
 
 [build-system]
 requires = [
-    "hatchling>=1.28.0"
+    "hatchling>=1.27.0"
 ]
 build-backend = "hatchling.build"
 
