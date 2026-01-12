@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - name: check out repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
         with:
           fetch-depth: 1
           persist-credentials: false
@@ -51,12 +51,12 @@ jobs:
     steps:
       # cache Lychee results to avoid hitting rate limits
       - name: Restore lychee cache
-        uses: actions/cache@v5
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb  # v5.0.1
         with:
           path: .lycheecache
           key: cache-lychee-${{ github.sha }}
           restore-keys: cache-lychee-
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
         with:
           persist-credentials: false
       - name: Lychee URL checker
