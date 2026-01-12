@@ -57,7 +57,7 @@ jobs:
 
   upload_pypi:
     needs: [build_wheels, build_sdist]
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     # publish whenever a GitHub release is published
     if: github.event_name == 'release' && github.event.action == 'published'
     environment:
