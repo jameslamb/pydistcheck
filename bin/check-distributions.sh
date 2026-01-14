@@ -7,7 +7,12 @@ PACKAGE_DIR="${1}"
 echo "--- sdist-only checks ---"
 
 gunzip -t "${PACKAGE_DIR}"/*.tar.gz
-pyroma --min=10 "${PACKAGE_DIR}"/*.tar.gz
+
+# pyroma can be added again once it can handle PEP 639 license metadata
+# https://github.com/regebro/pyroma/issues/93 is resolved but it still fails with
+# "malformed field 'license-expression'"
+#
+# pyroma --min=10 dist/*.tar.gz
 
 # using command-line arguments to avoid having a '[tools.pydistcheck]'
 # table in this repo's pyproject.toml (which might confuse tests)
