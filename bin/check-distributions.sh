@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set +x -e -u -o pipefail
+set -e -u -o pipefail
 
 PACKAGE_DIR="${1}"
 
