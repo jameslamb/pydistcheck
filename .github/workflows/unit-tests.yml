@@ -37,7 +37,9 @@ jobs:
           persist-credentials: false
       - name: build and check dists
         run: |
-          python -m pip -v install -r ./requirements-check-dists.txt
+          python -m pip install -v \
+            --constraint ./constraints.txt \
+            -r ./requirements-check-dists.txt
           make build check-dists
       - name: upload sdist
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0

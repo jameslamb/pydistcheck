@@ -1,8 +1,6 @@
 check-wheel-contents>=0.6.3
+pyroma>=5.0.1
 twine>=6.2.0
-
-# see note in 'check-distributions.sh' about why this is commented out
-# pyroma>=5.0.1
 
 # yes really, bootstrap with previously-released 'pydistcheck'
 pydistcheck

@@ -1,0 +1,3 @@
+# 'twine' depends on 'packaging', and falling back earlier than this
+# results in "malformed field 'license-expression'"
+packaging>=25.0
