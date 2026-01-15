@@ -25,10 +25,38 @@ permissions:
   statuses: none
 
 jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: check out repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - name: build and check dists
+        run: |
+          python -m pip install -v \
+            --constraint ./constraints.txt \
+            -r ./requirements-check-dists.txt
+          make build check-dists
+      - name: upload sdist
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
+        with:
+          name: sdist
+          path: dist/*.tar.gz
+      - name: upload wheel
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
+        with:
+          name: wheel
+          path: dist/*.whl
+
   test-cpython:
     name: unit-tests (${{ matrix.os }}, Python-CPython ${{ matrix.python_version }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
+    needs: [build]
     strategy:
       fail-fast: false
       matrix:
@@ -83,15 +111,17 @@ jobs:
         if: startsWith(matrix.os, 'windows')
         run: |
           choco install zip
-      - name: build and check dists
+      - name: download packages
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # v7.0.0
+        with:
+          name: wheel
+          path: dist
+      - name: install pydistcheck and testing dependencies
         shell: bash
         run: |
-          python -m pip -v install -r ./requirements-tests.txt || exit 1
-          make build check-dists
-      - name: install
-        shell: bash
-        run: |
-          python -m pip install -v dist/*.whl
+          python -m pip install \
+            -r ./requirements-tests.txt \
+            dist/*.whl
       - name: test
         shell: bash
         run: |
@@ -100,6 +130,7 @@ jobs:
     name: unit-tests (${{ matrix.os }}, Python-PyPy ${{ matrix.python_version }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
+    needs: [build]
     strategy:
       fail-fast: false
       matrix:
@@ -123,15 +154,17 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y \
             llvm
-      - name: build and check dists
+      - name: download packages
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # v7.0.0
+        with:
+          name: wheel
+          path: dist
+      - name: install pydistcheck and testing dependencies
         shell: bash
         run: |
-          python -m pip install -r ./requirements-tests.txt
-          make build check-dists
-      - name: install
-        shell: bash
-        run: |
-          python -m pip install dist/*.whl
+          python -m pip install \
+            -r ./requirements-tests.txt \
+            dist/*.whl
       - name: test
         shell: bash
         run: |
@@ -164,9 +197,10 @@ jobs:
     if: always()
     runs-on: ubuntu-slim
     needs:
+      - build
+      - check-test-packages
       - test-cpython
       - test-pypy
-      - check-test-packages
     steps:
       - name: Decide whether the needed jobs succeeded or failed
         uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2

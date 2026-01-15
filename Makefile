@@ -17,12 +17,7 @@ check-test-packages:
 
 .PHONY: check-wheels
 check-dists:
-	gunzip -t dist/*.tar.gz
-	zip -T dist/*.whl
-	check-wheel-contents dist/*.whl
-	# pyroma can be added again once https://github.com/regebro/pyroma/issues/93 is resolved
-	# pyroma --min=10 dist/*.tar.gz
-	twine check --strict dist/*
+	bin/check-distributions.sh dist
 
 .PHONY: clean
 clean:

@@ -1,8 +1,5 @@
-check-wheel-contents
-pyroma
 pytest
 pytest-cov
 requests
-twine
 types-requests
 zstandard ; python_version < '3.14'
