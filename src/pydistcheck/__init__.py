@@ -1,4 +1,4 @@
 # no one should be importing from this package
 __all__ = []
 
-__version__ = "0.11.1.99"
+__version__ = "0.11.2"
