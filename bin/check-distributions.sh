@@ -21,6 +21,7 @@ pydistcheck \
     --inspect \
     --expected-files 'pydistcheck-*/LICENSE' \
     --expected-files 'pydistcheck-*/LICENSES/DELOCATE_LICENSE' \
+    --expected-files 'pydistcheck-*/pydistcheck/*.py' \
     --expected-files 'pydistcheck-*/pyproject.toml' \
     --max-allowed-files 30 \
     "${PACKAGE_DIR}"/*.tar.gz
@@ -35,6 +36,7 @@ pydistcheck \
     --expected-directories '!pydistcheck/tests' \
     --expected-files 'pydistcheck-*/LICENSE' \
     --expected-files 'pydistcheck-*/LICENSES/DELOCATE_LICENSE' \
+    --expected-files 'pydistcheck/*.py' \
     --expected-files '!pydistcheck-*/pyproject.toml' \
     --max-allowed-files 17 \
     "${PACKAGE_DIR}"/*.whl
