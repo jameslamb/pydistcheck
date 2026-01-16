@@ -13,6 +13,7 @@ build/
 *.csv
 *.dat
 *.db
+delete-me/
 dist/
 *.dll
 *.doc
@@ -31,11 +32,13 @@ htmlcov/
 *.js
 *.json
 linkcheck_output/
+*.log
 .lycheecache
 *.lzma
 .mypy_cache/
 *.npy
 *.o
+out.txt
 *.pdf
 *.pem
 *.ppt
@@ -61,6 +64,7 @@ smoke-tests/
 *.tgz
 *.tmp
 tmp-dir/
+.venv/
 wheels/
 *.whl
 *.xls

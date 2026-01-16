@@ -69,11 +69,20 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.sdist]
 ignore-vcs = true
-packages = ["src/pydistcheck"]
+include = [
+    "src/pydistcheck/*.py",
+    "LICENSE",
+    "LICENSES/*"
+]
+exclude = [
+    "README.md"
+]
+sources = ["src"]
 
 [tool.hatch.build.targets.wheel]
-ignore-vcs = true
-packages = ["src/pydistcheck"]
+# ignore-vcs = true
+# packages = ["pydistcheck"]
+# sources = ["src"]
 
 [tool.hatch.version]
 path = "src/pydistcheck/__init__.py"
