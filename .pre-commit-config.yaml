@@ -26,7 +26,7 @@ repos:
           - tomli>=1.1.0
           - types-requests
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.11
+    rev: v0.14.14
     hooks:
       - id: ruff
         args: ["--config", "pyproject.toml"]
@@ -78,6 +78,6 @@ repos:
       - id: cmakelint
         args: ["--linelength=120"]
   - repo: https://github.com/zizmorcore/zizmor-pre-commit
-    rev: 'v1.20.0'
+    rev: 'v1.22.0'
     hooks:
       - id: zizmor
