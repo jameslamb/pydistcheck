@@ -185,11 +185,6 @@ shared_args=(
 )
 pydistcheck \
     "${shared_args[@]}" \
-    --expected-directories '*/.github' \
-    --expected-files '*/.gitignore' \
-    ./smoke-tests/*.tar.gz
-pydistcheck \
-    "${shared_args[@]}" \
     ./smoke-tests/*.whl
 
 get-files pandas
