@@ -51,7 +51,7 @@ jobs:
     steps:
       # cache Lychee results to avoid hitting rate limits
       - name: Restore lychee cache
-        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb  # v5.0.1
+        uses: actions/cache@cdf6c1fa76f9f475f3d7449005a359c84ca0f306  # v5.0.3
         with:
           path: .lycheecache
           key: cache-lychee-${{ github.sha }}
@@ -60,7 +60,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Lychee URL checker
-        uses: lycheeverse/lychee-action@a8c4c7cb88f0c7386610c35eb25108e448569cb0 # v2.7.0
+        uses: lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411 # v2.8.0
         with:
           args: >-
             --cache
