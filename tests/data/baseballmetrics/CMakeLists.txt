@@ -14,10 +14,17 @@ add_library(
     ${SOURCES}
 )
 
-# link those together to produce a library
+# link those together to produce a shared library
 add_library(_baseballmetrics SHARED)
 target_link_libraries(
     _baseballmetrics
+    PUBLIC baseballmetrics_objs
+)
+
+# link those together to produce a static library
+add_library(_baseballmetrics_static STATIC)
+target_link_libraries(
+    _baseballmetrics_static
     PUBLIC baseballmetrics_objs
 )
 
@@ -34,14 +41,23 @@ if(DEFINED SKBUILD)
         )
     endif()
 else()
-    # store a copy of the library right about the build/ folder
+    # store a copy of the libraries right above the build/ folder
     set(LIBRARY_OUTPUT_PATH
+        ${PROJECT_SOURCE_DIR}
+    )
+    set(ARCHIVE_OUTPUT_PATH
         ${PROJECT_SOURCE_DIR}
     )
 endif()
 
-# install lib_baseballmetrics to
+# install _baseballmetrics to
 install(
     TARGETS _baseballmetrics
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+# install _baseballmetrics_static to
+install(
+    TARGETS _baseballmetrics_static
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )

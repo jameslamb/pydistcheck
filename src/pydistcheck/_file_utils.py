@@ -87,7 +87,13 @@ class _FileInfo:
 #   * https://github.com/apple-oss-distributions/cctools/blob/658da8c66b4e184458f9c810deca9f6428a773a5/include/mach-o/fat.h#L48
 #   * https://github.com/matthew-brett/delocate/blob/df86dddd7c94a93b5c03948b8c127ba0777e2a4d/delocate/tools.py#L166
 #   * https://learn.microsoft.com/en-us/previous-versions/ms809762(v=msdn.10)
+#   * https://en.wikipedia.org/wiki/Ar_(Unix)
 #   * https://en.wikipedia.org/wiki/Portable_Executable
+
+# AR (.a static library)
+_AR_MAGIC_FIRST_8_BYTES = {
+    b"!<arch>\n",
+}
 
 # DOS MZ (.dll, .exe)
 _DOS_MZ_MAGIC_FIRST_2_BYTES = {
@@ -115,11 +121,13 @@ class _FileFormat:
     ELF = "ELF"
     MACH_O = "Mach-O"
     OTHER = "Other"
+    STATIC_LIBRARY = "static library"
     WINDOWS_PE = "Windows PE"
 
 
 def _guess_archive_member_file_format(
-    *, archive_file: Union[tarfile.TarFile, zipfile.ZipFile], member_name: str
+    *,
+    archive_file: Union[tarfile.TarFile, zipfile.ZipFile], member_name: str
 ) -> tuple[str, bool]:
     """
     The approach in this function was inspired by similar code in
@@ -130,7 +138,7 @@ def _guess_archive_member_file_format(
     """
     if isinstance(archive_file, zipfile.ZipFile):
         with archive_file.open(name=member_name, mode="r") as f:
-            header = f.read(4)
+            header = f.read(8)
     else:
         fileobj = archive_file.extractfile(member_name)
         if fileobj is None:  # pragma: no cover
@@ -139,11 +147,13 @@ def _guess_archive_member_file_format(
                 "Report it at https://github.com/jameslamb/pydistcheck/issues."
             )
             raise RuntimeError(error_msg)
-        header = fileobj.read(4)
+        header = fileobj.read(8)
 
-    if header in _ELF_MAGIC_FIRST_4_BYTES:
+    if header in _AR_MAGIC_FIRST_8_BYTES:
+        return _FileFormat.STATIC_LIBRARY, True
+    if header[:4] in _ELF_MAGIC_FIRST_4_BYTES:
         return _FileFormat.ELF, True
-    if header in _MACH_O_MAGIC_FIRST_4_BYTES:
+    if header[:4] in _MACH_O_MAGIC_FIRST_4_BYTES:
         return _FileFormat.MACH_O, True
     if header[:2] in _DOS_MZ_MAGIC_FIRST_2_BYTES:
         return _FileFormat.WINDOWS_PE, True
