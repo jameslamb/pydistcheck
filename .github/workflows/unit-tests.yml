@@ -188,7 +188,7 @@ jobs:
         include:
           - os: ubuntu-slim
             python_version: '3.12'
-          - os: macOS-15-intel
+          - os: macOS-15
             python_version: '3.11'
     steps:
       - name: check out repository

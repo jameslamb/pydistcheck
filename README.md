@@ -128,16 +128,13 @@ pydistcheck tests/data/problematic-package-*
 errors found while checking: 12
 ```
 
-And on a built distribution containing compiled objects ...
+And on a built distribution containing compiled objects, `pydistcheck` can detect the inclusion of debug symbols (which increase distribution size).
 
-```shell
-pydistcheck tests/data/debug-baseballmetrics*.whl
-```
+```console
+$ pydistcheck tests/data/debug-baseballmetrics*.whl
+==================== running pydistcheck ====================
 
-... `pydistcheck` can detect the inclusion of debug symbols (which increase distribution size).
-
-```text
-checking 'tests/data/debug-baseballmetrics-0.1.0-py3-none-macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl'
+checking 'tests/data/debug-baseballmetrics-0.1.0-py3-none-macosx_12_0_arm64.whl'
 ------------ check results -----------
 1. [compiled-objects-have-debug-symbols] Found compiled object containing debug symbols. For details, extract the distribution contents and run 'dsymutil -s "lib/lib_baseballmetrics.dylib"'.
 errors found while checking: 1
@@ -146,6 +143,8 @@ checking 'tests/data/debug-baseballmetrics-py3-none-manylinux_2_28_x86_64.manyli
 ------------ check results -----------
 1. [compiled-objects-have-debug-symbols] Found compiled object containing debug symbols. For details, extract the distribution contents and run 'objdump --all-headers "lib/lib_baseballmetrics.so"'.
 errors found while checking: 1
+
+==================== done running pydistcheck ===============
 ```
 
 See https://pydistcheck.readthedocs.io/en/latest/ to learn more.
