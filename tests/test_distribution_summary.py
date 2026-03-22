@@ -7,7 +7,7 @@ from pydistcheck._distribution_summary import _DistributionSummary, _FileInfo
 
 BASE_PACKAGE_SDISTS = ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"]
 MACOS_SUFFIX = "macosx_12_0_arm64.whl"
-MANYLINUX_SUFFIX = "manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl"
+MANYLINUX_SUFFIX = "manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl"
 BASE_WHEELS = [
     f"baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
     f"baseballmetrics-0.1.0-py3-none-{MANYLINUX_SUFFIX}",
@@ -124,15 +124,8 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
     # should correctly capture the contents:
     #   * 4 directories
     #   * 7 files
-    #
-    # remove this platform-specific difference when
-    # https://github.com/jameslamb/pydistcheck/issues/366 is complete
-    if "macosx" in distro_file:
-        assert len(ds.files) == 7
-        assert ds.num_files == 7
-    else:
-        assert len(ds.files) == 8
-        assert ds.num_files == 8
+    assert len(ds.files) == 7
+    assert ds.num_files == 7
 
     # `pip wheel` seems to omit directory members from the archive,
     # and `auditwheel repair` seems to restore them
@@ -146,12 +139,11 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
     else:
         expected_dir_paths = [
             "baseballmetrics-0.1.0.dist-info/",
-            "baseballmetrics.libs/",
             "baseballmetrics/",
             "lib/",
         ]
         expected_file_format = "ELF"
-        expected_num_directories = 4
+        expected_num_directories = 3
         shared_lib_ext = "so"
 
     assert len(ds.directories) == expected_num_directories
@@ -166,13 +158,6 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
         "baseballmetrics/metrics.py",
         f"lib/lib_baseballmetrics.{shared_lib_ext}",
     ]
-
-    # remove this when all platforms produce similar wheels
-    #  ref: https://github.com/jameslamb/pydistcheck/issues/366
-    if "manylinux" in distro_file:
-        expected_file_paths += [
-            "baseballmetrics-0.1.0.dist-info/entry_points.txt",
-        ]
 
     expected_all_paths = expected_dir_paths + expected_file_paths
 
@@ -209,10 +194,9 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
         }
     else:
         assert ds.size_by_file_extension == {
-            ".so": 14248,
-            "no-extension": 1204,
-            ".py": 536,
-            ".txt": 0,
+            ".so": 14224,
+            "no-extension": 1103,
+            ".py": 591,
         }
 
     # size_by_file_extension should return results sorted from largest to smallest by file size

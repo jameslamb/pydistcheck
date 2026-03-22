@@ -50,7 +50,7 @@ if [[ $OS_NAME == "linux" ]]; then
         'from problematic_package.question import SPONGEBOB_STR'
 
     check_distro \
-        'baseballmetrics-0.1.0-py3-none-manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl' \
+        'baseballmetrics-0.1.0-py3-none-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl' \
         'from baseballmetrics.metrics import batting_average; assert batting_average(2, 4) == 0.5'
 else
 

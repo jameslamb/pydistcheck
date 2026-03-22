@@ -31,6 +31,7 @@ pip install --upgrade --no-cache-dir pip
 clean_build_artifacts() {
     rm -rf ./baseballmetrics.egg-info
     rm -rf ./dist
+    rm -rf ./dist-tmp
     rm -rf ./_skbuild
     rm -rf ./wheelhouse
     rm -f ./*.whl
@@ -42,26 +43,47 @@ clean_build_artifacts
 
 if [[ $OS_NAME == "linux" ]]; then
     echo "building linux wheels"
+
+    mkdir -p ./dist
+
+    # debug build
     pip wheel \
-        -w ./dist \
+        -w ./dist-tmp \
         --config-setting='cmake.build-type=Debug' \
         --config-setting='install.strip=false' \
         .
-    mv \
-        ./dist/baseballmetrics-0.1.0-py3-none-manylinux_2_28_x86_64.whl \
-        ./dist/debug-baseballmetrics-0.1.0-py3-none-manylinux_2_28_x86_64.whl
-    pip wheel \
-        -w ./dist \
-        --config-setting='cmake.build-type=Release' \
-        .
+
     auditwheel repair \
         -w ./dist \
         --plat='manylinux_2_28_x86_64' \
-        ./dist/*.whl
+        ./dist-tmp/*.whl
+
+    rm -rf ./dist-tmp
+
+    # prefix distro name with 'debug-' (to clarify how it differs from the release builds)
+    DEBUG_DISTRO="$(ls dist/*.whl)"
+    mv \
+        "${DEBUG_DISTRO}" \
+        "${DEBUG_DISTRO/baseballmetrics-/debug-baseballmetrics-}"
+
+    # release build
+    pip wheel \
+        -w ./dist-tmp \
+        --config-setting='cmake.build-type=Release' \
+        --config-setting='install.strip=true' \
+        .
+
+    auditwheel repair \
+        -w ./dist \
+        --plat='manylinux_2_28_x86_64' \
+        ./dist-tmp/*.whl
+
+    rm -rf ./dist-tmp
+
 elif [[ $OS_NAME == "macos" ]]; then
     echo "building macOS wheels"
 
-    # debug builds
+    # debug build
     pip wheel \
         -w ./dist \
         --config-setting='cmake.build-type=Debug' \
