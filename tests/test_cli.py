@@ -17,7 +17,7 @@ PROBLEMATIC_PACKAGES = [
     "problematic-package-0.1.0.tar.gz",
     "problematic-package-0.1.0.zip",
 ]
-MACOS_SUFFIX = "macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl"
+MACOS_SUFFIX = "macosx_12_0_arm64.whl"
 MANYLINUX_SUFFIX = "manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl"
 BASEBALL_CONDA_PACKAGES = [
     "osx-64-baseballmetrics-0.1.0-0.conda",

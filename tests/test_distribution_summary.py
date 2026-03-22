@@ -6,7 +6,7 @@ import pytest
 from pydistcheck._distribution_summary import _DistributionSummary, _FileInfo
 
 BASE_PACKAGE_SDISTS = ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"]
-MACOS_SUFFIX = "macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl"
+MACOS_SUFFIX = "macosx_12_0_arm64.whl"
 MANYLINUX_SUFFIX = "manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl"
 BASE_WHEELS = [
     f"baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
@@ -123,9 +123,16 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
 
     # should correctly capture the contents:
     #   * 4 directories
-    #   * 8 files
-    assert len(ds.files) == 8
-    assert ds.num_files == 8
+    #   * 7 files
+    #
+    # remove this platform-specific difference when
+    # https://github.com/jameslamb/pydistcheck/issues/366 is complete
+    if "macosx" in distro_file:
+        assert len(ds.files) == 7
+        assert ds.num_files == 7
+    else:
+        assert len(ds.files) == 8
+        assert ds.num_files == 8
 
     # `pip wheel` seems to omit directory members from the archive,
     # and `auditwheel repair` seems to restore them
@@ -154,12 +161,18 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
         "baseballmetrics-0.1.0.dist-info/METADATA",
         "baseballmetrics-0.1.0.dist-info/RECORD",
         "baseballmetrics-0.1.0.dist-info/WHEEL",
-        "baseballmetrics-0.1.0.dist-info/entry_points.txt",
         "baseballmetrics/__init__.py",
         "baseballmetrics/_shared_lib.py",
         "baseballmetrics/metrics.py",
         f"lib/lib_baseballmetrics.{shared_lib_ext}",
     ]
+
+    # remove this when all platforms produce similar wheels
+    #  ref: https://github.com/jameslamb/pydistcheck/issues/366
+    if "manylinux" in distro_file:
+        expected_file_paths += [
+            "baseballmetrics-0.1.0.dist-info/entry_points.txt",
+        ]
 
     expected_all_paths = expected_dir_paths + expected_file_paths
 
@@ -190,10 +203,9 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
     # size_by_file_extension should work as expected
     if "macosx" in distro_file:
         assert ds.size_by_file_extension == {
-            ".dylib": 16504,
-            "no-extension": 1129,
-            ".py": 536,
-            ".txt": 0,
+            ".dylib": 17952,
+            "no-extension": 1028,
+            ".py": 591,
         }
     else:
         assert ds.size_by_file_extension == {

@@ -12,6 +12,15 @@ set -e -u -o pipefail
 
 if [[ $OSTYPE == 'darwin'* ]]; then
     OS_NAME="macos"
+    # pin the macOS API version minimum
+    #
+    # references:
+    #
+    #   - https://peps.python.org/pep-0425/
+    #   - https://packaging.python.org/en/latest/specifications/platform-compatibility-tags/#macos-platform-tag
+    #   - https://developer.apple.com/library/archive/documentation/DeveloperTools/Conceptual/cross_development/Introduction/Introduction.html
+    #
+    export MACOSX_DEPLOYMENT_TARGET=12.0
 else
     OS_NAME="linux"
     export PATH="/opt/python/cp311-cp311/bin:${PATH}"
@@ -51,27 +60,32 @@ if [[ $OS_NAME == "linux" ]]; then
         ./dist/*.whl
 elif [[ $OS_NAME == "macos" ]]; then
     echo "building macOS wheels"
+
+    # debug builds
     pip wheel \
         -w ./dist \
         --config-setting='cmake.build-type=Debug' \
         --config-setting='install.strip=false' \
         .
 
-    DEBUG_DISTRO_NAME="debug-baseballmetrics-0.1.0-py3-none-macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64"
+    # prefix distro name with 'debug-' (to clarify how it differs from the release builds)
+    DEBUG_DISTRO="$(ls dist/*.whl)"
     mv \
-        ./dist/baseballmetrics-0.1.0-py3-none-macosx_*.whl \
-        ./dist/${DEBUG_DISTRO_NAME}.whl
+        "${DEBUG_DISTRO}" \
+        "${DEBUG_DISTRO/baseballmetrics-/debug-baseballmetrics-}"
 
-    pip wheel -w ./dist .
-    mv \
-        ./dist/baseballmetrics-0.1.0-py3-none-macosx_*.whl \
-        ./dist/baseballmetrics-0.1.0-py3-none-macosx_10_15_x86_64.macosx_11_6_x86_64.macosx_12_5_x86_64.whl
+    # release build
+    pip wheel \
+        -w ./dist \
+        --config-setting='cmake.build-type=Release' \
+        --config-setting='install.strip=true' \
+        .
 
     rm -rf ./tmp-dir
     mkdir -p ./tmp-dir
     unzip \
         -d ./tmp-dir \
-        "./dist/${DEBUG_DISTRO_NAME}.whl"
+        ./dist/debug-*.whl
 
     tar \
         -C ./tmp-dir \
@@ -93,16 +107,7 @@ elif [[ $OS_NAME == "macos" ]]; then
 
 fi
 
-mv \
-    ./dist/*.tar.bz2 \
-    ../
+mv ./dist/* ../
 
-mv \
-    ./dist/*.tar.gz \
-    ../
-
-mv \
-    ./dist/*.whl \
-    ../
 echo "done building wheels"
 popd
