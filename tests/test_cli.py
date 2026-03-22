@@ -18,7 +18,7 @@ PROBLEMATIC_PACKAGES = [
     "problematic-package-0.1.0.zip",
 ]
 MACOS_SUFFIX = "macosx_12_0_arm64.whl"
-MANYLINUX_SUFFIX = "manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl"
+MANYLINUX_SUFFIX = "manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl"
 BASEBALL_CONDA_PACKAGES = [
     "osx-64-baseballmetrics-0.1.0-0.conda",
     "osx-64-baseballmetrics-0.1.0-0.tar.bz2",
@@ -36,7 +36,7 @@ PACKAGES_WITH_DEBUG_SYMBOLS = [
     "debug-baseballmetrics-0.1.0-macosx-wheel.tar.bz2",
     "debug-baseballmetrics-0.1.0-macosx-wheel.tar.gz",
     f"debug-baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
-    f"debug-baseballmetrics-py3-none-{MANYLINUX_SUFFIX}",
+    f"debug-baseballmetrics-0.1.0-py3-none-{MANYLINUX_SUFFIX}",
     "osx-64-debug-baseballmetrics-0.1.0-0.conda",
     "osx-64-debug-baseballmetrics-0.1.0-0.tar.bz2",
 ]

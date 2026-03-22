@@ -77,11 +77,11 @@ wheels/
 !tests/data/osx-64-baseballmetrics-0.1.0-0.conda
 !tests/data/osx-64-baseballmetrics-0.1.0-0.tar.bz2
 !tests/data/baseballmetrics-0.1.0-py3-none-macosx_12_0_arm64.whl
-!tests/data/baseballmetrics-0.1.0-py3-none-manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl
+!tests/data/baseballmetrics-0.1.0-py3-none-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl
 !tests/data/debug-baseballmetrics-0.1.0-macosx-wheel.tar.bz2
 !tests/data/debug-baseballmetrics-0.1.0-macosx-wheel.tar.gz
 !tests/data/debug-baseballmetrics-0.1.0-py3-none-macosx_12_0_arm64.whl
-!tests/data/debug-baseballmetrics-py3-none-manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl
+!tests/data/debug-baseballmetrics-0.1.0-py3-none-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl
 !tests/data/osx-64-debug-baseballmetrics-0.1.0-0.conda
 !tests/data/osx-64-debug-baseballmetrics-0.1.0-0.tar.bz2
 !tests/data/base-package-0.1.0.tar.gz
