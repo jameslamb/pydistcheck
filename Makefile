@@ -55,7 +55,7 @@ test-data-sdist:
 		-v $$(pwd):/usr/local/src \
 		--workdir /usr/local/src \
 		--entrypoint="" \
-		-it python:3.10 \
+		-it python:latest \
 		bash -c "apt-get update && apt-get install -y --no-install-recommends ca-certificates curl zip && bin/create-test-data-sdist.sh"
 
 .PHONY: test-data-bdist
