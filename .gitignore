@@ -6,7 +6,9 @@ _build/
 build/
 *.bz
 *.bz2
+.claude/
 *.conda
+conda-build/
 *.core
 *.coverage
 *.css
@@ -15,6 +17,8 @@ build/
 *.db
 delete-me/
 dist/
+dist-fixed/
+dist-tmp/
 *.dll
 *.doc
 *.docx
