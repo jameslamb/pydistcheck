@@ -10,3 +10,6 @@ radr://.*
 https://serverfault.com*
 https://stackoverflow.com*
 https://superuser.com*
+
+# throws 403s (probably a defense against bots)
+https://www.iec.ch/*
