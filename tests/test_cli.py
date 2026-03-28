@@ -20,8 +20,8 @@ PROBLEMATIC_PACKAGES = [
 MACOS_SUFFIX = "macosx_12_0_arm64.whl"
 MANYLINUX_SUFFIX = "manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl"
 BASEBALL_CONDA_PACKAGES = [
-    "osx-64-baseballmetrics-0.1.0-0.conda",
-    "osx-64-baseballmetrics-0.1.0-0.tar.bz2",
+    "osx-arm64-baseballmetrics-0.1.0-0.conda",
+    "osx-arm64-baseballmetrics-0.1.0-0.tar.bz2",
 ]
 BASEBALL_WHEELS = [
     f"baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
@@ -37,8 +37,8 @@ PACKAGES_WITH_DEBUG_SYMBOLS = [
     "debug-baseballmetrics-0.1.0-macosx-wheel.tar.gz",
     f"debug-baseballmetrics-0.1.0-py3-none-{MACOS_SUFFIX}",
     f"debug-baseballmetrics-0.1.0-py3-none-{MANYLINUX_SUFFIX}",
-    "osx-64-debug-baseballmetrics-0.1.0-0.conda",
-    "osx-64-debug-baseballmetrics-0.1.0-0.tar.bz2",
+    "osx-arm64-debug-baseballmetrics-0.1.0-0.conda",
+    "osx-arm64-debug-baseballmetrics-0.1.0-0.tar.bz2",
 ]
 TEST_DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
@@ -1016,8 +1016,8 @@ def test_path_too_long_check_works_for_conda_packages(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"\[path\-too\-long\] Path too long \(78 > 5\)\: "
-            r"'lib/python3\.9/site\-packages/baseballmetrics/__pycache__/metrics\.cpython\-39\.pyc'"
+            r"\[path\-too\-long\] Path too long \(80 > 5\)\: "
+            r"'lib/python3\.12/site\-packages/baseballmetrics/__pycache__/metrics\.cpython\-312\.pyc'"
         ),
     )
 
@@ -1071,9 +1071,11 @@ def test_debug_symbols_check_works(distro_file):
         else:
             # dsymutil works on both macOS and Linux
             debug_cmd = r"'dsymutil \-s " + lib_file
-    elif "osx-64" in distro_file:
+    elif "osx-arm64" in distro_file:
         # macOS conda packages
-        lib_file = r"\"lib/python3\.9/site-packages/lib/lib_baseballmetrics\.dylib\"'\."
+        lib_file = (
+            r"\"lib/python3\.12/site-packages/lib/lib_baseballmetrics\.dylib\"'\."
+        )
         if platform.startswith(("cygwin", "win")):
             debug_cmd = r"'llvm\-nm \-a " + lib_file
         else:
