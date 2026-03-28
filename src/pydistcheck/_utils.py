@@ -9,6 +9,7 @@ import re
 #
 #   * https://physics.nist.gov/cuu/Units/binary.html
 #   * https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/#meaning-of-memory
+#   * https://www.iec.ch/prefixes-binary-multiples
 #
 _UNIT_TO_NUM_BYTES = {
     "b": 1,
