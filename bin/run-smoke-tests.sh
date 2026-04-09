@@ -110,6 +110,7 @@ shared_args=(
     --ignore=mixed-file-extensions
     --ignore=path-contains-spaces
     --max-allowed-files=4500
+    --max-allowed-size-compressed=100M
     --max-allowed-size-uncompressed=150M
 )
 pydistcheck \

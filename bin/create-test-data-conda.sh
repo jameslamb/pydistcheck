@@ -17,6 +17,15 @@ set -Eeuox pipefail
 
 REPO_ROOT="${PWD}"
 TEST_DATA_DIR="${PWD}/tests/data"
+
+conda create --yes \
+    --name pydistcheck-conda-builds \
+    'conda-build=25.7.0' \
+    'python=3.12'
+
+# shellcheck disable=SC1091
+source activate pydistcheck-conda-builds
+
 CONDA_BASE_DIR=$(
     conda info --base
 )
@@ -52,15 +61,44 @@ conda_build ../tests/data/conda-recipes/baseballmetrics
 #----------------------------------#
 conda_build ../tests/data/conda-recipes/debug-baseballmetrics
 
-# get packages
-cp \
+# copy packages
+mv \
     "${CONDA_BASE_DIR}/conda-bld/${CHANNEL}/baseballmetrics-0.1.0-0.tar.bz2" \
     "${TEST_DATA_DIR}/${CHANNEL}-baseballmetrics-0.1.0-0.tar.bz2"
 
-cp \
+mv \
     "${CONDA_BASE_DIR}/conda-bld/${CHANNEL}/debug-baseballmetrics-0.1.0-0.tar.bz2" \
     "${TEST_DATA_DIR}/${CHANNEL}-debug-baseballmetrics-0.1.0-0.tar.bz2"
+
+# build .conda packages
+conda config --set conda_build.pkg_format 2
+
+#--------------------------#
+#- baseballmetrics*.conda -#
+#--------------------------#
+conda_build ../tests/data/conda-recipes/baseballmetrics
+
+#--------------------------------#
+#- debug-baseballmetrics*.conda -#
+#--------------------------------#
+conda_build ../tests/data/conda-recipes/debug-baseballmetrics
+
+# copy packages
+mv \
+    "${CONDA_BASE_DIR}/conda-bld/${CHANNEL}/baseballmetrics-0.1.0-0.conda" \
+    "${TEST_DATA_DIR}/${CHANNEL}-baseballmetrics-0.1.0-0.conda"
+
+mv \
+    "${CONDA_BASE_DIR}/conda-bld/${CHANNEL}/debug-baseballmetrics-0.1.0-0.conda" \
+    "${TEST_DATA_DIR}/${CHANNEL}-debug-baseballmetrics-0.1.0-0.conda"
 
 # clean up
 cd "${REPO_ROOT}"
 rm -rf ./conda-build
+conda build purge
+
+# shellcheck disable=SC1091
+source deactivate
+conda env remove \
+    --yes \
+    --name pydistcheck-conda-builds
