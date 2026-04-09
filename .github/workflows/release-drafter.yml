@@ -6,8 +6,15 @@ on:
     branches:
       - main
 
+# automatically cancel in-progress builds if another commit is pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# default to 0 permissions
+# (job-level overrides add the minimal permissions needed)
 permissions:
-  contents: read
+  contents: none
 
 jobs:
   update_release_draft:
