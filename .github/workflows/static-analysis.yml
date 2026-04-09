@@ -9,25 +9,22 @@ on:
     branches:
       - main
 
+# automatically cancel in-progress builds if another commit is pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# default to 0 permissions
+# (job-level overrides add the minimal permissions needed)
 permissions:
-  actions: none
-  checks: none
-  contents: read
-  deployments: none
-  discussions: none
-  id-token: none
-  issues: none
-  packages: none
-  pages: none
-  pull-requests: none
-  repository-projects: none
-  security-events: none
-  statuses: none
+  contents: none
 
 jobs:
   lint:
     name: lint
     runs-on: ubuntu-latest
+    permissions:
+      statuses: read
     steps:
       - name: check out repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2

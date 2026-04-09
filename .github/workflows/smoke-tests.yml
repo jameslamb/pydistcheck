@@ -12,20 +12,15 @@ on:
   schedule:
     - cron: '0 0 * * 3'
 
+# automatically cancel in-progress builds if another commit is pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# default to 0 permissions
+# (job-level overrides add the minimal permissions needed)
 permissions:
-  actions: none
-  checks: none
-  contents: read
-  deployments: none
-  discussions: none
-  id-token: none
-  issues: none
-  packages: none
-  pages: none
-  pull-requests: none
-  repository-projects: none
-  security-events: none
-  statuses: none
+  contents: none
 
 jobs:
   test:
@@ -42,6 +37,8 @@ jobs:
             python_version: '3.13'
           - os: windows-latest
             python_version: '3.12'
+    permissions:
+      contents: read
     steps:
       - name: check out repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
@@ -70,6 +67,8 @@ jobs:
     runs-on: ubuntu-slim
     needs:
       - test
+    permissions:
+      statuses: read
     steps:
       - name: Decide whether the needed jobs succeeded or failed
         uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
