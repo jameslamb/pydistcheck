@@ -30,7 +30,7 @@ clean:
 
 .PHONY: install
 install:
-	pipx install --python /opt/hostedtoolcache/Python/3.9.25/x64/bin/python --force '.[conda]'
+	pipx install --python /opt/hostedtoolcache/Python/3.9.25/x64/bin --force '.[conda]'
 
 .PHONY: linux-wheel
 linux-wheel:
