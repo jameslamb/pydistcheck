@@ -46,6 +46,7 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        id: setup-python
         with:
           python-version: ${{ matrix.python_version }}
       - name: Install extra tools on Linux
@@ -56,6 +57,9 @@ jobs:
             llvm
       - name: run tests
         shell: bash
+        env:
+          # ensure 'pipx' uses the Python interpreter set up by 'actions/setup-python'
+          PIPX_DEFAULT_PYTHON: ${{ steps.setup-python.output.python-path }}
         run: |
           python3 -m pip install \
               pipx \
