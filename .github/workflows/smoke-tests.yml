@@ -57,9 +57,9 @@ jobs:
             llvm
       - name: run tests
         shell: bash
-        env:
-          # ensure 'pipx' uses the Python interpreter set up by 'actions/setup-python'
-          PIPX_DEFAULT_PYTHON: ${{ matrix.python_version }}
+        # env:
+        #   # ensure 'pipx' uses the Python interpreter set up by 'actions/setup-python'
+        #   PIPX_DEFAULT_PYTHON: ${{ steps.setup-python.outputs.python-path }}
         run: |
           python3 -m pip install \
               pipx \
