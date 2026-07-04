@@ -30,7 +30,7 @@ clean:
 
 .PHONY: install
 install:
-	python -m pipx install --force '.[conda]'
+	python3 -m pipx install --force '.[conda]'
 
 .PHONY: linux-wheel
 linux-wheel:
