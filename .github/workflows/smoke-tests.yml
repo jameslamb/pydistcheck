@@ -63,14 +63,9 @@ jobs:
           PIPX_BIN_DIR: ${{ runner.temp }}/pipx/bin
         run: |
           export PATH="${PIPX_BIN_DIR}:${PATH}"
-          python3 -m pip install \
+          python -m pip install \
               pipx \
               requests
-          echo "PATH: ${PATH}"
-          echo "pip: $(which pip)"
-          echo "pipx: $(which pipx)"
-          echo "python: $(which python) | $(python --version)"
-          echo "python3: $(which python3) | $(python3 --version)"
           make install
           make smoke-tests
   all-smoke-tests-successful:
