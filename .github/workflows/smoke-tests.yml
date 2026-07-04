@@ -56,7 +56,12 @@ jobs:
             llvm
       - name: run tests
         shell: bash
+        env:
+          # ensure 'pipx' uses the Python interpreter set up by 'actions/setup-python'
+          PIPX_HOME: ${{ runner.temp }}/pipx
+          PIPX_BIN_DIR: ${{ runner.temp }}/pipx/bin
         run: |
+          export PATH="${PIPX_BIN_DIR}:${PATH}"
           python -m pip install \
               pipx \
               requests

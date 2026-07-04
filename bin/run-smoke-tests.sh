@@ -76,7 +76,6 @@ pydistcheck \
 pydistcheck \
     "${shared_args[@]}" \
     --expected-files '*/azure-pipelines.yml' \
-    --expected-files '*/.cirrus.star' \
     --expected-files '*/.codecov.yml' \
     --expected-files '*/.gitignore' \
     ./smoke-tests/*.tar.gz
