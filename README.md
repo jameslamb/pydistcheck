@@ -106,25 +106,25 @@ largest files
 Or on the test data in this repo ...
 
 ```shell
-pydistcheck tests/data/problematic-package-*
+pydistcheck tests/data/problematic_package-*
 ```
 
 ... to see the types of issues it checks for.
 
 ```text
 ------------ check results -----------
-1. [files-only-differ-by-case] Found files which differ only by case. Files: problematic-package-0.1.0/problematic_package/Question.py,problematic-package-0.1.0/problematic_package/question.PY,problematic-package-0.1.0/problematic_package/question.py
+1. [files-only-differ-by-case] Found files which differ only by case. Files: problematic_package-0.1.0/problematic_package/Question.py,problematic_package-0.1.0/problematic_package/question.PY,problematic_package-0.1.0/problematic_package/question.py
 2. [mixed-file-extensions] Found a mix of file extensions for the same file type: .NDJSON (1), .jsonl (1), .ndjson (1)
 3. [mixed-file-extensions] Found a mix of file extensions for the same file type: .yaml (2), .yml (1)
-4. [path-contains-non-ascii-characters] Found file path containing non-ASCII characters: 'problematic-package-0.1.0/problematic_package/?veryone-loves-python.py'
-5. [path-contains-spaces] Found path with spaces: 'problematic-package-0.1.0/beep boop.ini'
-6. [path-contains-spaces] Found path with spaces: 'problematic-package-0.1.0/problematic_package/bad code/'
-7. [path-contains-spaces] Found path with spaces: 'problematic-package-0.1.0/problematic_package/bad code/__init__.py'
-8. [path-contains-spaces] Found path with spaces: 'problematic-package-0.1.0/problematic_package/bad code/ship-it.py'
-9. [unexpected-files] Found unexpected directory 'problematic-package-0.1.0/.git/'.
-10. [unexpected-files] Found unexpected file 'problematic-package-0.1.0/.gitignore'.
-11. [unexpected-files] Found unexpected file 'problematic-package-0.1.0/.hadolint.yaml'.
-12. [unexpected-files] Found unexpected file 'problematic-package-0.1.0/problematic_package/.gitignore'.
+4. [path-contains-non-ascii-characters] Found file path containing non-ASCII characters: 'problematic_package-0.1.0/problematic_package/?veryone-loves-python.py'
+5. [path-contains-spaces] Found path with spaces: 'problematic_package-0.1.0/beep boop.ini'
+6. [path-contains-spaces] Found path with spaces: 'problematic_package-0.1.0/problematic_package/bad code/'
+7. [path-contains-spaces] Found path with spaces: 'problematic_package-0.1.0/problematic_package/bad code/__init__.py'
+8. [path-contains-spaces] Found path with spaces: 'problematic_package-0.1.0/problematic_package/bad code/ship-it.py'
+9. [unexpected-files] Found unexpected directory 'problematic_package-0.1.0/.git/'.
+10. [unexpected-files] Found unexpected file 'problematic_package-0.1.0/.gitignore'.
+11. [unexpected-files] Found unexpected file 'problematic_package-0.1.0/.hadolint.yaml'.
+12. [unexpected-files] Found unexpected file 'problematic_package-0.1.0/problematic_package/.gitignore'.
 errors found while checking: 12
 ```
 

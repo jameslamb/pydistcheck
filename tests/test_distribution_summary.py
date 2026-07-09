@@ -5,7 +5,7 @@ import pytest
 
 from pydistcheck._distribution_summary import _DistributionSummary, _FileInfo
 
-BASE_PACKAGE_SDISTS = ["base-package-0.1.0.tar.gz", "base-package-0.1.0.zip"]
+BASE_PACKAGE_SDISTS = ["base_package-0.1.0.tar.gz", "base_package-0.1.0.zip"]
 MACOS_SUFFIX = "macosx_12_0_arm64.whl"
 MANYLINUX_SUFFIX = "manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl"
 BASE_WHEELS = [
@@ -32,28 +32,28 @@ def test_distribution_summary_basically_works(distro_file):
     # (NOTE: zip adds trailing slashes to directories, tar does not)
     if distro_file.endswith("zip"):
         expected_dir_paths = [
-            "base-package-0.1.0/",
-            "base-package-0.1.0/base_package/",
-            "base-package-0.1.0/base_package.egg-info/",
+            "base_package-0.1.0/",
+            "base_package-0.1.0/base_package/",
+            "base_package-0.1.0/base_package.egg-info/",
         ]
     else:
         expected_dir_paths = [
-            "base-package-0.1.0",
-            "base-package-0.1.0/base_package",
-            "base-package-0.1.0/base_package.egg-info",
+            "base_package-0.1.0",
+            "base_package-0.1.0/base_package",
+            "base_package-0.1.0/base_package.egg-info",
         ]
     expected_file_paths = [
-        "base-package-0.1.0/setup.cfg",
-        "base-package-0.1.0/PKG-INFO",
-        "base-package-0.1.0/setup.py",
-        "base-package-0.1.0/LICENSE.txt",
-        "base-package-0.1.0/README.md",
-        "base-package-0.1.0/base_package/__init__.py",
-        "base-package-0.1.0/base_package/thing.py",
-        "base-package-0.1.0/base_package.egg-info/top_level.txt",
-        "base-package-0.1.0/base_package.egg-info/dependency_links.txt",
-        "base-package-0.1.0/base_package.egg-info/SOURCES.txt",
-        "base-package-0.1.0/base_package.egg-info/PKG-INFO",
+        "base_package-0.1.0/setup.cfg",
+        "base_package-0.1.0/PKG-INFO",
+        "base_package-0.1.0/setup.py",
+        "base_package-0.1.0/LICENSE.txt",
+        "base_package-0.1.0/README.md",
+        "base_package-0.1.0/base_package/__init__.py",
+        "base_package-0.1.0/base_package/thing.py",
+        "base_package-0.1.0/base_package.egg-info/top_level.txt",
+        "base_package-0.1.0/base_package.egg-info/dependency_links.txt",
+        "base_package-0.1.0/base_package.egg-info/SOURCES.txt",
+        "base_package-0.1.0/base_package.egg-info/PKG-INFO",
     ]
     expected_all_paths = expected_dir_paths + expected_file_paths
 
@@ -72,7 +72,7 @@ def test_distribution_summary_basically_works(distro_file):
     assert ds.size_by_file_extension == {
         ".cfg": 258,
         ".md": 15,
-        "no-extension": 382,
+        "no-extension": 426,
         ".py": 70,
         ".txt": 11603,
     }
@@ -98,8 +98,8 @@ def test_distribution_summary_basically_works(distro_file):
     assert all(x in ds.files for x in largest_files)
 
     # should actually choose the 2 largest files
-    assert largest_files[0].name == "base-package-0.1.0/LICENSE.txt"
-    assert largest_files[1].name == "base-package-0.1.0/setup.cfg"
+    assert largest_files[0].name == "base_package-0.1.0/LICENSE.txt"
+    assert largest_files[1].name == "base_package-0.1.0/setup.cfg"
 
 
 def test_distribution_summary_get_largest_files_works():

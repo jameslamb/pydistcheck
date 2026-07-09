@@ -5,8 +5,8 @@
 set -e -u -o pipefail
 
 pip install \
-    'build>=0.9.0' \
-    'setuptools>=42'
+    'build>=1.4.0' \
+    'setuptools>=82'
 
 rm -rf /tmp/base-package
 mkdir -p /tmp/base-package/base_package
@@ -136,7 +136,7 @@ allow_bugs = False
 EOF
 
 cat << EOF > "/tmp/problematic-package/MANIFEST.in"
-include .git/*
+recursive-include .git/
 include *.gitignore
 include *.ini
 include *.jsonl
