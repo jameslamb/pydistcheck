@@ -30,11 +30,11 @@ DISTRO_DIR="${1}"
 pushd "${DISTRO_DIR}"
 
 check_distro \
-    'base-package-0.1.0.zip' \
+    'base_package-0.1.0.zip' \
     'from base_package.thing import do_stuff'
 
 check_distro \
-    'base-package-0.1.0.tar.gz' \
+    'base_package-0.1.0.tar.gz' \
     'from base_package.thing import do_stuff'
 
 # NOTE: problematic-package doesn't work on macOS because of
@@ -42,11 +42,11 @@ check_distro \
 if [[ $OS_NAME == "linux" ]]; then
 
     check_distro \
-        'problematic-package-0.1.0.zip' \
+        'problematic_package-0.1.0.zip' \
         'from problematic_package.question import SPONGEBOB_STR'
 
     check_distro \
-        'problematic-package-0.1.0.tar.gz' \
+        'problematic_package-0.1.0.tar.gz' \
         'from problematic_package.question import SPONGEBOB_STR'
 
     check_distro \

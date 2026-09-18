@@ -10,12 +10,12 @@ import pydistcheck.cli  # noqa: F401
 from pydistcheck.cli import check
 
 BASE_PACKAGES = [
-    "base-package-0.1.0.tar.gz",
-    "base-package-0.1.0.zip",
+    "base_package-0.1.0.tar.gz",
+    "base_package-0.1.0.zip",
 ]
 PROBLEMATIC_PACKAGES = [
-    "problematic-package-0.1.0.tar.gz",
-    "problematic-package-0.1.0.zip",
+    "problematic_package-0.1.0.tar.gz",
+    "problematic_package-0.1.0.zip",
 ]
 MACOS_SUFFIX = "macosx_12_0_arm64.whl"
 MANYLINUX_SUFFIX = "manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl"
@@ -104,8 +104,8 @@ def test_check_runs_for_all_files_before_exiting():
         check,
         [
             "--max-allowed-size-compressed=5B",
-            os.path.join(TEST_DATA_DIR, "base-package-0.1.0.tar.gz"),
-            os.path.join(TEST_DATA_DIR, "base-package-0.1.0.zip"),
+            os.path.join(TEST_DATA_DIR, "base_package-0.1.0.tar.gz"),
+            os.path.join(TEST_DATA_DIR, "base_package-0.1.0.zip"),
         ],
     )
     assert result.exit_code == 1
@@ -730,9 +730,9 @@ def test_files_only_differ_by_case_works(distro_file):
         result=result,
         pattern=(
             r"^1\. \[files\-only\-differ\-by\-case\] Found files which differ only by case\. "
-            r"Files\: problematic\-package\-0\.1\.0/problematic_package/Question\.py"
-            r",problematic\-package\-0\.1\.0/problematic_package/question\.PY"
-            r",problematic\-package\-0\.1\.0/problematic_package/question\.py"
+            r"Files\: problematic_package\-0\.1\.0/problematic_package/Question\.py"
+            r",problematic_package\-0\.1\.0/problematic_package/question\.PY"
+            r",problematic_package\-0\.1\.0/problematic_package/question\.py"
         ),
     )
     _assert_log_matches_pattern(
@@ -783,7 +783,7 @@ def test_path_contains_non_ascii_characters_works(distro_file):
         pattern=(
             r"^4\. \[path\-contains\-non\-ascii\-characters\] Found file path containing non-ASCII "
             r"characters\: "
-            r"'problematic\-package\-0\.1\.0/problematic_package/\?+veryone-loves-python\.py'"
+            r"'problematic_package\-0\.1\.0/problematic_package/\?+veryone-loves-python\.py'"
         ),
     )
 
@@ -805,7 +805,7 @@ def test_path_contains_spaces_works(distro_file):
         result=result,
         pattern=(
             r"^5\. \[path\-contains\-spaces\] "
-            r"Found path with spaces\: 'problematic\-package\-0\.1\.0/beep boop\.ini"
+            r"Found path with spaces\: 'problematic_package\-0\.1\.0/beep boop\.ini"
         ),
     )
 
@@ -814,7 +814,7 @@ def test_path_contains_spaces_works(distro_file):
         result=result,
         pattern=(
             r"^6\. \[path\-contains\-spaces\] Found path with spaces\: "
-            r"'problematic\-package\-0\.1\.0/problematic_package/bad code[/]*"
+            r"'problematic_package\-0\.1\.0/problematic_package/bad code[/]*"
         ),
     )
 
@@ -823,14 +823,14 @@ def test_path_contains_spaces_works(distro_file):
         result=result,
         pattern=(
             r"^7\. \[path\-contains\-spaces\] Found path with spaces\: "
-            r"'problematic\-package\-0\.1\.0/problematic_package/bad code/__init__\.py"
+            r"'problematic_package\-0\.1\.0/problematic_package/bad code/__init__\.py"
         ),
     )
     _assert_log_matches_pattern(
         result=result,
         pattern=(
             r"^8\. \[path\-contains\-spaces\] Found path with spaces\: "
-            r"'problematic\-package\-0\.1\.0/problematic_package/bad code/ship\-it\.py"
+            r"'problematic_package\-0\.1\.0/problematic_package/bad code/ship\-it\.py"
         ),
     )
 
@@ -852,7 +852,7 @@ def test_unexpected_files_check_works(distro_file):
         result=result,
         pattern=(
             r"^9\. \[unexpected\-files\] Found unexpected directory "
-            r"'problematic\-package\-0\.1\.0/\.git[/]{0,1}'\."
+            r"'problematic_package\-0\.1\.0/\.git[/]{0,1}'\."
         ),
     )
 
@@ -861,14 +861,14 @@ def test_unexpected_files_check_works(distro_file):
         result=result,
         pattern=(
             r"^10\. \[unexpected\-files\] Found unexpected file "
-            r"'problematic\-package\-0\.1\.0/\.gitignore'\."
+            r"'problematic_package\-0\.1\.0/\.gitignore'\."
         ),
     )
     _assert_log_matches_pattern(
         result=result,
         pattern=(
             r"^11\. \[unexpected\-files\] Found unexpected file "
-            r"'problematic\-package\-0\.1\.0/\.hadolint\.yaml'\."
+            r"'problematic_package\-0\.1\.0/\.hadolint\.yaml'\."
         ),
     )
 
@@ -877,7 +877,7 @@ def test_unexpected_files_check_works(distro_file):
         result=result,
         pattern=(
             r"^12\. \[unexpected\-files\] Found unexpected file "
-            r"'problematic\-package\-0\.1\.0/problematic_package/\.gitignore'\."
+            r"'problematic_package\-0\.1\.0/problematic_package/\.gitignore'\."
         ),
     )
 
@@ -909,14 +909,14 @@ def test_unexpected_files_correctly_respects_multiple_cli_args(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"\[unexpected\-files\] Found unexpected file 'problematic\-package\-0\.1\.0/\.gitignore"
+            r"\[unexpected\-files\] Found unexpected file 'problematic_package\-0\.1\.0/\.gitignore"
         ),
     )
     _assert_log_matches_pattern(
         result=result,
         pattern=(
             r"\[unexpected\-files\] Found unexpected file "
-            r"'problematic\-package\-0\.1\.0/problematic_package/\.gitignore"
+            r"'problematic_package\-0\.1\.0/problematic_package/\.gitignore"
         ),
     )
 
@@ -924,7 +924,7 @@ def test_unexpected_files_correctly_respects_multiple_cli_args(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"\[unexpected\-files\] Found unexpected file 'problematic\-package\-0\.1\.0/\.git/HEAD"
+            r"\[unexpected\-files\] Found unexpected file 'problematic_package\-0\.1\.0/\.git/HEAD"
         ),
     )
 
@@ -1136,11 +1136,11 @@ def test_inspect_respects_output_file_size_unit_for_all_size_strings():
     assert result.exit_code == 0
 
     # mix of B and K
-    _assert_log_matches_pattern(result, r" compressed size: 4\.938K")
-    _assert_log_matches_pattern(result, r" uncompressed size: 12\.039K")
+    _assert_log_matches_pattern(result, r" compressed size: 4.921K")
+    _assert_log_matches_pattern(result, r" uncompressed size: 12\.082K")
     _assert_log_matches_pattern(result, r" \.py \- 70\.0B")
     _assert_log_matches_pattern(
-        result, r" \(11\.092K\) base-package\-0\.1\.0/LICENSE\.txt"
+        result, r" \(11\.092K\) base_package\-0\.1\.0/LICENSE\.txt"
     )
 
     # --output-file-size-unit B
@@ -1155,11 +1155,11 @@ def test_inspect_respects_output_file_size_unit_for_all_size_strings():
     assert result.exit_code == 0
 
     # all B
-    _assert_log_matches_pattern(result, r" compressed size: 5057\.0B")
-    _assert_log_matches_pattern(result, r" uncompressed size: 12328\.0B")
+    _assert_log_matches_pattern(result, r" compressed size: 5039\.0B")
+    _assert_log_matches_pattern(result, r" uncompressed size: 12372\.0B")
     _assert_log_matches_pattern(result, r" \.py \- 70\.0B")
     _assert_log_matches_pattern(
-        result, r" \(11358\.0B\) base-package\-0\.1\.0/LICENSE\.txt"
+        result, r" \(11358\.0B\) base_package\-0\.1\.0/LICENSE\.txt"
     )
 
 
@@ -1177,11 +1177,11 @@ def test_inspect_respects_output_file_size_precision_for_all_size_strings():
     assert result.exit_code == 0
 
     # default precision
-    _assert_log_matches_pattern(result, r" compressed size: 4\.938K")
-    _assert_log_matches_pattern(result, r" uncompressed size: 12\.039K")
+    _assert_log_matches_pattern(result, r" compressed size: 4.921K")
+    _assert_log_matches_pattern(result, r" uncompressed size: 12\.082K")
     _assert_log_matches_pattern(result, r" \.py \- 70\.0B")
     _assert_log_matches_pattern(
-        result, r" \(11\.092K\) base-package\-0\.1\.0/LICENSE\.txt"
+        result, r" \(11\.092K\) base_package\-0\.1\.0/LICENSE\.txt"
     )
 
     # --output-file-size-precision 2
@@ -1196,9 +1196,9 @@ def test_inspect_respects_output_file_size_precision_for_all_size_strings():
     assert result.exit_code == 0
 
     # precision 2
-    _assert_log_matches_pattern(result, r" compressed size: 4\.94K")
-    _assert_log_matches_pattern(result, r" uncompressed size: 12\.04K")
+    _assert_log_matches_pattern(result, r" compressed size: 4\.92K")
+    _assert_log_matches_pattern(result, r" uncompressed size: 12\.08K")
     _assert_log_matches_pattern(result, r" \.py \- 70\.0B")
     _assert_log_matches_pattern(
-        result, r" \(11\.09K\) base-package\-0\.1\.0/LICENSE\.txt"
+        result, r" \(11\.09K\) base_package\-0\.1\.0/LICENSE\.txt"
     )
