@@ -63,7 +63,7 @@ class ExitCodes:
     default=_Config.ignore,
     help=(
         "ID of a check to skip, e.g. 'compiled-objects-have-debug-symbols'. "
-        "See https://pydistcheck.readthedocs.io/en/docs-fix/check-reference.html for a "
+        "See https://pydistcheck.readthedocs.io/en/latest/check-reference.html for a "
         "complete list of valid options. Can be passed multiple times."
     ),
 )
@@ -211,7 +211,8 @@ def check(  # noqa: PLR0913
     Exit codes:
 
       0 = no issues detected\n
-      1 = issues detected
+      1 = issues detected\n
+      2 = unsupported file type
     """
     if version:
         from pydistcheck import __version__ as _VERSION

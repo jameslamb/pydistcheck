@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# [description] test that the packages used in in unit tests
+# [description] test that the packages used in unit tests
 #               are valid, installable Python distributions
 
 set -e -u -o pipefail

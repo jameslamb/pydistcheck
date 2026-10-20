@@ -8,7 +8,7 @@ from ._utils import _FileSize
 
 if TYPE_CHECKING:
     from ._config import _Config
-    from .distribution_summary import _DistributionSummary
+    from ._distribution_summary import _DistributionSummary
 
 
 def inspect_distribution(*, summary: "_DistributionSummary", config: "_Config") -> None:

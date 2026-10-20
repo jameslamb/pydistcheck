@@ -25,6 +25,7 @@ repos:
           - click>=8.0
           - tomli>=1.1.0
           - types-requests
+          - zstandard>=0.22.0
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.17.1
     hooks:

@@ -1,5 +1,5 @@
 """
-Manages configuration of ``pydistcheck` CLI, including:
+Manages configuration of ``pydistcheck`` CLI, including:
 
   * validating configuration values
   * updating configuuration from files
