@@ -32,26 +32,6 @@ pydistcheck \
     ./smoke-tests/*
 
 # wheel-only packages
-get-files catboost
-get-conda-forge-files catboost
-shared_args=(
-    --ignore=compiled-objects-have-debug-symbols
-    --ignore=mixed-file-extensions
-    --ignore=too-many-files
-    --max-allowed-size-compressed=100M
-    --max-allowed-size-uncompressed='0.5G'
-)
-pydistcheck \
-    "${shared_args[@]}" \
-    ./smoke-tests/*.conda
-pydistcheck \
-    "${shared_args[@]}" \
-    --expected-files='*/.gitignore' \
-    ./smoke-tests/*.tar.gz
-pydistcheck \
-    "${shared_args[@]}" \
-    ./smoke-tests/*.whl
-
 get-files psycopg2-binary
 pydistcheck \
     --ignore 'compiled-objects-have-debug-symbols' \
@@ -80,7 +60,7 @@ pydistcheck \
     --expected-files '*/.gitignore' \
     ./smoke-tests/*.tar.gz
 
-# package with so many files that `find -exec du -ch` has to batch results
+# package with a lot of files
 get-files tensorflow
 pydistcheck \
     --ignore 'compiled-objects-have-debug-symbols' \
@@ -158,6 +138,26 @@ pydistcheck \
     --expected-directories '*/.github' \
     --expected-files '*/codecov.yml' \
     --expected-files '*/.readthedocs.yaml' \
+    ./smoke-tests/*.tar.gz
+pydistcheck \
+    "${shared_args[@]}" \
+    ./smoke-tests/*.whl
+
+get-files catboost
+get-conda-forge-files catboost
+shared_args=(
+    --ignore=compiled-objects-have-debug-symbols
+    --ignore=mixed-file-extensions
+    --ignore=too-many-files
+    --max-allowed-size-compressed=100M
+    --max-allowed-size-uncompressed='0.5G'
+)
+pydistcheck \
+    "${shared_args[@]}" \
+    ./smoke-tests/*.conda
+pydistcheck \
+    "${shared_args[@]}" \
+    --expected-files='*/.gitignore' \
     ./smoke-tests/*.tar.gz
 pydistcheck \
     "${shared_args[@]}" \

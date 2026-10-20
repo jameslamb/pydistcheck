@@ -26,7 +26,7 @@ max_allowed_files = 2000
 max_allowed_size_compressed = '50M'
 
 # If the distribution is larger than this size (uncompressed),
-# pydistcheck reports a 'distro-too-large-compressed' check failure.
+# pydistcheck reports a 'distro-too-large-uncompressed' check failure.
 #
 # See 'pydistcheck --help' for available units.
 max_allowed_size_uncompressed = '75M'
@@ -38,7 +38,7 @@ max_allowed_size_uncompressed = '75M'
 # https://pydistcheck.readthedocs.io/en/latest/check-reference.html#path-too-long
 max_path_length = 200
 
-# Number of significant digits to use when rounding file sizes
+# Number of decimal places to use when rounding file sizes
 # in printed output.
 output_file_size_precision = 3
 

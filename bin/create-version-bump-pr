@@ -6,7 +6,7 @@
 #
 # [usage]
 #
-#   bin/create-release-pr '4.0.0'
+#   bin/create-version-bump-pr
 #
 
 set -Eeuo pipefail

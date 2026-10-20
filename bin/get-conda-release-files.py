@@ -10,7 +10,7 @@ CONDA_CHANNEL = sys.argv[2]
 OUTPUT_DIR = sys.argv[3]
 BASE_URL = f"https://api.anaconda.org/package/{CONDA_CHANNEL}"
 
-print(f"Getting conda-forge details for package '{PACKAGE_NAME}'")
+print(f"Getting details for package '{PACKAGE_NAME}' (channel: {CONDA_CHANNEL})")
 res = requests.get(url=f"{BASE_URL}/{PACKAGE_NAME}", timeout=30)
 res.raise_for_status()
 release_info = res.json()

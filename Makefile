@@ -17,7 +17,7 @@ check-test-packages:
 		-it python:latest \
 		./check-test-packages.sh /opt/test-packages
 
-.PHONY: check-wheels
+.PHONY: check-dists
 check-dists:
 	bin/check-distributions.sh dist
 
@@ -67,7 +67,7 @@ test-data-bdist: \
 	test-data-macos-conda-tarbz2-packages \
 	test-data-conda-dot-conda-packages
 
-.PHONY: test-data-conda-packages
+.PHONY: test-data-macos-conda-tarbz2-packages
 test-data-macos-conda-tarbz2-packages:
 	bin/create-test-data-conda.sh 'osx-arm64'
 
