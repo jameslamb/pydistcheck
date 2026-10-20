@@ -104,6 +104,10 @@ ignore_missing_imports = false
 mypy_path = "./src:./tests/data"
 strict = true
 
+[[tool.mypy.overrides]]
+module = ["compression", "compression.*"]
+ignore_missing_imports = true
+
 [tool.rstcheck]
 ignore_directives = [
     # rstcheck does not understand directives from extension 'sphinx-click'
