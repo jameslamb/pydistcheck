@@ -6,6 +6,8 @@ echo "running smoke tests"
 
 get-files() {
     local pkg_name=$1
+    rm -rf ./smoke-tests
+    mkdir -p ./smoke-tests
     echo ""
     python bin/get-pypi-files.py \
         "${pkg_name}" \
@@ -14,16 +16,13 @@ get-files() {
 
 get-conda-forge-files() {
     local pkg_name=$1
+    mkdir -p ./smoke-tests
     echo ""
     python bin/get-conda-release-files.py \
         "${pkg_name}" \
         'conda-forge' \
         ./smoke-tests
 }
-
-# set up output directory
-rm -rf ./smoke-tests
-mkdir -p ./smoke-tests
 
 # conda package where conda-forge only has the old .tar.bz2 format
 get-conda-forge-files librmm
@@ -36,7 +35,7 @@ pydistcheck \
 get-files psycopg2-binary
 pydistcheck \
     --ignore 'compiled-objects-have-debug-symbols' \
-    ./smoke-tests/*
+    ./smoke-tests/*.whl
 
 # package where source distro is a .zip
 get-files numpy
