@@ -47,9 +47,7 @@ class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
 
     def __call__(self, distro_summary: _DistributionSummary) -> list[str]:
         out: list[str] = []
-        compiled_object_paths = [
-            file_info.name for file_info in distro_summary.compiled_objects
-        ]
+        compiled_object_paths = distro_summary.compiled_object_paths
         if not compiled_object_paths:
             return out
 
@@ -244,29 +242,25 @@ class _PathTooLongCheck(_CheckProtocol):
         self.max_path_length = max_path_length
 
     def __call__(self, distro_summary: _DistributionSummary) -> list[str]:
-        out: list[str] = []
-        bad_paths = [
-            p for p in distro_summary.all_paths if len(p) > self.max_path_length
-        ]
-        for file_path in bad_paths:
-            msg = (
+        return [
+            (
                 f"[{self.check_name}] Path too long ({len(file_path)} > {self.max_path_length}): "
                 f"'{file_path}'"
             )
-            out.append(msg)
-        return out
+            for file_path in distro_summary.all_paths
+            if len(file_path) > self.max_path_length
+        ]
 
 
 class _SpacesInPathCheck(_CheckProtocol):
     check_name = "path-contains-spaces"
 
     def __call__(self, distro_summary: _DistributionSummary) -> list[str]:
-        out: list[str] = []
-        for file_path in distro_summary.all_paths:
-            if file_path != file_path.replace(" ", ""):
-                msg = f"[{self.check_name}] Found path with spaces: '{file_path}'"
-                out.append(msg)
-        return out
+        return [
+            f"[{self.check_name}] Found path with spaces: '{file_path}'"
+            for file_path in distro_summary.all_paths
+            if " " in file_path
+        ]
 
 
 class _ExpectedFilesCheck(_CheckProtocol):
@@ -286,12 +280,10 @@ class _ExpectedFilesCheck(_CheckProtocol):
     def __call__(self, distro_summary: _DistributionSummary) -> list[str]:
         out: list[str] = []
         for pattern in self.file_patterns:
-            found_any = False
-            for file_path in distro_summary.file_paths:
-                if fnmatchcase(file_path, pattern):
-                    found_any = True
-                    break
-
+            found_any = any(
+                fnmatchcase(file_path, pattern)
+                for file_path in distro_summary.file_paths
+            )
             if not found_any:
                 msg = f"[{self.check_name}] Did not find any files matching pattern '{pattern}'."
                 out.append(msg)

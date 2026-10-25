@@ -45,4 +45,8 @@ def _import_zstandard() -> Any:  # pragma: no cover
         raise ModuleNotFoundError(err_msg) from err
 
 
-__all__ = ["_import_zstandard", "tomllib"]
+__all__ = [
+    "_import_zstandard",
+    "_tf_extractall_has_filter",
+    "tomllib",
+]

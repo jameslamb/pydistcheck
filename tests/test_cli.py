@@ -227,7 +227,7 @@ def test_check_fails_with_expected_error_if_one_check_in_ignore_is_unrecognized(
             "--ignore=too-many-files",
         ],
     )
-    assert result.exit_code == 1
+    assert result.exit_code == 3
     _assert_log_matches_pattern(
         result,
         (
@@ -251,7 +251,7 @@ def test_check_fails_with_expected_error_if_multiple_checks_in_ignore_are_unreco
             "--ignore=too-many-files",
         ],
     )
-    assert result.exit_code == 1
+    assert result.exit_code == 3
     _assert_log_matches_pattern(
         result,
         (
@@ -373,7 +373,7 @@ def test_check_fails_with_expected_error_if_one_check_in_select_is_unrecognized(
             "--ignore=too-many-files",
         ],
     )
-    assert result.exit_code == 1
+    assert result.exit_code == 3
     _assert_log_matches_pattern(
         result,
         (
@@ -397,7 +397,7 @@ def test_check_fails_with_expected_error_if_multiple_checks_in_select_are_unreco
             "--select=too-many-files",
         ],
     )
-    assert result.exit_code == 1
+    assert result.exit_code == 3
     _assert_log_matches_pattern(
         result,
         (

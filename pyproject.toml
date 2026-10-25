@@ -79,11 +79,6 @@ exclude = [
 ]
 sources = ["src"]
 
-[tool.hatch.build.targets.wheel]
-# ignore-vcs = true
-# packages = ["pydistcheck"]
-# sources = ["src"]
-
 [tool.hatch.version]
 path = "src/pydistcheck/__init__.py"
 

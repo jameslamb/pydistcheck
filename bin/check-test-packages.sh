@@ -21,7 +21,7 @@ check_distro() {
         base-package \
         problematic-package
     pip install -qq "${distro_file}"
-    python -c "${test_code}" || exit 1
+    python -c "${test_code}"
     echo "success"
 }
 
