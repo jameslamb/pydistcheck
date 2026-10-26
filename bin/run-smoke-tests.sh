@@ -35,7 +35,7 @@ pydistcheck \
 get-files psycopg2-binary
 pydistcheck \
     --ignore 'compiled-objects-have-debug-symbols' \
-    ./smoke-tests/*
+    ./smoke-tests/*.whl
 
 # package where source distro is a .zip
 get-files numpy
@@ -192,7 +192,14 @@ pydistcheck \
     --max-allowed-files=2500 \
     --max-allowed-size-compressed=70M \
     --max-allowed-size-uncompressed=300M \
-    ./smoke-tests/*
+    ./smoke-tests/*.whl
+pydistcheck \
+    --ignore 'mixed-file-extensions' \
+    --expected-files '*/.gitignore' \
+    --expected-files '*/.cirrus.yml' \
+    --expected-files '*/.travis.yml' \
+    --max-allowed-files=2500 \
+    ./smoke-tests/*.tar.gz
 
 get-files Pillow
 pydistcheck \

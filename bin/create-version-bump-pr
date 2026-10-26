@@ -12,7 +12,7 @@
 set -Eeuo pipefail
 
 sed \
-    -i=.bak \
+    -i.bak \
     "/^__version/ s|\"\$|\.99\"|g" \
     ./src/pydistcheck/__init__.py
 

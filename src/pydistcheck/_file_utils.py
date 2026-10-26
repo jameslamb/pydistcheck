@@ -175,7 +175,7 @@ def _extract_subset_of_files_from_archive(  # noqa: PLR0912
     *,
     archive_file: str,
     archive_format: str,
-    relative_paths: list[str],
+    relative_paths: set[str],
     out_dir: str,
 ) -> None:
     """

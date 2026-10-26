@@ -139,6 +139,10 @@ class _DistributionSummary:
     def compiled_objects(self) -> list[_FileInfo]:
         return [f for f in self.files if f.is_compiled is True]
 
+    @property
+    def compiled_object_paths(self) -> set[str]:
+        return {f.name for f in self.files if f.is_compiled is True}
+
     @cached_property
     def count_by_file_extension(self) -> dict[str, int]:
         return {

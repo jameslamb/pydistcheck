@@ -36,7 +36,7 @@ jobs:
           INPUT_PACKAGE_NAME: ${{ inputs.package_name }}
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y \
+          sudo apt-get install -y --no-install-recommends \
             llvm
           python -m pip install \
             pipx

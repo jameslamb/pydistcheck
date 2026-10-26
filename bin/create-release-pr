@@ -14,7 +14,7 @@ set -Eeuo pipefail
 NEW_VERSION="${1}"
 
 sed \
-    -i=.bak \
+    -i.bak \
     "/^__version/ s|.*|__version__ = \"${NEW_VERSION}\"|g" \
     ./src/pydistcheck/__init__.py
 

@@ -59,6 +59,7 @@ def test_distribution_summary_basically_works(distro_file):
 
     assert sorted(ds.all_paths) == sorted(expected_all_paths)
     assert ds.compiled_objects == []
+    assert ds.compiled_object_paths == set()
     assert sorted(ds.directory_paths) == sorted(expected_dir_paths)
     assert sorted(ds.file_paths) == sorted(expected_file_paths)
 
@@ -171,6 +172,8 @@ def test_distribution_summary_correctly_reads_contents_of_wheels(distro_file):
     assert lib_file_info.file_format == expected_file_format
     assert lib_file_info.file_extension == f".{shared_lib_ext}"
     assert lib_file_info.is_compiled is True
+
+    assert ds.compiled_object_paths == {lib_file_info.name}
 
     assert sorted(ds.directory_paths) == sorted(expected_dir_paths)
     assert sorted(ds.file_paths) == sorted(expected_file_paths)

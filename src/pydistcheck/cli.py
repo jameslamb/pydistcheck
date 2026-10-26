@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 import click
 
 if TYPE_CHECKING:
+    from typing import Optional
     from collections.abc import Sequence
 
 from ._checks import (
@@ -33,6 +34,7 @@ class ExitCodes:
     OK = 0
     CHECK_ERRORS = 1
     UNSUPPORTED_FILE_TYPE = 2
+    UNRECOGNIZED_CHECK = 3
 
 
 @click.command()
@@ -189,9 +191,9 @@ class ExitCodes:
 )
 def check(  # noqa: PLR0913
     *,
-    filepaths: str,
+    filepaths: tuple[str],
     version: bool,
-    config: str,
+    config: "Optional[str]",
     expected_directories: "Sequence[str]",
     expected_files: "Sequence[str]",
     ignore: "Sequence[str]",
@@ -212,7 +214,8 @@ def check(  # noqa: PLR0913
 
       0 = no issues detected\n
       1 = issues detected\n
-      2 = unsupported file type
+      2 = unsupported file type\n
+      3 = unrecognized check found in configuration
     """
     if version:
         from pydistcheck import __version__ as _VERSION
@@ -254,7 +257,7 @@ def check(  # noqa: PLR0913
         print(
             f"ERROR: found the following unrecognized checks passed via '--ignore': {error_str}"
         )
-        sys.exit(1)
+        sys.exit(ExitCodes.UNRECOGNIZED_CHECK)
 
     selected_checks = {x for x in conf.select if x.strip()}
     unrecognized_checks = selected_checks - ALL_CHECKS
@@ -265,7 +268,7 @@ def check(  # noqa: PLR0913
         print(
             f"ERROR: found the following unrecognized checks passed via '--select': {error_str}"
         )
-        sys.exit(1)
+        sys.exit(ExitCodes.UNRECOGNIZED_CHECK)
 
     checks = [
         _CompiledObjectsDebugSymbolCheck(),

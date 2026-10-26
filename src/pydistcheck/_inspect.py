@@ -39,7 +39,9 @@ def inspect_distribution(*, summary: "_DistributionSummary", config: "_Config") 
 
     print("contents")
     print(f"  * directories: {summary.num_directories}")
-    print(f"  * files: {summary.num_files} ({len(summary.compiled_objects)} compiled)")
+    print(
+        f"  * files: {summary.num_files} ({len(summary.compiled_object_paths)} compiled)"
+    )
 
     print("size by extension")
     for extension, size in summary.size_by_file_extension.items():
