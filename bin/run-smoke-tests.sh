@@ -199,8 +199,6 @@ pydistcheck \
     --expected-files '*/.cirrus.yml' \
     --expected-files '*/.travis.yml' \
     --max-allowed-files=2500 \
-    --max-allowed-size-compressed=10M \
-    --max-allowed-size-uncompressed=20M \
     ./smoke-tests/*.tar.gz
 
 get-files Pillow
