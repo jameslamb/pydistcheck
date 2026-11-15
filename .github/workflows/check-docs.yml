@@ -31,7 +31,7 @@ jobs:
         with:
           fetch-depth: 1
           persist-credentials: false
-      - uses: conda-incubator/setup-miniconda@be893c923ea9cf1cf7cd510fbdde27c7e18cbdcb # v3.1.0
+      - uses: conda-incubator/setup-miniconda@be893c923ea9cf1cf7cd510fbdde27c7e18cbdcb  # v3.1.0
         with:
           environment-file: docs/env.yml
           activate-environment: pydistcheck-docs
@@ -59,7 +59,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Lychee URL checker
-        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8  # v2.9.0
         with:
           args: >-
             --cache
@@ -86,6 +86,6 @@ jobs:
       statuses: read
     steps:
       - name: Decide whether the needed jobs succeeded or failed
-        uses: re-actors/alls-green@b5b5b37504aa4183270bd3d855c52a67f212be35 # v1.3.0
+        uses: re-actors/alls-green@b5b5b37504aa4183270bd3d855c52a67f212be35  # v1.3.0
         with:
           jobs: ${{ toJSON(needs) }}
