@@ -11,12 +11,7 @@ inputs:
     required: true
   pr-number:
     description: Pull request to check.
-    required: false
-    default: ${{ github.event.pull_request.number }}
-  github-token:
-    description: "Token used to list the pull request's files. Needs 'pull-requests: read'."
-    required: false
-    default: ${{ github.token }}
+    required: true
 
 outputs:
   matched:
@@ -30,7 +25,8 @@ runs:
       id: check
       shell: bash
       env:
-        GH_TOKEN: ${{ inputs.github-token }}
+        # the calling job needs 'pull-requests: read'
+        GH_TOKEN: ${{ github.token }}
         PATTERNS_FILE: ${{ inputs.patterns-file }}
         PR_NUMBER: ${{ inputs.pr-number }}
       run: |

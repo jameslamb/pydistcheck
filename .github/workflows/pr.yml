@@ -38,11 +38,13 @@ jobs:
         uses: ./.github/actions/files-changed  # zizmor: ignore[self-repository]
         with:
           patterns-file: ./.github/ci-trigger-patterns/unit-tests.txt
+          pr-number: ${{ github.event.pull_request.number }}
       - name: check if smoke tests should run
         id: smoke-tests
         uses: ./.github/actions/files-changed  # zizmor: ignore[self-repository]
         with:
           patterns-file: ./.github/ci-trigger-patterns/smoke-tests.txt
+          pr-number: ${{ github.event.pull_request.number }}
     outputs:
       run_unit_tests: ${{ steps.unit-tests.outputs.matched }}
       run_smoke_tests: ${{ steps.smoke-tests.outputs.matched }}
