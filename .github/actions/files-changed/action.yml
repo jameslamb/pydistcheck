@@ -1,0 +1,67 @@
+---
+name: files-changed
+description: >-
+  Check whether any files changed in a pull request match a list of patterns.
+
+inputs:
+  patterns-file:
+    description: >-
+      Path to a file of extended regexes, one per line, matched against the whole path
+      of each changed file. Blank lines and lines starting with '#' are ignored.
+    required: true
+  pr-number:
+    description: Pull request to check.
+    required: false
+    default: ${{ github.event.pull_request.number }}
+  github-token:
+    description: "Token used to list the pull request's files. Needs 'pull-requests: read'."
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  matched:
+    description: "'true' if any changed file matches a pattern in 'patterns-file', 'false' otherwise."
+    value: ${{ steps.check.outputs.matched }}
+
+runs:
+  using: composite
+  steps:
+    - name: check which files changed
+      id: check
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        PATTERNS_FILE: ${{ inputs.patterns-file }}
+        PR_NUMBER: ${{ inputs.pr-number }}
+      run: |
+        set -e -u -o pipefail
+
+        # figure out which files changed
+        changed_files=$(gh pr diff "${PR_NUMBER}" --repo "${GITHUB_REPOSITORY}" --name-only)
+        echo "--- changed files ---"
+        echo "${changed_files}"
+        echo ""
+
+        # ignore comment lines and blank lines in the list of patterns
+        patterns=$(sed -E '/^[[:space:]]*(#|$)/d' "${PATTERNS_FILE}")
+
+        # grep exit codes:
+        #
+        #   0 = some changed files match a pattern          -> run the tests
+        #   1 = no changed files match any pattern          -> skip the tests
+        #   2 = error (e.g. bad regex in the patterns file) -> fail the job
+        grep_exit_code=0
+        grep                                    \
+          --line-regexp                         \
+          --extended-regexp                     \
+          --file <(printf '%s\n' "${patterns}") \
+        <<< "${changed_files}" \
+        > /dev/null \
+        || grep_exit_code=$?
+
+        # handle output
+        case "${grep_exit_code}" in
+          0) echo "matched=true" >> "${GITHUB_OUTPUT}" ;;
+          1) echo "matched=false" >> "${GITHUB_OUTPUT}" ;;
+          *) exit "${grep_exit_code}" ;;
+        esac

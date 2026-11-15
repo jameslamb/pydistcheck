@@ -1,4 +1,5 @@
-# changes to pr.yml always trigger all CI
+# changes to PR CI configs always trigger all CI
+\.github/actions/files-changed/.*
 \.github/workflows/pr\.yml
 
 # 'pydistcheck' source code
