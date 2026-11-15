@@ -70,7 +70,7 @@ jobs:
         with:
           name: wheel
           path: dist
-      - uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086 # v1.14.3
+      - uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086  # v1.14.3
 
   upload_github:
     needs: [upload_pypi]
