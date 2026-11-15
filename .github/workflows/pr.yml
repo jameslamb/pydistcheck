@@ -24,7 +24,7 @@ jobs:
       pull-requests: read
     outputs:
       run_unit_tests: ${{ steps.filter.outputs.run_unit_tests }}
-      run_smoke_tests:  ${{ steps.filter.outputs.run_smoke_tests }}
+      run_smoke_tests: ${{ steps.filter.outputs.run_smoke_tests }}
     steps:
       - name: check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
@@ -84,22 +84,22 @@ jobs:
           set_output ./.github/ci-trigger-patterns/unit-tests.txt  run_unit_tests
           set_output ./.github/ci-trigger-patterns/smoke-tests.txt run_smoke_tests
   check-docs:
-    uses: ./.github/workflows/check-docs.yml
+    uses: $/.github/workflows/check-docs.yml
     permissions:
       contents: read
   smoke-tests:
     needs: [changes]
     if: needs.changes.outputs.run_smoke_tests == 'true'
-    uses: ./.github/workflows/smoke-tests.yml
+    uses: $/.github/workflows/smoke-tests.yml
     permissions:
       contents: read
   static-analysis:
-    uses: ./.github/workflows/static-analysis.yml
+    uses: $/.github/workflows/static-analysis.yml
     permissions:
       contents: read
   unit-tests:
     needs: [changes]
     if: needs.changes.outputs.run_unit_tests == 'true'
-    uses: ./.github/workflows/unit-tests.yml
+    uses: $/.github/workflows/unit-tests.yml
     permissions:
       contents: read
