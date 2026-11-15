@@ -83,4 +83,9 @@ jobs:
       - name: Note that all tests succeeded
         uses: re-actors/alls-green@b5b5b37504aa4183270bd3d855c52a67f212be35  # v1.3.0
         with:
+          # these are skipped if the PR doesn't change any files that affect them
+          # (see the 'changes' job)
+          allowed-skips: >-
+            smoke-tests,
+            unit-tests
           jobs: ${{ toJSON(needs) }}
