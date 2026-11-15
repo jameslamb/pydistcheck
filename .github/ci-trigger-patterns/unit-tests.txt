@@ -1,0 +1,20 @@
+# changes to pr.yml always trigger all CI
+\.github/workflows/pr\.yml
+
+# 'pydistcheck' source code
+constraints\.txt
+\.gitignore
+LICENSE
+LICENSES/.*
+pyproject\.toml
+README\.md
+requirements.*\.txt
+src/.*
+
+# testing code
+bin/.*
+docs/.*
+Makefile
+\.github/ci-trigger-patterns/unit-tests\.txt
+\.github/workflows/unit-tests\.yml
+tests/.*

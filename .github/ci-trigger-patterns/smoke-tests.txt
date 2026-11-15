@@ -1,0 +1,14 @@
+# changes to pr.yml always trigger all CI
+\.github/workflows/pr\.yml
+
+# 'pydistcheck' source code
+pyproject\.toml
+src/.*
+
+# testing code
+Makefile
+bin/run-smoke-tests\.sh
+bin/get-conda-release-files\.py
+bin/get-pypi-files\.py
+\.github/ci-trigger-patterns/smoke-tests\.txt
+\.github/workflows/smoke-tests\.yml

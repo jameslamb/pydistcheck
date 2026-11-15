@@ -15,19 +15,91 @@ permissions:
   contents: none
 
 jobs:
+  # skip some expensive jobs if only files that cannot affect them were changed
+  changes:
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      run_unit_tests: ${{ steps.filter.outputs.run_unit_tests }}
+      run_smoke_tests:  ${{ steps.filter.outputs.run_smoke_tests }}
+    steps:
+      - name: check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          sparse-checkout: .github/ci-trigger-patterns/
+          sparse-checkout-cone-mode: false
+      - name: check which files changed
+        id: filter
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -e -u -o pipefail
+
+          # figure out which files changed
+          changed_files=$(gh pr diff "${PR_NUMBER}" --repo "${GITHUB_REPOSITORY}" --name-only)
+          echo "--- changed files ---"
+          echo "${changed_files}"
+          echo ""
+
+          # sets output '{output_name}=true' if any changed file matches a pattern
+          # in '{patterns_file}' (extended regexes, matched against the whole path).
+          #
+          # Blank lines and lines starting with '#' in '{patterns_file}' are ignored.
+          set_output() {
+            local patterns_file="${1}"
+            local output_name="${2}"
+            local patterns
+
+            # ignore comment lines and blank lines in the list of patterns
+            patterns=$(sed -E '/^[[:space:]]*(#|$)/d' "${patterns_file}")
+
+            # grep exit codes:
+            #
+            #   0 = some changed files match a pattern          -> run the tests
+            #   1 = no changed files match any pattern          -> skip the tests
+            #   2 = error (e.g. bad regex in the patterns file) -> fail the job
+            local grep_exit_code=0
+            grep                                    \
+              --line-regexp                         \
+              --extended-regexp                     \
+              --file <(printf '%s\n' "${patterns}") \
+            <<< "${changed_files}" \
+            > /dev/null \
+            || grep_exit_code=$?
+
+            # handle output
+            case "${grep_exit_code}" in
+              0) echo "${output_name}=true" >> "${GITHUB_OUTPUT}" ;;
+              1) echo "${output_name}=false" >> "${GITHUB_OUTPUT}" ;;
+              *) exit "${grep_exit_code}" ;;
+            esac
+          }
+
+          set_output ./.github/ci-trigger-patterns/unit-tests.txt  run_unit_tests
+          set_output ./.github/ci-trigger-patterns/smoke-tests.txt run_smoke_tests
   check-docs:
-    uses: $/.github/workflows/check-docs.yml
+    uses: ./.github/workflows/check-docs.yml
     permissions:
       contents: read
   smoke-tests:
-    uses: $/.github/workflows/smoke-tests.yml
+    needs: [changes]
+    if: needs.changes.outputs.run_smoke_tests == 'true'
+    uses: ./.github/workflows/smoke-tests.yml
     permissions:
       contents: read
   static-analysis:
-    uses: $/.github/workflows/static-analysis.yml
+    uses: ./.github/workflows/static-analysis.yml
     permissions:
       contents: read
   unit-tests:
-    uses: $/.github/workflows/unit-tests.yml
+    needs: [changes]
+    if: needs.changes.outputs.run_unit_tests == 'true'
+    uses: ./.github/workflows/unit-tests.yml
     permissions:
       contents: read
