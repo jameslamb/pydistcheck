@@ -13,3 +13,6 @@ https://superuser.com*
 
 # throws 403s (probably a defense against bots)
 https://www.iec.ch/*
+
+# blocking automated traffic (I think?)
+https://llvm.org/*

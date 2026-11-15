@@ -2,20 +2,10 @@
 name: smoke-tests
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_call:
   # run every Wednesday at midnight UTC
   schedule:
     - cron: '0 0 * * 3'
-
-# automatically cancel in-progress builds if another commit is pushed
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 # default to 0 permissions
 # (job-level overrides add the minimal permissions needed)
@@ -67,15 +57,3 @@ jobs:
               requests
           make install
           make smoke-tests
-  all-smoke-tests-successful:
-    if: always()
-    runs-on: ubuntu-slim
-    needs:
-      - test
-    permissions:
-      statuses: read
-    steps:
-      - name: Decide whether the needed jobs succeeded or failed
-        uses: re-actors/alls-green@b5b5b37504aa4183270bd3d855c52a67f212be35  # v1.3.0
-        with:
-          jobs: ${{ toJSON(needs) }}

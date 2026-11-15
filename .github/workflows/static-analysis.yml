@@ -2,17 +2,7 @@
 name: static-analysis
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
-# automatically cancel in-progress builds if another commit is pushed
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  workflow_call:
 
 # default to 0 permissions
 # (job-level overrides add the minimal permissions needed)
@@ -24,7 +14,7 @@ jobs:
     name: lint
     runs-on: ubuntu-latest
     permissions:
-      statuses: read
+      contents: read
     steps:
       - name: check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
