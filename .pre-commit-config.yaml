@@ -57,6 +57,7 @@ repos:
     rev: v1.38.0
     hooks:
       - id: yamllint
+        args: ["--strict"]
         additional_dependencies: [pyyaml]
   - repo: https://github.com/codespell-project/codespell
     rev: v2.4.3
