@@ -1,7 +1,6 @@
 *.7zip
 *.a
 *.bak
-build/
 _build/
 build/
 *.bz
@@ -33,6 +32,7 @@ downloads/
 *.html
 htmlcov/
 .idea/
+.ipynb_checkpoints/
 *.js
 *.json
 linkcheck_output/
@@ -40,6 +40,7 @@ linkcheck_output/
 .lycheecache
 *.lzma
 .mypy_cache/
+.nox/
 *.npy
 *.o
 out.txt
@@ -53,6 +54,7 @@ out.txt
 *.pyc
 __pycache__/
 .pytest_cache/
+.python-version
 *.rda
 *.rds
 *.Rdata
@@ -64,11 +66,15 @@ smoke-tests/
 *.snappy-*.tar.gz
 *.so
 *.sqlite
+ *.swp
 *.tar.gz
 *.tgz
 *.tmp
 tmp-dir/
+.tox/
+venv/
 .venv/
+.vscode/
 wheels/
 *.whl
 *.xls
