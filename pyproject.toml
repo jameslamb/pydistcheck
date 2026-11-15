@@ -103,6 +103,13 @@ strict = true
 module = ["compression", "compression.*"]
 ignore_missing_imports = true
 
+[tool.pytest.ini_options]
+addopts = [
+    "--strict-config",
+    "--strict-markers"
+]
+xfail_strict = true
+
 [tool.rstcheck]
 ignore_directives = [
     # rstcheck does not understand directives from extension 'sphinx-click'
