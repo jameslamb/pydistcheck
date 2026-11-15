@@ -42,7 +42,8 @@ runs:
         # file names come from the PR, so stop the runner from treating any of them
         # as workflow commands
         # (ref: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands)
-        stop_token=$(uuidgen)
+        # ('uuidgen' isn't available on 'ubuntu-slim' runners, so generate a random hex string instead)
+        stop_token=$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')
         echo "--- changed files ---"
         echo "::stop-commands::${stop_token}"
         echo "${changed_files}"
