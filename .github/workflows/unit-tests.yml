@@ -2,12 +2,7 @@
 name: unit-tests
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_call:
 
 # automatically cancel in-progress builds if another commit is pushed
 concurrency:
@@ -205,18 +200,3 @@ jobs:
       - name: run tests
         run: |
           bin/check-test-packages.sh ${GITHUB_WORKSPACE}/tests/data
-  all-unit-tests-successful:
-    if: always()
-    runs-on: ubuntu-slim
-    needs:
-      - build
-      - check-test-packages
-      - test-cpython
-      - test-pypy
-    permissions:
-      statuses: read
-    steps:
-      - name: Decide whether the needed jobs succeeded or failed
-        uses: re-actors/alls-green@b5b5b37504aa4183270bd3d855c52a67f212be35 # v1.3.0
-        with:
-          jobs: ${{ toJSON(needs) }}

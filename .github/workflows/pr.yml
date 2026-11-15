@@ -1,0 +1,33 @@
+name: pr
+
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: pr-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# default to 0 permissions
+# (job-level overrides add the minimal permissions needed)
+permissions:
+  contents: none
+
+jobs:
+  check-docs:
+    uses: $/.github/workflows/check-docs.yml
+    permissions:
+      contents: read
+  smoke-tests:
+    uses: $/.github/workflows/smoke-tests.yml
+    permissions:
+      contents: read
+  static-analysis:
+    uses: $/.github/workflows/static-analysis.yml
+    permissions:
+      contents: read
+  unit-tests:
+    uses: $/.github/workflows/unit-tests.yml
+    permissions:
+      contents: read

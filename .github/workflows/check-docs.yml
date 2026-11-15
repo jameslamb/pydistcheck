@@ -2,12 +2,7 @@
 name: docs
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_call:
 
 # automatically cancel in-progress builds if another commit is pushed
 concurrency:
@@ -76,16 +71,3 @@ jobs:
           # fail the action on broken links
           fail: true
           failIfEmpty: true
-  all-docs-tests-successful:
-    if: always()
-    runs-on: ubuntu-slim
-    needs:
-      - check-docs
-      - check-links
-    permissions:
-      statuses: read
-    steps:
-      - name: Decide whether the needed jobs succeeded or failed
-        uses: re-actors/alls-green@b5b5b37504aa4183270bd3d855c52a67f212be35 # v1.3.0
-        with:
-          jobs: ${{ toJSON(needs) }}

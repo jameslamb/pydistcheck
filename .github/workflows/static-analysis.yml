@@ -2,12 +2,7 @@
 name: static-analysis
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_call:
 
 # automatically cancel in-progress builds if another commit is pushed
 concurrency:
@@ -24,7 +19,7 @@ jobs:
     name: lint
     runs-on: ubuntu-latest
     permissions:
-      statuses: read
+      contents: read
     steps:
       - name: check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
