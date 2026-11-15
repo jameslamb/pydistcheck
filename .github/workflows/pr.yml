@@ -5,6 +5,7 @@ on:
     branches:
       - main
 
+# automatically cancel in-progress builds if another commit is pushed
 concurrency:
   group: pr-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
