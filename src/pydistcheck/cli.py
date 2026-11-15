@@ -8,8 +8,8 @@ from typing import TYPE_CHECKING
 import click
 
 if TYPE_CHECKING:
-    from typing import Optional
     from collections.abc import Sequence
+    from typing import Optional
 
 from ._checks import (
     ALL_CHECKS,
