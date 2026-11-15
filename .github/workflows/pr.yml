@@ -66,3 +66,19 @@ jobs:
     uses: $/.github/workflows/unit-tests.yml
     permissions:
       contents: read
+  all-required-pr-jobs:
+    if: always()
+    runs-on: ubuntu-slim
+    needs:
+      - changes
+      - check-docs
+      - smoke-tests
+      - static-analysis
+      - unit-tests
+    permissions:
+      statuses: read
+    steps:
+      - name: Note that all tests succeeded
+        uses: re-actors/alls-green@b5b5b37504aa4183270bd3d855c52a67f212be35  # v1.3.0
+        with:
+          jobs: ${{ toJSON(needs) }}
