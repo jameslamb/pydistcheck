@@ -38,8 +38,15 @@ runs:
 
         # figure out which files changed
         changed_files=$(gh pr diff "${PR_NUMBER}" --repo "${GITHUB_REPOSITORY}" --name-only)
+
+        # file names come from the PR, so stop the runner from treating any of them
+        # as workflow commands
+        # (ref: https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands)
+        stop_token=$(uuidgen)
         echo "--- changed files ---"
+        echo "::stop-commands::${stop_token}"
         echo "${changed_files}"
+        echo "::${stop_token}::"
         echo ""
 
         # ignore comment lines and blank lines in the list of patterns
