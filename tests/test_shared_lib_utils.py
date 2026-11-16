@@ -3,14 +3,14 @@ from typing import Optional
 
 import pytest
 
-from pydistcheck._shared_lib_utils import (
-    _MACHO_STRIP_SYMBOL,
-    _file_has_debug_symbols,
-)
+from pydistcheck._shared_lib_utils import _file_has_debug_symbols
 
 _NO_DEBUG_SYMBOLS = (False, "")
 _FOUND_DEBUG_SECTIONS = (True, "objdump -h")
 _FOUND_DEBUG_SYMBOLS = (True, "nm -a")
+
+# symbol added by Apple's 'strip', which should be ignored
+_MACHO_STRIP_SYMBOL = b"radr://5614542"
 
 # ELF symbol types
 _STT_FUNC = 2
@@ -96,7 +96,7 @@ def _make_elf(
         for i in range(1, len(section_names) + 1)
     )
     if symbol_types is not None:
-        # .symtab (SHT_SYMTAB)
+        # .symtab (SHT_SYMTAB), using .shstrtab (section 1) for symbol names
         shdrs.append(
             struct.pack(
                 shdr_fmt,
@@ -106,7 +106,7 @@ def _make_elf(
                 0,
                 symtab_offset,
                 len(symtab),
-                0,
+                1,
                 0,
                 8,
                 sym_size,
@@ -122,7 +122,7 @@ def _make_elf(
     header = ident + struct.pack(
         header_fmt,
         3,  # e_type = ET_DYN
-        62,  # e_machine
+        62 if endian == "<" else 22,  # e_machine (x86-64 or s390)
         1,  # e_version
         0,  # e_entry
         0,  # e_phoff
@@ -327,6 +327,11 @@ def test_elf_debug_sections_detected(tmp_path, is_64, endian, debug_section):
     content = _make_elf(
         is_64=is_64, endian=endian, section_names=(b".text", debug_section)
     )
+    assert _check_bytes(tmp_path, content) == _FOUND_DEBUG_SECTIONS
+
+
+def test_elf_non_utf8_section_names(tmp_path):
+    content = _make_elf(section_names=(b".text\xff", b".debug_info"))
     assert _check_bytes(tmp_path, content) == _FOUND_DEBUG_SECTIONS
 
 
