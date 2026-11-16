@@ -18,20 +18,16 @@ Compilers for languages like C, C++, Fortran, and Rust can optionally include ad
 The inclusion of such information can increase the size of built objects substantially.
 It's ``pydistcheck``'s position that the inclusion of such debug symbols in a shared library distributed as part of Python wheel is rarely desirable, and that by default wheels shouldn't include that type of information.
 
-This check attempts to run the following tools with ``subprocess.run()``.
+This check reads the headers of each compiled object directly (without invoking any other tools), and reports debug symbols if it finds any of the following.
 
-* ``dsymutil``
-* ``llvm-nm``
-* ``llvm-objdump``
-* ``nm``
-* ``objdump``
-* ``readelf``
+* **ELF** (Linux shared libraries, ``.so``): sections with DWARF debug information (``.debug_*`` or ``.zdebug_*``),
+  or a symbol table that has not been stripped of "debugger-only" symbols (source file names and section symbols, which ``nm`` only shows when passed ``-a``)
+* **Mach-O** (macOS shared libraries, ``.dylib`` / ``.so``): a ``__DWARF`` segment or sections,
+  or "stab" symbolic debugging entries in the symbol table (other than the ``radr://5614542`` symbol added by Apple's ``strip``)
+* **PE** (Windows libraries, ``.dll`` / ``.pyd``): sections with DWARF debug information (for example, produced by MinGW),
+  or ``.file`` entries in the COFF symbol table
 
-Installing more of these in the environment where you run ``pydistcheck`` improves its ability to detect debug symbols.
-
-.. warning::
-    If ``pydistcheck`` invoking these other tools with ``subprocess.run()`` is a concern for you (for example, if it causes permissions-related issues),
-    turn this check off by passing it to ``--ignore``.
+Each error message suggests a command (``objdump -h`` or ``nm -a``) that can be run on the extracted file to see the debug information.
 
 For a LOT more information about this topic, see these discussions in other open source projects.
 

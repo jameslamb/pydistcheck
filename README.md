@@ -135,12 +135,12 @@ $ pydistcheck tests/data/debug-baseballmetrics*.whl
 
 checking 'tests/data/debug-baseballmetrics-0.1.0-py3-none-macosx_12_0_arm64.whl'
 ------------ check results -----------
-1. [compiled-objects-have-debug-symbols] Found compiled object containing debug symbols. For details, extract the distribution contents and run 'dsymutil -s "lib/lib_baseballmetrics.dylib"'.
+1. [compiled-objects-have-debug-symbols] Found compiled object containing debug symbols. For details, extract the distribution contents and run 'nm -a "lib/lib_baseballmetrics.dylib"'.
 errors found while checking: 1
 
 checking 'tests/data/debug-baseballmetrics-0.1.0-py3-none-manylinux_2_28_x86_64.manylinux_2_5_x86_64.manylinux1_x86_64.whl'
 ------------ check results -----------
-1. [compiled-objects-have-debug-symbols] Found compiled object containing debug symbols. For details, extract the distribution contents and run 'objdump --all-headers "lib/lib_baseballmetrics.so"'.
+1. [compiled-objects-have-debug-symbols] Found compiled object containing debug symbols. For details, extract the distribution contents and run 'objdump -h "lib/lib_baseballmetrics.so"'.
 errors found while checking: 1
 
 ==================== done running pydistcheck ===============
