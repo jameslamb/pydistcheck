@@ -1,9 +1,12 @@
-name: pr
+name: main
 
 on:
   push:
     branches:
       - main
+  # run every Wednesday at midnight UTC
+  schedule:
+    - cron: '0 0 * * 3'
 
 # automatically cancel in-progress builds if another commit is pushed
 concurrency:
@@ -16,11 +19,16 @@ permissions:
   contents: none
 
 jobs:
+  build:
+    uses: $/.github/workflows/build.yml
+    permissions:
+      contents: read
   check-docs:
     uses: $/.github/workflows/check-docs.yml
     permissions:
       contents: read
   smoke-tests:
+    needs: [build]
     uses: $/.github/workflows/smoke-tests.yml
     permissions:
       contents: read
@@ -29,6 +37,7 @@ jobs:
     permissions:
       contents: read
   unit-tests:
+    needs: [build]
     uses: $/.github/workflows/unit-tests.yml
     permissions:
       contents: read

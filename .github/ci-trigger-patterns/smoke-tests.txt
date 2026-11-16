@@ -12,4 +12,5 @@ bin/run-smoke-tests\.sh
 bin/get-conda-release-files\.py
 bin/get-pypi-files\.py
 \.github/ci-trigger-patterns/smoke-tests\.txt
+\.github/workflows/build\.yml
 \.github/workflows/smoke-tests\.yml

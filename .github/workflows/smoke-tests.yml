@@ -3,9 +3,6 @@ name: smoke-tests
 
 on:
   workflow_call:
-  # run every Wednesday at midnight UTC
-  schedule:
-    - cron: '0 0 * * 3'
 
 # default to 0 permissions
 # (job-level overrides add the minimal permissions needed)
@@ -44,16 +41,18 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y --no-install-recommends \
             llvm
+      - name: download packages
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # v8.0.2
+        with:
+          name: wheel
+          path: dist
+      - name: install pydistcheck and testing dependencies
+        shell: bash
+        run: |
+          python -m pip install \
+              requests \
+              "$(echo dist/*.whl)[conda]"
       - name: run tests
         shell: bash
-        env:
-          # ensure 'pipx' uses the Python interpreter set up by 'actions/setup-python'
-          PIPX_HOME: ${{ runner.temp }}/pipx
-          PIPX_BIN_DIR: ${{ runner.temp }}/pipx/bin
         run: |
-          export PATH="${PIPX_BIN_DIR}:${PATH}"
-          python -m pip install \
-              pipx \
-              requests
-          make install
           make smoke-tests

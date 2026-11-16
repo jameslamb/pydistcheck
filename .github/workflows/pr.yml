@@ -48,12 +48,16 @@ jobs:
     outputs:
       run_unit_tests: ${{ steps.unit-tests.outputs.matched }}
       run_smoke_tests: ${{ steps.smoke-tests.outputs.matched }}
+  build:
+    uses: $/.github/workflows/build.yml
+    permissions:
+      contents: read
   check-docs:
     uses: $/.github/workflows/check-docs.yml
     permissions:
       contents: read
   smoke-tests:
-    needs: [changes]
+    needs: [build, changes]
     if: needs.changes.outputs.run_smoke_tests == 'true'
     uses: $/.github/workflows/smoke-tests.yml
     permissions:
@@ -63,7 +67,7 @@ jobs:
     permissions:
       contents: read
   unit-tests:
-    needs: [changes]
+    needs: [build, changes]
     if: needs.changes.outputs.run_unit_tests == 'true'
     uses: $/.github/workflows/unit-tests.yml
     permissions:
@@ -72,6 +76,7 @@ jobs:
     if: always()
     runs-on: ubuntu-slim
     needs:
+      - build
       - changes
       - check-docs
       - smoke-tests
