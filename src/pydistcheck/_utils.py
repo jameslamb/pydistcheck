@@ -1,3 +1,4 @@
+# Copyright (c) 2022-2026 the pydistcheck developers. All rights reserved.
 """
 miscellaneous helper classes and functions that are
 not specific to package distributions

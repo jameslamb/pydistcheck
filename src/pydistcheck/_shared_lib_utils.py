@@ -1,3 +1,4 @@
+# Copyright (c) 2022-2026 the pydistcheck developers. All rights reserved.
 """
 functions used to analyze compiled objects
 """
@@ -44,7 +45,7 @@ _COMMANDS_TO_PATTERNS = [
     (["llvm-objdump", "--macho", "-W"],            r"^Contents of the \.debug"),
     (["llvm-objdump", "-g"],                       r"^Contents of the \.debug"),
     (["llvm-objdump", "--macho", "-g"],            r"^Contents of the \.debug"),
-    (["readelf", "-S"],                            r"[\t ]+\.debug_[a-z]+[\t ]+")
+    (["readelf", "-S"],                            r"[\t ]+\.debug_[a-z]+[\t ]+"),
 ]
 # fmt: on
 
@@ -64,7 +65,7 @@ def _look_for_debug_symbols(lib_file: str) -> tuple[bool, str]:
 def _get_symbols(cmd_args: list[str], lib_file: str) -> str:
     syms = _run_command(args=[*cmd_args, lib_file])
     return "\n".join(
-        [line for line in syms.split("\n") if line and _MACHO_STRIP_SYMBOL not in line]
+        [line for line in syms.split("\n") if line and _MACHO_STRIP_SYMBOL not in line],
     )
 
 

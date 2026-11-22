@@ -1,3 +1,4 @@
+# Copyright (c) 2022-2026 the pydistcheck developers. All rights reserved.
 """
 Code that prints diagnostic information about a distribution.
 """
@@ -40,7 +41,7 @@ def inspect_distribution(*, summary: "_DistributionSummary", config: "_Config") 
     print("contents")
     print(f"  * directories: {summary.num_directories}")
     print(
-        f"  * files: {summary.num_files} ({len(summary.compiled_object_paths)} compiled)"
+        f"  * files: {summary.num_files} ({len(summary.compiled_object_paths)} compiled)",
     )
 
     print("size by extension")

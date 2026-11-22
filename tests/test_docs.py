@@ -1,3 +1,4 @@
+# Copyright (c) 2022-2026 the pydistcheck developers. All rights reserved.
 """
 Tests that ensure documentation accurately describes the
 state of the project's source code.

@@ -1,3 +1,4 @@
+# Copyright (c) 2022-2026 the pydistcheck developers. All rights reserved.
 import os
 import re
 from sys import platform
@@ -49,7 +50,9 @@ if os.path.isfile(os.path.join(TEST_DATA_DIR, NUMPY_WIN_DEBUG_WHL)):
 
 
 def _assert_log_matches_pattern(
-    result: Result, pattern: str, num_times: int = 1
+    result: Result,
+    pattern: str,
+    num_times: int = 1,
 ) -> None:
     log_lines = result.output.split("\n")
     match_results = [bool(re.search(pattern, log_line)) for log_line in log_lines]
@@ -119,7 +122,9 @@ def test_check_runs_for_all_files_before_exiting():
         num_times=2,
     )
     _assert_log_matches_pattern(
-        result=result, pattern="errors found while checking\\: 1", num_times=2
+        result=result,
+        pattern="errors found while checking\\: 1",
+        num_times=2,
     )
 
 
@@ -128,7 +133,8 @@ def test_check_fails_with_informative_error_if_file_is_an_unrecognized_format(fl
     result = CliRunner().invoke(check, [__file__, *flags])
     assert result.exit_code == 2
     _assert_log_matches_pattern(
-        result, r"error.*File '.*' does not appear to be a Python package distribution"
+        result,
+        r"error.*File '.*' does not appear to be a Python package distribution",
     )
 
 
@@ -138,7 +144,8 @@ def test_check_respects_ignore_with_one_check(distro_file):
 
     # fails when running all checks
     result = runner.invoke(
-        check, [os.path.join(TEST_DATA_DIR, distro_file), "--max-allowed-files=1"]
+        check,
+        [os.path.join(TEST_DATA_DIR, distro_file), "--max-allowed-files=1"],
     )
     assert result.exit_code == 1
 
@@ -265,7 +272,9 @@ def test_check_fails_with_expected_error_if_multiple_checks_in_ignore_are_unreco
 @patch("pydistcheck.cli._FileCountCheck", autospec=True)
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES)
 def test_check_respects_select_with_one_check(
-    mock_path_contains_spaces, mock_too_many_files, distro_file
+    mock_path_contains_spaces,
+    mock_too_many_files,
+    distro_file,
 ):
     # ensure this attribute is actually set, as it's used for filtering (the class attribute
     # is lost somewhere in all this mocking and patching)
@@ -320,7 +329,10 @@ def test_check_respects_select_with_one_check(
 @patch("pydistcheck.cli._FileCountCheck", autospec=True)
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES)
 def test_check_respects_select_with_multiple_checks(
-    mock_path_too_long, mock_path_contains_spaces, mock_too_many_files, distro_file
+    mock_path_too_long,
+    mock_path_contains_spaces,
+    mock_too_many_files,
+    distro_file,
 ):
     # ensure this attribute is actually set, as it's used for filtering (the class attribute
     # is lost somewhere in all this mocking and patching)
@@ -411,12 +423,14 @@ def test_check_fails_with_expected_error_if_multiple_checks_in_select_are_unreco
 def test_check_respects_max_allowed_files(distro_file):
     runner = CliRunner()
     result = runner.invoke(
-        check, [os.path.join(TEST_DATA_DIR, distro_file), "--max-allowed-files=1"]
+        check,
+        [os.path.join(TEST_DATA_DIR, distro_file), "--max-allowed-files=1"],
     )
     assert result.exit_code == 1
 
     _assert_log_matches_pattern(
-        result, r"^1\. \[too\-many\-files\] Found 11 files\. Only 1 allowed\.$"
+        result,
+        r"^1\. \[too\-many\-files\] Found 11 files\. Only 1 allowed\.$",
     )
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
 
@@ -562,10 +576,12 @@ def test_check_error_messages_supports_output_file_size_precision():
     ],
 )
 def test_check_raises_informative_error_for_malformed_file_size_config(
-    cli_arg, size_str
+    cli_arg,
+    size_str,
 ):
     with pytest.raises(
-        ValueError, match=rf"Could not parse '{size_str}' as a file size"
+        ValueError,
+        match=rf"Could not parse '{size_str}' as a file size",
     ):
         CliRunner().invoke(
             check,
@@ -615,7 +631,7 @@ def test_check_prefers_pyproject_toml_to_defaults(distro_file, tmp_path):
     with runner.isolated_filesystem(temp_dir=tmp_path):
         with open("pyproject.toml", "w") as f:
             f.write(
-                "[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '7B'\n"
+                "[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '7B'\n",
             )
         result = runner.invoke(
             check,
@@ -643,12 +659,13 @@ def test_check_handles_ignore_list_in_pyproject_toml_correctly(distro_file, tmp_
         )
         assert result.exit_code == 1
         _assert_log_matches_pattern(
-            result, r"^1\. \[too\-many\-files\] Found [0-9]+ files\. Only 1 allowed\.$"
+            result,
+            r"^1\. \[too\-many\-files\] Found [0-9]+ files\. Only 1 allowed\.$",
         )
         with open("pyproject.toml", "w") as f:
             f.write(
                 "[tool.pylint]\n[tool.pydistcheck]\n"
-                "ignore = [\n'too-many-files', 'path-contains-non-ascii-characters'\n]\n"
+                "ignore = [\n'too-many-files', 'path-contains-non-ascii-characters'\n]\n",
             )
         result = runner.invoke(
             check,
@@ -660,13 +677,14 @@ def test_check_handles_ignore_list_in_pyproject_toml_correctly(distro_file, tmp_
 
 @pytest.mark.parametrize("distro_file", BASE_PACKAGES)
 def test_check_prefers_keyword_args_to_pyproject_toml_and_defaults(
-    distro_file, tmp_path
+    distro_file,
+    tmp_path,
 ):
     runner = CliRunner()
     with runner.isolated_filesystem(temp_dir=tmp_path):
         with open("pyproject.toml", "w") as f:
             f.write(
-                "[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '7B'\n"
+                "[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '7B'\n",
             )
         result = runner.invoke(
             check,
@@ -693,14 +711,14 @@ def test_check_prefers_custom_toml_file_to_root_pyproject_toml(distro_file, tmp_
     with runner.isolated_filesystem(temp_dir=tmp_path):
         with open("pyproject.toml", "w") as f:
             f.write(
-                "[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '10GB'\n"
+                "[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '10GB'\n",
             )
         other_dir = os.path.join(tmp_path, "cool-files")
         other_config = os.path.join(other_dir, "stuff.toml")
         os.mkdir(other_dir)
         with open(other_config, "w") as f:
             f.write(
-                "[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '7B'\n"
+                "[tool.pylint]\n[tool.pydistcheck]\nmax_allowed_size_uncompressed = '7B'\n",
             )
         result = runner.invoke(
             check,
@@ -736,7 +754,8 @@ def test_files_only_differ_by_case_works(distro_file):
         ),
     )
     _assert_log_matches_pattern(
-        result=result, pattern=r"errors found while checking\: [0-9]{1}"
+        result=result,
+        pattern=r"errors found while checking\: [0-9]{1}",
     )
 
 
@@ -764,7 +783,8 @@ def test_mixed_file_extension_use_works(distro_file):
     )
 
     _assert_log_matches_pattern(
-        result=result, pattern=r"errors found while checking\: [0-9]{1}"
+        result=result,
+        pattern=r"errors found while checking\: [0-9]{1}",
     )
 
 
@@ -788,7 +808,8 @@ def test_path_contains_non_ascii_characters_works(distro_file):
     )
 
     _assert_log_matches_pattern(
-        result=result, pattern=r"errors found while checking\: [0-9]{1}"
+        result=result,
+        pattern=r"errors found while checking\: [0-9]{1}",
     )
 
 
@@ -835,7 +856,8 @@ def test_path_contains_spaces_works(distro_file):
     )
 
     _assert_log_matches_pattern(
-        result=result, pattern=r"errors found while checking\: [0-9]{1}"
+        result=result,
+        pattern=r"errors found while checking\: [0-9]{1}",
     )
 
 
@@ -882,7 +904,8 @@ def test_unexpected_files_check_works(distro_file):
     )
 
     _assert_log_matches_pattern(
-        result=result, pattern=r"errors found while checking\: [0-9]{1}"
+        result=result,
+        pattern=r"errors found while checking\: [0-9]{1}",
     )
 
 
@@ -929,7 +952,8 @@ def test_unexpected_files_correctly_respects_multiple_cli_args(distro_file):
     )
 
     _assert_log_matches_pattern(
-        result=result, pattern=r"errors found while checking\: [0-9]{1}"
+        result=result,
+        pattern=r"errors found while checking\: [0-9]{1}",
     )
 
 
@@ -957,12 +981,13 @@ def test_expected_files_check_works(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^2\. \[expected\-files\] Did not find any files matching pattern '\*\.R'."
+            r"^2\. \[expected\-files\] Did not find any files matching pattern '\*\.R'.",
         ),
     )
 
     _assert_log_matches_pattern(
-        result=result, pattern=r"errors found while checking\: [0-9]+"
+        result=result,
+        pattern=r"errors found while checking\: [0-9]+",
     )
 
 
@@ -980,7 +1005,8 @@ def test_expected_files_does_not_raise_check_failure_if_all_patterns_match(distr
     assert result.exit_code == 0
 
     _assert_log_matches_pattern(
-        result=result, pattern=r"errors found while checking\: 0"
+        result=result,
+        pattern=r"errors found while checking\: 0",
     )
 
 
@@ -998,7 +1024,8 @@ def test_expected_files_does_not_raise_check_failure_if_directory_pattern_matche
     assert result.exit_code == 0
 
     _assert_log_matches_pattern(
-        result=result, pattern=r"errors found while checking\: 0"
+        result=result,
+        pattern=r"errors found while checking\: 0",
     )
 
 
@@ -1052,7 +1079,8 @@ def test_cli_raises_exactly_the_expected_number_of_errors_for_the_problematic_pa
     )
     assert result.exit_code == 1
     _assert_log_matches_pattern(
-        result=result, pattern=r"errors found while checking\: 12$"
+        result=result,
+        pattern=r"errors found while checking\: 12$",
     )
 
 
@@ -1116,7 +1144,8 @@ def test_inspect_runs_before_checks(distro_file):
     assert result.exit_code == 1
 
     _assert_log_matches_pattern(
-        result, r"^1\. \[too\-many\-files\] Found 11 files\. Only 1 allowed\.$"
+        result,
+        r"^1\. \[too\-many\-files\] Found 11 files\. Only 1 allowed\.$",
     )
     _assert_log_matches_pattern(result, "errors found while checking\\: 1")
     _assert_log_matches_pattern(result, r"^size by extension$")
@@ -1140,7 +1169,8 @@ def test_inspect_respects_output_file_size_unit_for_all_size_strings():
     _assert_log_matches_pattern(result, r" uncompressed size: 12\.039K")
     _assert_log_matches_pattern(result, r" \.py \- 70\.0B")
     _assert_log_matches_pattern(
-        result, r" \(11\.092K\) base-package\-0\.1\.0/LICENSE\.txt"
+        result,
+        r" \(11\.092K\) base-package\-0\.1\.0/LICENSE\.txt",
     )
 
     # --output-file-size-unit B
@@ -1159,7 +1189,8 @@ def test_inspect_respects_output_file_size_unit_for_all_size_strings():
     _assert_log_matches_pattern(result, r" uncompressed size: 12328\.0B")
     _assert_log_matches_pattern(result, r" \.py \- 70\.0B")
     _assert_log_matches_pattern(
-        result, r" \(11358\.0B\) base-package\-0\.1\.0/LICENSE\.txt"
+        result,
+        r" \(11358\.0B\) base-package\-0\.1\.0/LICENSE\.txt",
     )
 
 
@@ -1181,7 +1212,8 @@ def test_inspect_respects_output_file_size_precision_for_all_size_strings():
     _assert_log_matches_pattern(result, r" uncompressed size: 12\.039K")
     _assert_log_matches_pattern(result, r" \.py \- 70\.0B")
     _assert_log_matches_pattern(
-        result, r" \(11\.092K\) base-package\-0\.1\.0/LICENSE\.txt"
+        result,
+        r" \(11\.092K\) base-package\-0\.1\.0/LICENSE\.txt",
     )
 
     # --output-file-size-precision 2
@@ -1200,5 +1232,6 @@ def test_inspect_respects_output_file_size_precision_for_all_size_strings():
     _assert_log_matches_pattern(result, r" uncompressed size: 12\.04K")
     _assert_log_matches_pattern(result, r" \.py \- 70\.0B")
     _assert_log_matches_pattern(
-        result, r" \(11\.09K\) base-package\-0\.1\.0/LICENSE\.txt"
+        result,
+        r" \(11\.09K\) base-package\-0\.1\.0/LICENSE\.txt",
     )

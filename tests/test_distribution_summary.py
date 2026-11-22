@@ -1,3 +1,4 @@
+# Copyright (c) 2022-2026 the pydistcheck developers. All rights reserved.
 import os
 import zipfile
 
@@ -105,7 +106,7 @@ def test_distribution_summary_basically_works(distro_file):
 
 def test_distribution_summary_get_largest_files_works():
     ds = _DistributionSummary.from_file(
-        os.path.join(TEST_DATA_DIR, BASE_PACKAGE_SDISTS[0])
+        os.path.join(TEST_DATA_DIR, BASE_PACKAGE_SDISTS[0]),
     )
 
     # get_largest_files() should return a non-empty list of _FileInfo objects
