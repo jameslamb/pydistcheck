@@ -3,13 +3,13 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "pydistcheck"
-current_year = datetime.now(tz=timezone.utc).year
+current_year = datetime.now(tz=UTC).year
 copyright = f"2022-{current_year}, James Lamb"  # noqa: A001
 author = "James Lamb"
 
