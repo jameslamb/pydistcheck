@@ -1,6 +1,9 @@
+# Copyright (c) 2022-2026 the pydistcheck developers. All rights reserved.
 """
 CLI entrypoints
 """
+
+from __future__ import annotations
 
 import sys
 from typing import TYPE_CHECKING
@@ -29,7 +32,7 @@ from ._distribution_summary import _DistributionSummary
 from ._utils import _FileSize
 
 
-class ExitCodes:
+class _ExitCodes:
     OK = 0
     CHECK_ERRORS = 1
     UNSUPPORTED_FILE_TYPE = 2
@@ -188,14 +191,14 @@ class ExitCodes:
         "  - G, Gi = gibibytes"
     ),
 )
-def check(  # noqa: PLR0913
+def check(  # noqa: C901,PLR0913
     *,
     filepaths: tuple[str],
     version: bool,
     config: str | None,
-    expected_directories: "Sequence[str]",
-    expected_files: "Sequence[str]",
-    ignore: "Sequence[str]",
+    expected_directories: Sequence[str],
+    expected_files: Sequence[str],
+    ignore: Sequence[str],
     inspect: bool,
     max_allowed_files: int,
     max_allowed_size_compressed: str,
@@ -203,9 +206,9 @@ def check(  # noqa: PLR0913
     max_path_length: int,
     output_file_size_precision: int,
     output_file_size_unit: str,
-    select: "Sequence[str]",
+    select: Sequence[str],
 ) -> None:
-    """
+    r"""
     Run the contents of a distribution through a set of checks, and warn about
     any problematic characteristics that are detected.
 
@@ -220,7 +223,7 @@ def check(  # noqa: PLR0913
         from pydistcheck import __version__ as _VERSION
 
         print(f"pydistcheck {_VERSION}")
-        sys.exit(ExitCodes.OK)
+        sys.exit(_ExitCodes.OK)
 
     print("==================== running pydistcheck ====================")
     filepaths_to_check = [click.format_filename(f) for f in filepaths]
@@ -254,9 +257,9 @@ def check(  # noqa: PLR0913
         # (since sets don't guarantee ordering)
         error_str = ",".join(sorted(unrecognized_checks))
         print(
-            f"ERROR: found the following unrecognized checks passed via '--ignore': {error_str}"
+            f"ERROR: found the following unrecognized checks passed via '--ignore': {error_str}",
         )
-        sys.exit(ExitCodes.UNRECOGNIZED_CHECK)
+        sys.exit(_ExitCodes.UNRECOGNIZED_CHECK)
 
     selected_checks = {x for x in conf.select if x.strip()}
     unrecognized_checks = selected_checks - ALL_CHECKS
@@ -265,22 +268,22 @@ def check(  # noqa: PLR0913
         # (since sets don't guarantee ordering)
         error_str = ",".join(sorted(unrecognized_checks))
         print(
-            f"ERROR: found the following unrecognized checks passed via '--select': {error_str}"
+            f"ERROR: found the following unrecognized checks passed via '--select': {error_str}",
         )
-        sys.exit(ExitCodes.UNRECOGNIZED_CHECK)
+        sys.exit(_ExitCodes.UNRECOGNIZED_CHECK)
 
     checks = [
         _CompiledObjectsDebugSymbolCheck(),
         _DistroTooLargeCompressedCheck(
             max_allowed_size_bytes=_FileSize.from_string(
-                size_str=conf.max_allowed_size_compressed
+                size_str=conf.max_allowed_size_compressed,
             ).total_size_bytes,
             output_file_size_precision=conf.output_file_size_precision,
             output_file_size_unit=conf.output_file_size_unit,
         ),
         _DistroTooLargeUnCompressedCheck(
             max_allowed_size_bytes=_FileSize.from_string(
-                size_str=conf.max_allowed_size_uncompressed
+                size_str=conf.max_allowed_size_uncompressed,
             ).total_size_bytes,
             output_file_size_precision=conf.output_file_size_precision,
             output_file_size_unit=conf.output_file_size_unit,
@@ -316,7 +319,7 @@ def check(  # noqa: PLR0913
             summary = _DistributionSummary.from_file(filename=filepath)
         except ValueError as err:
             print(f"error: {err}")
-            sys.exit(ExitCodes.UNSUPPORTED_FILE_TYPE)
+            sys.exit(_ExitCodes.UNSUPPORTED_FILE_TYPE)
 
         if conf.inspect:
             from ._inspect import inspect_distribution
@@ -346,6 +349,6 @@ def check(  # noqa: PLR0913
     # now that all files have been checked, be sure to exit with a non-0 code
     # if any errors were found
     if any_errors_found:
-        sys.exit(ExitCodes.CHECK_ERRORS)
+        sys.exit(_ExitCodes.CHECK_ERRORS)
     else:
-        sys.exit(ExitCodes.OK)
+        sys.exit(_ExitCodes.OK)

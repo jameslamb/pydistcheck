@@ -37,7 +37,7 @@ for file_info in files:
             filename=file_info["basename"].replace("/", "-"),
             package_type=pkg_type,
             url=url,
-        )
+        ),
     )
 
 print(f"Found the following file types for '{PACKAGE_NAME}=={latest_version}':")

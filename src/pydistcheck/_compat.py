@@ -1,3 +1,4 @@
+# Copyright (c) 2022-2026 the pydistcheck developers. All rights reserved.
 """
 Central location for import stuff used to make the project compatible
 with a wide range of dependency versions.

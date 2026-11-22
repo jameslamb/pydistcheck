@@ -1,3 +1,6 @@
+# Copyright (c) 2022-2026 the pydistcheck developers. All rights reserved.
+from __future__ import annotations
+
 import os
 import pathlib
 import tarfile
@@ -49,11 +52,15 @@ class _FileInfo:
 
     @classmethod
     def from_tarfile_member(
-        cls, *, archive_file: tarfile.TarFile, tar_info: tarfile.TarInfo
-    ) -> "_FileInfo":
+        cls,
+        *,
+        archive_file: tarfile.TarFile,
+        tar_info: tarfile.TarInfo,
+    ) -> _FileInfo:
         member_name = tar_info.name
         file_format, is_compiled = _guess_archive_member_file_format(
-            archive_file=archive_file, member_name=member_name
+            archive_file=archive_file,
+            member_name=member_name,
         )
         return cls(
             name=member_name,
@@ -65,11 +72,15 @@ class _FileInfo:
 
     @classmethod
     def from_zipfile_member(
-        cls, *, archive_file: zipfile.ZipFile, zip_info: zipfile.ZipInfo
-    ) -> "_FileInfo":
+        cls,
+        *,
+        archive_file: zipfile.ZipFile,
+        zip_info: zipfile.ZipInfo,
+    ) -> _FileInfo:
         member_name = zip_info.filename
         file_format, is_compiled = _guess_archive_member_file_format(
-            archive_file=archive_file, member_name=member_name
+            archive_file=archive_file,
+            member_name=member_name,
         )
         return cls(
             name=member_name,
@@ -118,9 +129,13 @@ class _FileFormat:
 
 
 def _guess_archive_member_file_format(
-    *, archive_file: tarfile.TarFile | zipfile.ZipFile, member_name: str
+    *,
+    archive_file: tarfile.TarFile | zipfile.ZipFile,
+    member_name: str,
 ) -> tuple[str, bool]:
     """
+    Guess the format of a file in an archive.
+
     The approach in this function was inspired by similar code in
     https://github.com/matthew-brett/delocate, so that project's license is included
     in distributions of ``pydistcheck`` as file ``DELOCATE_LICENSE``.
@@ -151,7 +166,9 @@ def _guess_archive_member_file_format(
 
 
 def _decompress_zstd_archive(
-    *, tar_zst_file: str, decompressed_tar_path: str
+    *,
+    tar_zst_file: str,
+    decompressed_tar_path: str,
 ) -> None:  # pragma: no cover
     """Given a path to a .tar.zst file, decompress its contents to a .tar file"""
     # from Python 3.14 onwards, use the zstd support from the standard library
@@ -170,7 +187,7 @@ def _decompress_zstd_archive(
                 decompressor.copy_stream(compressed, destination)
 
 
-def _extract_subset_of_files_from_archive(  # noqa: PLR0912
+def _extract_subset_of_files_from_archive(  # noqa: C901,PLR0912
     *,
     archive_file: str,
     archive_format: str,
@@ -236,7 +253,8 @@ def _extract_subset_of_files_from_archive(  # noqa: PLR0912
             # decompress the .tar.zst to just .tar
             decompressed_tar_path = tar_zst_file.replace(".tar.zst", ".tar")
             _decompress_zstd_archive(
-                tar_zst_file=tar_zst_file, decompressed_tar_path=decompressed_tar_path
+                tar_zst_file=tar_zst_file,
+                decompressed_tar_path=decompressed_tar_path,
             )
 
             # do tarfile things

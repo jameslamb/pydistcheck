@@ -88,10 +88,6 @@ exclude_also = [
     "if TYPE_CHECKING:"
 ]
 
-[tool.isort]
-line_length = 88
-profile = "black"
-
 [tool.mypy]
 exclude = 'docs/conf\.py$|build/*'
 ignore_missing_imports = false
@@ -122,70 +118,61 @@ target-version = "py311"
 
 [tool.ruff.lint]
 ignore = [
+    # (pydocstyle) 1-line docstring should fit on one line
+    "D200",
+    # (pydocstyle) incorrect blank line before class
+    "D203",
+    # (pydocstyle) 1 blank line required between summary line and description
+    "D205",
+    # (pydocstyle) Multi-line docstring summary should start at the first line
+    "D212",
+    # (pydocstyle) First line should end with a period
+    "D400",
+    # (pydocstyle) First line should end with a period, question mark, or exclamation point
+    "D415",
     # (pycodestyle) Line too long
     "E501",
+    # (flake8-no-pep420) no implicit namespace packages
+    "INP001",
+    # (pep8-naming) import of a lowercase name aliased as a non-lowercase name
+    "N812",
     # (pylint) Magic value used in comparison, consider replacing with a constant
     "PLR2004",
     # (flake8-pytest-style) scope='function' is implied in @pytest.fixture()
     "PT003",
     # (flake8-pytest-style) Wrong values type in @pytest.mark.parametrize expected list of tuple
     "PT007",
+    # (flake8-use-pathlib)
+    "PTH",
     # (flake8-bandit) subprocess call: check for execution of untrusted input
     "S603",
     # (flake8-simplify) use ternary operator instead of if-else
-    "SIM108"
+    "SIM108",
+    # (flake8-print) 'print' found
+    "T201",
+    # (tryceratops) move return statements to 'else' block
+    "TRY300"
 ]
 select = [
-    # flake8-builtins
-    "A",
-    # flake8-annotations
-    "ANN",
-    # flake8-bugbear
-    "B",
-    # flake8-comprehensions
-    "C4",
-    # flake8-datetimez
-    "DTZ",
-    # pycodestyle
-    "E",
-    # flake8-errmsg
-    "EM",
-    # eradicate
-    "ERA",
-    # pyflakes
-    "F",
-    # flake8-fixme
-    "FIX",
-    # flynt
-    "FLY",
-    # perflint
-    "PERF",
-    # pygrep-hooks
-    "PGH",
-    # flake8-pie
-    "PIE",
-    # pylint
-    "PL",
-    # flake8-pytest-style
-    "PT",
-    # flake8-pyi
-    "PYI",
-    # flake8-return
-    "RET",
-    # ruff-exclusive checks
-    "RUF",
-    # flake8-bandit
-    "S",
-    # flake8-simplify
-    "SIM",
-    # pyupgrade
-    "UP",
+    "ALL"
 ]
 
 [tool.ruff.lint.flake8-annotations]
 mypy-init-return = true
 
 [tool.ruff.lint.per-file-ignores]
+"bin/*" = [
+    # (flake8-copyright)
+    "CPY001",
+    # (pydocstyle)
+    "D",
+]
+"docs/*" = [
+    # (flake8-copyright)
+    "CPY001",
+    # (pydocstyle)
+    "D",
+]
 "src/pydistcheck/*.py" = [
     # (flake8-bandit) uses of tarfile.extractall()
     "S202"
@@ -214,5 +201,11 @@ mypy-init-return = true
     # (flake8-bugbear) Found useless expression
     "B018",
     # (flake8-bandit) use of assert detected
-    "S101"
+    "S101",
+    # (flake8-self) Private member accessed
+    "SLF001",
+]
+"tests/data/*" = [
+    # (flake8-copyright) Missing copyright notice at top of file
+    "CPY001",
 ]

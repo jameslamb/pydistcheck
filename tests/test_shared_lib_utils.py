@@ -1,3 +1,4 @@
+# Copyright (c) 2022-2026 the pydistcheck developers. All rights reserved.
 import subprocess
 from unittest.mock import Mock, patch
 
@@ -11,7 +12,7 @@ from pydistcheck._shared_lib_utils import (
 def test_run_command_handles_binary_output():
     """Test that _run_command can handle binary output containing invalid UTF-8 bytes."""
     mock_output = bytes(
-        [0x68, 0x65, 0x6C, 0x6C, 0x6F, 0xD7, 0x77, 0x6F, 0x72, 0x6C, 0x64]
+        [0x68, 0x65, 0x6C, 0x6C, 0x6F, 0xD7, 0x77, 0x6F, 0x72, 0x6C, 0x64],
     )  # i.e., "hello" + invalid UTF-8 + "world"
 
     with patch("subprocess.run") as mock_run:

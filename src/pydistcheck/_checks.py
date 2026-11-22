@@ -1,3 +1,5 @@
+# Copyright (c) 2022-2026 the pydistcheck developers. All rights reserved.
+
 """
 Implementations for individual checks that ``pydistcheck``
 performs on distributions.
@@ -37,7 +39,8 @@ class _CheckProtocol(Protocol):
     check_name: str
 
     def __call__(
-        self, distro_summary: _DistributionSummary
+        self,
+        distro_summary: _DistributionSummary,
     ) -> list[str]:  # pragma: no cover
         ...
 
@@ -61,7 +64,7 @@ class _CompiledObjectsDebugSymbolCheck(_CheckProtocol):
 
             for file_relative_path in compiled_object_paths:
                 has_debug_symbols, cmd_str = _file_has_debug_symbols(
-                    file_absolute_path=os.path.join(tmp_dir, file_relative_path)
+                    file_absolute_path=os.path.join(tmp_dir, file_relative_path),
                 )
                 if has_debug_symbols:
                     msg = (
@@ -126,7 +129,8 @@ class _DistroTooLargeUnCompressedCheck(_CheckProtocol):
         out: list[str] = []
         max_size = _FileSize(num=self.max_allowed_size_bytes, unit_str="B")
         actual_size = _FileSize(
-            num=distro_summary.uncompressed_size_bytes, unit_str="B"
+            num=distro_summary.uncompressed_size_bytes,
+            unit_str="B",
         )
         if actual_size > max_size:
             actual_size_str = actual_size.to_string(
@@ -195,7 +199,7 @@ class _NonAsciiCharacterCheck(_CheckProtocol):
         for file_path in distro_summary.all_paths:
             if not file_path.isascii():
                 ascii_converted_str = file_path.encode("ascii", "replace").decode(
-                    "ascii"
+                    "ascii",
                 )
                 msg = (
                     f"[{self.check_name}] Found file path containing non-ASCII characters: "
@@ -294,7 +298,8 @@ class _ExpectedFilesCheck(_CheckProtocol):
                 # NOTE: some archive formats have a trailing "/" on directory names,
                 #       some do not
                 if fnmatchcase(directory_path, pattern) or fnmatchcase(
-                    directory_path, pattern + "/"
+                    directory_path,
+                    pattern + "/",
                 ):
                     found_any = True
                     break
@@ -331,7 +336,8 @@ class _UnexpectedFilesCheck(_CheckProtocol):
                 # NOTE: some archive formats have a trailing "/" on directory names,
                 #       some do not
                 if fnmatchcase(directory_path, pattern) or fnmatchcase(
-                    directory_path, pattern + "/"
+                    directory_path,
+                    pattern + "/",
                 ):
                     msg = f"[{self.check_name}] Found unexpected directory '{directory_path}'."
                     out.append(msg)

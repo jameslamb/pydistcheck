@@ -1,3 +1,4 @@
+# Copyright (c) 2022-2026 the pydistcheck developers. All rights reserved.
 import os
 import uuid
 from copy import deepcopy
@@ -40,7 +41,8 @@ def test_config_can_be_initialized_without_any_arguments():
 
 def test_update_from_dict_raises_exception_for_first_bad_value_encountered(base_config):
     with pytest.raises(
-        ValueError, match=r"Configuration value 'a' is not recognized by pydistcheck"
+        ValueError,
+        match=r"Configuration value 'a' is not recognized by pydistcheck",
     ):
         base_config.update_from_dict({"a": 7, "b": 8, "inspect": False})
 
@@ -99,7 +101,8 @@ def test_update_from_toml_silently_returns_self_if_file_does_not_exist(base_conf
 
 
 def test_update_from_toml_works_for_files_with_no_pydistcheck_configuration(
-    base_config, tmpdir
+    base_config,
+    tmpdir,
 ):
     original_config = deepcopy(base_config)
     temp_file = os.path.join(tmpdir, f"{uuid.uuid4().hex}.toml")
@@ -110,7 +113,8 @@ def test_update_from_toml_works_for_files_with_no_pydistcheck_configuration(
 
 
 def test_update_from_toml_works_for_files_with_empty_pydistcheck_configuration(
-    base_config, tmpdir
+    base_config,
+    tmpdir,
 ):
     original_config = deepcopy(base_config)
     temp_file = os.path.join(tmpdir, f"{uuid.uuid4().hex}.toml")
@@ -121,10 +125,13 @@ def test_update_from_toml_works_for_files_with_empty_pydistcheck_configuration(
 
 
 @pytest.mark.parametrize(
-    "config_key", ["max_allowed_size_compressed", "max-allowed-size_compressed"]
+    "config_key",
+    ["max_allowed_size_compressed", "max-allowed-size_compressed"],
 )
 def test_update_from_toml_works_with_underscores_and_hyphens(
-    base_config, tmpdir, config_key
+    base_config,
+    tmpdir,
+    config_key,
 ):
     temp_file = os.path.join(tmpdir, f"{uuid.uuid4().hex}.toml")
     with open(temp_file, "w") as f:
@@ -135,7 +142,9 @@ def test_update_from_toml_works_with_underscores_and_hyphens(
 
 @pytest.mark.parametrize("use_hyphens", [True, False])
 def test_update_from_toml_works_with_all_config_values(
-    base_config, tmpdir, use_hyphens
+    base_config,
+    tmpdir,
+    use_hyphens,
 ):
     temp_file = os.path.join(tmpdir, f"{uuid.uuid4().hex}.toml")
     patch_dict = {

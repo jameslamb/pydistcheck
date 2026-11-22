@@ -1,3 +1,4 @@
+# Copyright (c) 2022-2026 the pydistcheck developers. All rights reserved.
 import pytest
 
 from pydistcheck._utils import _FileSize
@@ -125,7 +126,7 @@ def test_file_size_to_string_works(precision, unit_str, expected_str):
 def test_file_is_hashable():
     # same compare as same
     assert {_FileSize(num=708, unit_str="Ki"), _FileSize(num=708, unit_str="Ki")} == {
-        _FileSize(num=708, unit_str="Ki")
+        _FileSize(num=708, unit_str="Ki"),
     }
 
     # different (based on 'num') compare as different
