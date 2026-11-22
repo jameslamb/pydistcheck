@@ -25,7 +25,6 @@ classifiers = [
 ]
 dependencies = [
     "click>=8.0",
-    "tomli>=1.1.0 ; python_version < '3.11'"
 ]
 description = "Inspect Python package distributions and raise warnings on common problems."
 keywords = [

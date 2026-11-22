@@ -23,7 +23,6 @@ repos:
         exclude: "tests"
         additional_dependencies:
           - click>=8.0
-          - tomli>=1.1.0
           - types-requests
           - zstandard>=0.22.0
   - repo: https://github.com/astral-sh/ruff-pre-commit
@@ -63,7 +62,6 @@ repos:
     rev: v2.4.3
     hooks:
       - id: codespell
-        additional_dependencies: [tomli]
         args: ["--toml", "pyproject.toml"]
   - repo: https://github.com/abravalheri/validate-pyproject
     rev: 'v0.27'
