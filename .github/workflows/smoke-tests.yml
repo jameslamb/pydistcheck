@@ -19,11 +19,11 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            python_version: '3.9'
+            python_version: '3.11'
           - os: ubuntu-latest
-            python_version: '3.13'
+            python_version: '3.15'
           - os: windows-latest
-            python_version: '3.12'
+            python_version: '3.13'
     permissions:
       contents: read
     steps:

@@ -9,7 +9,6 @@ import click
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
-    from typing import Optional
 
 from ._checks import (
     ALL_CHECKS,
@@ -193,7 +192,7 @@ def check(  # noqa: PLR0913
     *,
     filepaths: tuple[str],
     version: bool,
-    config: "Optional[str]",
+    config: str | None,
     expected_directories: "Sequence[str]",
     expected_files: "Sequence[str]",
     ignore: "Sequence[str]",

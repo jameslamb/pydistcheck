@@ -3,7 +3,6 @@ import pathlib
 import tarfile
 import zipfile
 from dataclasses import dataclass
-from typing import Union
 
 from ._compat import _import_zstandard, _tf_extractall_has_filter
 
@@ -119,7 +118,7 @@ class _FileFormat:
 
 
 def _guess_archive_member_file_format(
-    *, archive_file: Union[tarfile.TarFile, zipfile.ZipFile], member_name: str
+    *, archive_file: tarfile.TarFile | zipfile.ZipFile, member_name: str
 ) -> tuple[str, bool]:
     """
     The approach in this function was inspired by similar code in
