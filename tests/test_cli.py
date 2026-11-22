@@ -981,7 +981,7 @@ def test_expected_files_check_works(distro_file):
     _assert_log_matches_pattern(
         result=result,
         pattern=(
-            r"^2\. \[expected\-files\] Did not find any files matching pattern '\*\.R'.",
+            r"^2\. \[expected\-files\] Did not find any files matching pattern '\*\.R'."
         ),
     )
 
