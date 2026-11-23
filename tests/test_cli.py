@@ -1,7 +1,6 @@
 # Copyright (c) 2022-2026 the pydistcheck developers. All rights reserved.
 import os
 import re
-from sys import platform
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -1092,30 +1091,18 @@ def test_debug_symbols_check_works(distro_file):
     )
     assert result.exit_code == 1, result.output
     if "macosx" in distro_file:
-        # macOS wheels
-        lib_file = r"\"lib/lib_baseballmetrics\.dylib\"'"
-        if platform.startswith(("cygwin", "win")):
-            debug_cmd = r"'llvm\-nm \-a " + lib_file
-        else:
-            # dsymutil works on both macOS and Linux
-            debug_cmd = r"'dsymutil \-s " + lib_file
+        # macOS wheels: stab symbols
+        debug_cmd = r"'nm \-a \"lib/lib_baseballmetrics\.dylib\"'"
     elif "osx-arm64" in distro_file:
-        # macOS conda packages
-        lib_file = (
-            r"\"lib/python3\.12/site-packages/lib/lib_baseballmetrics\.dylib\"'\."
-        )
-        if platform.startswith(("cygwin", "win")):
-            debug_cmd = r"'llvm\-nm \-a " + lib_file
-        else:
-            # dsymutil works on both macOS and Linux
-            debug_cmd = r"'dsymutil \-s " + lib_file
+        # macOS conda packages: stab symbols
+        debug_cmd = r"'nm \-a \"lib/python3\.12/site\-packages/lib/lib_baseballmetrics\.dylib\"'\."
     elif NUMPY_WIN_DEBUG_WHL in distro_file:
-        # windows wheels
+        # windows wheels: MinGW-built DLL with DWARF sections
         lib_file = r"\"numpy\.libs/libopenblas64__v0\.3\.23-293-gc2f4bdbb-gcc_10_3_0-2bde3a66a51006b2b53eb373ff767a3f\.dll\"'"
-        debug_cmd = r"'objdump \-\-all\-headers " + lib_file
+        debug_cmd = r"'objdump \-h " + lib_file
     else:
-        # linux wheels
-        debug_cmd = r"'objdump \-\-all\-headers \"lib/lib_baseballmetrics\.so\"'\."
+        # linux wheels: DWARF sections
+        debug_cmd = r"'objdump \-h \"lib/lib_baseballmetrics\.so\"'\."
 
     expected_msg = (
         r"^1\. \[compiled\-objects\-have\-debug\-symbols\] "
