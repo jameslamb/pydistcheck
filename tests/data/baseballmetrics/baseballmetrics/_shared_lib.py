@@ -12,6 +12,6 @@ _LIB = ctypes.cdll.LoadLibrary(
         Path(__file__)
         .absolute()
         .parents[1]
-        .joinpath(f"lib/lib_baseballmetrics.{_shlib_ext}")
-    )
+        .joinpath(f"lib/lib_baseballmetrics.{_shlib_ext}"),
+    ),
 )

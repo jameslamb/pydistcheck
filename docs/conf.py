@@ -3,13 +3,13 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "pydistcheck"
-current_year = datetime.now(tz=timezone.utc).year
+current_year = datetime.now(tz=UTC).year
 copyright = f"2022-{current_year}, James Lamb"  # noqa: A001
 author = "James Lamb"
 
@@ -34,7 +34,7 @@ html_static_path = ["_static"]
 # is necessary to achieve the behavior "fail on all redirects".
 # ref: https://github.com/sphinx-doc/sphinx/issues/13439
 linkcheck_allowed_redirects = {
-    "b4eb55a0-4de4-4643-a6fb-f95ec4bb1f54": "932edc12-3965-4d22-9dd7-b02e9210bf2c"
+    "b4eb55a0-4de4-4643-a6fb-f95ec4bb1f54": "932edc12-3965-4d22-9dd7-b02e9210bf2c",
 }
 
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#confval-linkcheck_anchors_ignore_for_url

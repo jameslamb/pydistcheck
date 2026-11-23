@@ -24,11 +24,8 @@ jobs:
           # Linux #
           #########
           - os: ubuntu-slim
-            python_version: &oldest_python '3.9'
+            python_version: &oldest_python '3.11'
             package-type: sdist
-          - os: ubuntu-slim
-            python_version: '3.11'
-            package-type: wheel
           - os: ubuntu-slim
             python_version: '3.12'
             package-type: wheel
@@ -36,7 +33,10 @@ jobs:
             python_version: '3.13'
             package-type: wheel
           - os: ubuntu-slim
-            python_version: &latest_python '3.14'
+            python_version: '3.14'
+            package-type: wheel
+          - os: ubuntu-slim
+            python_version: &latest_python '3.15'
             package-type: sdist
           #########
           # macOS #

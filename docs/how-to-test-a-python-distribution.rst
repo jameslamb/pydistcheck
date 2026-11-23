@@ -130,7 +130,7 @@ The following open-source tools take packages as input, and can be used to detec
 * ``auditwheel-emscripten`` (`link <https://github.com/ryanking13/auditwheel-emscripten>`__) = like ``auditwheel``, but focused on Python-in-a-web-browser applications (e.g. `pyodide auditwheel`_)
 * ``auditwheel-symbols`` (`link <https://github.com/messense/auditwheel-symbols>`__) = detect which symbols in a Linux wheel's shared library are causing ``auditwheel`` to suggest a more recent ``manylinux`` tag
 * ``check-wheel-contents`` (`link <https://github.com/jwodder/check-wheel-contents>`__) = detect unnecessary files, import issues, portability problems in wheels
-* ``conda-verify`` (`link <https://github.com/conda/conda-verify/tree/main>`__) = detect portability and correctness problems in conda packages
+* ``conda-verify`` (`link <https://github.com/conda-archive/conda-verify/tree/main>`__) = detect portability and correctness problems in conda packages
 * ``cph`` (`link <https://github.com/conda/conda-package-handling>`__) = work with conda packages (e.g. ``cph extract`` to decompress them, ``cph list`` to list their contents)
 * ``delocate`` (`link <https://github.com/matthew-brett/delocate>`__) = detect and repair issues in macOS wheels that link to external shared libraries
 * ``delvewheel`` (`link <https://github.com/adang1345/delvewheel>`__) = detect and repair issues in Windows wheels that link to external shared libraries

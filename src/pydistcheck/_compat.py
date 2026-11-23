@@ -1,15 +1,12 @@
+# Copyright (c) 2022-2026 the pydistcheck developers. All rights reserved.
 """
 Central location for import stuff used to make the project compatible
 with a wide range of dependency versions.
 """
 
+import tomllib
 from functools import lru_cache
 from typing import Any
-
-try:  # pragma: no cover
-    import tomllib
-except ModuleNotFoundError:  # pragma: no cover
-    import tomli as tomllib  # type: ignore[no-redef]
 
 
 @lru_cache

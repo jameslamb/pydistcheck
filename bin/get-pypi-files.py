@@ -49,7 +49,7 @@ for file_info in files:
             filename=file_name,
             package_type=pkg_type,
             url=file_info["url"],
-        )
+        ),
     )
 
 print(f"Found the following file types for '{PACKAGE_NAME}=={latest_version}':")
