@@ -107,7 +107,7 @@ _DOS_MZ_MAGIC_FIRST_2_BYTES = {
 # ELF (.so, .o)
 #
 # The signature is the same for all ELF files, regardless of endianness.
-# ref: https://en.wikipedia.org/wiki/Executable_and_Linkable_Format
+# ref: https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.eheader.html
 _ELF_MAGIC = b"\x7fELF"
 
 # MACH-O (.dylib)
