@@ -105,10 +105,10 @@ _DOS_MZ_MAGIC_FIRST_2_BYTES = {
 }
 
 # ELF (.so, .o)
-_ELF_MAGIC_FIRST_4_BYTES = {
-    0x7F454C46.to_bytes(4, "little"),
-    0x7F454C46.to_bytes(4, "big"),
-}
+#
+# The signature is the same for all ELF files, regardless of endianness.
+# ref: https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.eheader.html
+_ELF_MAGIC = b"\x7fELF"
 
 # MACH-O (.dylib)
 _MACH_O_MAGIC_FIRST_4_BYTES = {
@@ -155,7 +155,7 @@ def _guess_archive_member_file_format(
             raise RuntimeError(error_msg)
         header = fileobj.read(4)
 
-    if header in _ELF_MAGIC_FIRST_4_BYTES:
+    if header == _ELF_MAGIC:
         return _FileFormat.ELF, True
     if header in _MACH_O_MAGIC_FIRST_4_BYTES:
         return _FileFormat.MACH_O, True
