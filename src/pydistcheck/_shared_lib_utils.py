@@ -17,9 +17,7 @@ References:
 """
 
 import os
-import re
 import struct
-import subprocess
 from typing import BinaryIO, NamedTuple
 
 from ._file_utils import (
@@ -27,9 +25,6 @@ from ._file_utils import (
     _ELF_MAGIC_FIRST_4_BYTES,
     _MACH_O_MAGIC_FIRST_4_BYTES,
 )
-
-_COMMAND_FAILED = "__command_failed__"
-_TOOL_NOT_AVAILABLE = "__tool_not_available__"
 
 # commands suggested to users who want to see the debug information for themselves
 _SECTIONS_CMD = "objdump -h"
@@ -42,7 +37,6 @@ _NO_DEBUG_SYMBOLS: tuple[bool, str] = (False, "")
 _DEBUG_SECTION_PREFIXES = (b".debug_", b".zdebug_")
 
 # --- ELF ---
-_ELF_MAGIC = b"\x7fELF"
 _ELFCLASS32 = 1
 _ELFCLASS64 = 2
 _ELFDATA2LSB = 1
@@ -87,33 +81,6 @@ _IMAGE_SYM_CLASS_FILE = 0x67
 
 class _MalformedBinaryError(Exception):
     pass
-
-
-def _run_command(args: list[str]) -> str:
-    try:
-        stdout = subprocess.run(args, capture_output=True, check=True).stdout
-        # Use latin1 encoding, which can handle any byte value without data loss.
-        # See https://github.com/jameslamb/pydistcheck/issues/206 for rationale.
-        return stdout.decode("latin1")
-    except subprocess.CalledProcessError:
-        return _COMMAND_FAILED
-    except FileNotFoundError:
-        return _TOOL_NOT_AVAILABLE
-
-
-def _look_for_debug_symbols(
-    lib_file: str,
-    commands_to_patterns: list[tuple[list[str], str]],
-) -> tuple[bool, str]:
-    for cmd_args, pattern in commands_to_patterns:
-        stdout = _run_command(args=[*cmd_args, lib_file])
-        contains_debug_symbols = any(
-            bool(re.search(pattern, x)) for x in stdout.split("\n")
-        )
-        if contains_debug_symbols:
-            return True, " ".join(cmd_args)
-    # if you get here, no debug symbols were found by any tools
-    return _NO_DEBUG_SYMBOLS
 
 
 def _read_at(f: BinaryIO, *, offset: int, size: int) -> bytes:
@@ -425,12 +392,16 @@ def _file_has_debug_symbols(file_absolute_path: str) -> tuple[bool, str]:
 
     with open(file_absolute_path, "rb") as f:
         header = f.read(4)
-        if header in _ELF_MAGIC_FIRST_4_BYTES:
-            return _elf_has_debug_symbols(f)
-        if header in _MACH_O_MAGIC_FIRST_4_BYTES:
-            return _macho_has_debug_symbols(f)
-        if header[:2] in _DOS_MZ_MAGIC_FIRST_2_BYTES:
-            return _pe_has_debug_symbols(f)
+        try:
+            if header in _ELF_MAGIC_FIRST_4_BYTES:
+                return _elf_has_debug_symbols(f)
+            if header in _MACH_O_MAGIC_FIRST_4_BYTES:
+                return _macho_has_debug_symbols(f)
+            if header[:2] in _DOS_MZ_MAGIC_FIRST_2_BYTES:
+                return _pe_has_debug_symbols(f)
+        except _MalformedBinaryError:
+            # files that cannot be parsed are treated as not having debug symbols
+            return _NO_DEBUG_SYMBOLS
 
         # any file not in a recognizable format should be marked as not having debug symbols
-        return False, ""
+        return _NO_DEBUG_SYMBOLS
