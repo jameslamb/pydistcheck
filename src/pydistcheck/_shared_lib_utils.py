@@ -17,10 +17,19 @@ References:
 """
 
 import os
+import re
 import struct
+import subprocess
 from typing import BinaryIO, NamedTuple
 
-from ._file_utils import _DOS_MZ_MAGIC_FIRST_2_BYTES, _MACH_O_MAGIC_FIRST_4_BYTES
+from ._file_utils import (
+    _DOS_MZ_MAGIC_FIRST_2_BYTES,
+    _ELF_MAGIC_FIRST_4_BYTES,
+    _MACH_O_MAGIC_FIRST_4_BYTES,
+)
+
+_COMMAND_FAILED = "__command_failed__"
+_TOOL_NOT_AVAILABLE = "__tool_not_available__"
 
 # commands suggested to users who want to see the debug information for themselves
 _SECTIONS_CMD = "objdump -h"
@@ -78,6 +87,33 @@ _IMAGE_SYM_CLASS_FILE = 0x67
 
 class _MalformedBinaryError(Exception):
     pass
+
+
+def _run_command(args: list[str]) -> str:
+    try:
+        stdout = subprocess.run(args, capture_output=True, check=True).stdout
+        # Use latin1 encoding, which can handle any byte value without data loss.
+        # See https://github.com/jameslamb/pydistcheck/issues/206 for rationale.
+        return stdout.decode("latin1")
+    except subprocess.CalledProcessError:
+        return _COMMAND_FAILED
+    except FileNotFoundError:
+        return _TOOL_NOT_AVAILABLE
+
+
+def _look_for_debug_symbols(
+    lib_file: str,
+    commands_to_patterns: list[tuple[list[str], str]],
+) -> tuple[bool, str]:
+    for cmd_args, pattern in commands_to_patterns:
+        stdout = _run_command(args=[*cmd_args, lib_file])
+        contains_debug_symbols = any(
+            bool(re.search(pattern, x)) for x in stdout.split("\n")
+        )
+        if contains_debug_symbols:
+            return True, " ".join(cmd_args)
+    # if you get here, no debug symbols were found by any tools
+    return _NO_DEBUG_SYMBOLS
 
 
 def _read_at(f: BinaryIO, *, offset: int, size: int) -> bytes:
@@ -187,6 +223,10 @@ def _read_elf_layout(f: BinaryIO) -> _ElfLayout:
 
 
 def _elf_has_debug_symbols(f: BinaryIO) -> tuple[bool, str]:
+    """
+    Report whether an ELF ("Executable and Linkable Format") file
+    contains debug symbols.
+    """
     section_headers, section_names, st_info_offset = _read_elf_layout(f)
     symtabs = []
     for shdr in section_headers:
@@ -292,6 +332,10 @@ def _thin_macho_has_debug_symbols(f: BinaryIO, *, base: int) -> tuple[bool, str]
 
 
 def _macho_has_debug_symbols(f: BinaryIO) -> tuple[bool, str]:
+    """
+    Report whether a Mach-O ("Mach object") file
+    contains debug symbols.
+    """
     header = _read_at(f, offset=0, size=8)
     magic, nfat_arch = _unpack_from(">II", header, 0)
     if magic not in (_FAT_MAGIC, _FAT_MAGIC_64):
@@ -315,6 +359,10 @@ def _macho_has_debug_symbols(f: BinaryIO) -> tuple[bool, str]:
 
 
 def _pe_has_debug_symbols(f: BinaryIO) -> tuple[bool, str]:
+    """
+    Report whether a PE ("Portable Executable") file
+    contains debug symbols.
+    """
     (e_lfanew,) = _unpack_from("<I", _read_at(f, offset=0x3C, size=4), 0)
     coff_header = _read_at(f, offset=e_lfanew, size=24)
     # 'MZ' but not PE (e.g. a DOS executable)
@@ -374,23 +422,15 @@ def _pe_has_debug_symbols(f: BinaryIO) -> tuple[bool, str]:
 
 
 def _file_has_debug_symbols(file_absolute_path: str) -> tuple[bool, str]:
-    """
-    Return a two-item tuple of the form ``(has_debug_symbols, cmd_str)``.
 
-    Where ``cmd_str`` is a command users could run to see the debug information.
-
-    Files that are not ELF, Mach-O, or PE, or which cannot be parsed,
-    are treated as not containing debug symbols.
-    """
     with open(file_absolute_path, "rb") as f:
         header = f.read(4)
-        try:
-            if header == _ELF_MAGIC:
-                return _elf_has_debug_symbols(f)
-            if header in _MACH_O_MAGIC_FIRST_4_BYTES:
-                return _macho_has_debug_symbols(f)
-            if header[:2] in _DOS_MZ_MAGIC_FIRST_2_BYTES:
-                return _pe_has_debug_symbols(f)
-        except _MalformedBinaryError:
-            return _NO_DEBUG_SYMBOLS
-    return _NO_DEBUG_SYMBOLS
+        if header in _ELF_MAGIC_FIRST_4_BYTES:
+            return _elf_has_debug_symbols(f)
+        if header in _MACH_O_MAGIC_FIRST_4_BYTES:
+            return _macho_has_debug_symbols(f)
+        if header[:2] in _DOS_MZ_MAGIC_FIRST_2_BYTES:
+            return _pe_has_debug_symbols(f)
+
+        # any file not in a recognizable format should be marked as not having debug symbols
+        return False, ""
