@@ -72,13 +72,13 @@ def _elf_has_debug_symbols(f: str) -> tuple[bool, str]:
     has_debug_symbols, cmd_str = _look_for_debug_symbols(
         lib_file=f,
         commands_to_patterns=[
-            (["readelf", "-S"],                 r"[\t ]+\.debug_[a-z]+[\t ]+"),
             (["objdump", "--all-headers"],      r"[\t ]+\.debug_line[\t ]+"),
             (["objdump", "-W"],                 r"^Contents of the \.debug"),
             (["objdump", "-g"],                 r"^Contents of the \.debug"),
             (["llvm-objdump", "--all-headers"], r"[\t ]+\.debug_line[\t ]+"),
             (["llvm-objdump", "-W"],            r"^Contents of the \.debug"),
             (["llvm-objdump", "-g"],            r"^Contents of the \.debug"),
+            (["readelf", "-S"],                 r"[\t ]+\.debug_[a-z]+[\t ]+"),
         ],
     )
     # fmt: on
