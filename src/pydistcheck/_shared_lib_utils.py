@@ -6,13 +6,14 @@ Debug symbols are detected by reading ELF, Mach-O, and PE headers directly
 (with only the standard library), instead of shelling out to tools like
 'objdump', 'nm', 'readelf', and 'dsymutil'.
 
-references:
+References:
   * https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html
   * https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html
   * https://github.com/apple-oss-distributions/xnu/blob/5c2921b07a2480ab43ec66f5b9e41cb872bc554f/EXTERNAL_HEADERS/mach-o/loader.h
   * https://github.com/apple-oss-distributions/cctools/blob/658da8c66b4e184458f9c810deca9f6428a773a5/include/mach-o/fat.h
   * https://github.com/apple-oss-distributions/cctools/blob/658da8c66b4e184458f9c810deca9f6428a773a5/include/mach-o/stab.h
   * https://learn.microsoft.com/en-us/windows/win32/debug/pe-format
+
 """
 
 import os
@@ -153,7 +154,9 @@ def _read_elf_layout(f: BinaryIO) -> _ElfLayout:
     # no section header table (e.g. fully-stripped with 'sstrip')
     if shoff == 0:
         return _ElfLayout(
-            section_headers=[], section_names=b"", st_info_offset=st_info_offset
+            section_headers=[],
+            section_names=b"",
+            st_info_offset=st_info_offset,
         )
 
     if shentsize < struct.calcsize(shdr_fmt):
@@ -161,7 +164,7 @@ def _read_elf_layout(f: BinaryIO) -> _ElfLayout:
 
     # for files with >= 0xff00 sections, the real values live in section header 0
     first = _ElfSectionHeader(
-        *_unpack_from(shdr_fmt, _read_at(f, offset=shoff, size=shentsize), 0)
+        *_unpack_from(shdr_fmt, _read_at(f, offset=shoff, size=shentsize), 0),
     )
     if shnum == 0:
         shnum = first.sh_size
@@ -188,7 +191,7 @@ def _elf_has_debug_symbols(f: BinaryIO) -> tuple[bool, str]:
     symtabs = []
     for shdr in section_headers:
         if _c_string_at(section_names, shdr.sh_name).startswith(
-            _DEBUG_SECTION_PREFIXES
+            _DEBUG_SECTION_PREFIXES,
         ):
             return True, _SECTIONS_CMD
         if shdr.sh_type == _SHT_SYMTAB:
@@ -209,7 +212,11 @@ def _elf_has_debug_symbols(f: BinaryIO) -> tuple[bool, str]:
 
 
 def _macho_segment_is_dwarf(
-    load_commands: bytes, *, offset: int, endian: str, is_64: bool
+    load_commands: bytes,
+    *,
+    offset: int,
+    endian: str,
+    is_64: bool,
 ) -> bool:
     if load_commands[offset + 8 : offset + 24].rstrip(b"\0") == _DWARF_SEGMENT_NAME:
         return True
@@ -231,7 +238,7 @@ def _macho_segment_is_dwarf(
     return False
 
 
-def _thin_macho_has_debug_symbols(f: BinaryIO, *, base: int) -> tuple[bool, str]:
+def _thin_macho_has_debug_symbols(f: BinaryIO, *, base: int) -> tuple[bool, str]:  # noqa: C901
     header = _read_at(f, offset=base, size=28)
     (magic,) = _unpack_from("<I", header, 0)
     if magic in (_MH_MAGIC, _MH_MAGIC_64):
@@ -253,7 +260,10 @@ def _thin_macho_has_debug_symbols(f: BinaryIO, *, base: int) -> tuple[bool, str]
         if cmdsize < 8 or offset + cmdsize > len(load_commands):
             raise _MalformedBinaryError
         if cmd in (_LC_SEGMENT, _LC_SEGMENT_64) and _macho_segment_is_dwarf(
-            load_commands, offset=offset, endian=endian, is_64=cmd == _LC_SEGMENT_64
+            load_commands,
+            offset=offset,
+            endian=endian,
+            is_64=cmd == _LC_SEGMENT_64,
         ):
             return True, _SECTIONS_CMD
         if cmd == _LC_SYMTAB:
@@ -294,7 +304,9 @@ def _macho_has_debug_symbols(f: BinaryIO) -> tuple[bool, str]:
     fat_arches = _read_at(f, offset=8, size=nfat_arch * fat_arch_size)
     for i in range(nfat_arch):
         _cputype, _cpusubtype, offset = _unpack_from(
-            fat_arch_fmt, fat_arches, i * fat_arch_size
+            fat_arch_fmt,
+            fat_arches,
+            i * fat_arch_size,
         )
         result = _thin_macho_has_debug_symbols(f, base=offset)
         if result[0]:
@@ -329,10 +341,14 @@ def _pe_has_debug_symbols(f: BinaryIO) -> tuple[bool, str]:
                     symbol_table_offset + num_symbols * _COFF_SYMBOL_SIZE
                 )
                 (string_table_size,) = _unpack_from(
-                    "<I", _read_at(f, offset=string_table_offset, size=4), 0
+                    "<I",
+                    _read_at(f, offset=string_table_offset, size=4),
+                    0,
                 )
                 string_table = _read_at(
-                    f, offset=string_table_offset, size=string_table_size
+                    f,
+                    offset=string_table_offset,
+                    size=string_table_size,
                 )
             section_name = _c_string_at(string_table, int(section_name[1:]))
         if section_name.startswith(_DEBUG_SECTION_PREFIXES):
@@ -342,7 +358,9 @@ def _pe_has_debug_symbols(f: BinaryIO) -> tuple[bool, str]:
     # including '.file' symbols naming the source files
     if symbol_table_offset != 0 and num_symbols > 0:
         symbols = _read_at(
-            f, offset=symbol_table_offset, size=num_symbols * _COFF_SYMBOL_SIZE
+            f,
+            offset=symbol_table_offset,
+            size=num_symbols * _COFF_SYMBOL_SIZE,
         )
         i = 0
         while i < num_symbols:
@@ -357,8 +375,9 @@ def _pe_has_debug_symbols(f: BinaryIO) -> tuple[bool, str]:
 
 def _file_has_debug_symbols(file_absolute_path: str) -> tuple[bool, str]:
     """
-    Returns a two-item tuple of the form ``(has_debug_symbols, cmd_str)``,
-    where ``cmd_str`` is a command users could run to see the debug information.
+    Return a two-item tuple of the form ``(has_debug_symbols, cmd_str)``.
+
+    Where ``cmd_str`` is a command users could run to see the debug information.
 
     Files that are not ELF, Mach-O, or PE, or which cannot be parsed,
     are treated as not containing debug symbols.

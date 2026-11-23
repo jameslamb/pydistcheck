@@ -1,5 +1,5 @@
+# Copyright (c) 2022-2026 the pydistcheck developers. All rights reserved.
 import struct
-from typing import Optional
 
 import pytest
 
@@ -32,7 +32,7 @@ def _make_elf(
     is_64: bool = True,
     endian: str = "<",
     section_names: tuple[bytes, ...] = (b".text",),
-    symbol_types: Optional[list[int]] = None,
+    symbol_types: list[int] | None = None,
     extended_numbering: bool = False,
 ) -> bytes:
     shdr_fmt = endian + ("IIQQQQIIQQ" if is_64 else "IIIIIIIIII")
@@ -110,7 +110,7 @@ def _make_elf(
                 0,
                 8,
                 sym_size,
-            )
+            ),
         )
 
     ident = (
@@ -140,7 +140,11 @@ def _make_elf(
 
 
 def _macho_segment(
-    *, is_64: bool, endian: str, name: bytes, section_segnames: tuple[bytes, ...] = ()
+    *,
+    is_64: bool,
+    endian: str,
+    name: bytes,
+    section_segnames: tuple[bytes, ...] = (),
 ) -> bytes:
     """A segment load command, with one section per entry in ``section_segnames``."""
     # 'section_fmt' is (sectname, segname, then the remaining numeric fields)
@@ -161,7 +165,13 @@ def _macho_segment(
     num_sections = len(section_segnames)
     cmd_size = struct.calcsize(cmd_fmt) + struct.calcsize(section_fmt) * num_sections
     out = struct.pack(
-        endian + cmd_fmt, cmd, cmd_size, name, *([0] * 6), num_sections, 0
+        endian + cmd_fmt,
+        cmd,
+        cmd_size,
+        name,
+        *([0] * 6),
+        num_sections,
+        0,
     )
     for segname in section_segnames:
         out += struct.pack(
@@ -325,7 +335,9 @@ _ELF_VARIANTS = [
 @pytest.mark.parametrize("debug_section", [b".debug_info", b".zdebug_line"])
 def test_elf_debug_sections_detected(tmp_path, is_64, endian, debug_section):
     content = _make_elf(
-        is_64=is_64, endian=endian, section_names=(b".text", debug_section)
+        is_64=is_64,
+        endian=endian,
+        section_names=(b".text", debug_section),
     )
     assert _check_bytes(tmp_path, content) == _FOUND_DEBUG_SECTIONS
 
@@ -394,7 +406,8 @@ def test_macho_dwarf_segment_detected(tmp_path):
 @pytest.mark.parametrize("is_64", [True, False])
 def test_macho_object_file_dwarf_sections_detected(tmp_path, is_64):
     content = _make_thin_macho(
-        is_64=is_64, object_file_section_segments=(b"__TEXT", b"__DWARF")
+        is_64=is_64,
+        object_file_section_segments=(b"__TEXT", b"__DWARF"),
     )
     assert _check_bytes(tmp_path, content) == _FOUND_DEBUG_SECTIONS
     content = _make_thin_macho(is_64=is_64, object_file_section_segments=(b"__TEXT",))
@@ -412,7 +425,8 @@ def test_fat_macho_checks_every_slice(tmp_path, is_64):
     clean = _make_thin_macho()
     with_stabs = _make_thin_macho(symbols=((0x64, b"/src/main.c"),))
     assert _check_bytes(
-        tmp_path, _make_fat_macho([clean, with_stabs], is_64=is_64)
+        tmp_path,
+        _make_fat_macho([clean, with_stabs], is_64=is_64),
     ) == (_FOUND_DEBUG_SYMBOLS)
     assert (
         _check_bytes(tmp_path, _make_fat_macho([clean, clean], is_64=is_64))
@@ -499,7 +513,8 @@ _MACHO_WITH_DEBUG = _make_thin_macho(symbols=((0x64, b"/src/main.c"),))
 _MACHO_NCMDS = 16
 _MACHO_FIRST_CMDSIZE = 32 + 4
 _MACHO_OBJECT_FILE = _make_thin_macho(
-    symbols=((0x64, b"/src/main.c"),), object_file_section_segments=(b"__TEXT",)
+    symbols=((0x64, b"/src/main.c"),),
+    object_file_section_segments=(b"__TEXT",),
 )
 # the unnamed segment is the second load command, after one 72-byte segment command
 _MACHO_OBJECT_FILE_NSECTS = 32 + 72 + 64
