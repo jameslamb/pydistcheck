@@ -196,7 +196,7 @@ def _pe_has_debug_symbols(f: BinaryIO) -> tuple[bool, str]:
         buffer=_read_at(f, offset=0x3C, size=4),
         offset=0,
     )
-    coff_header = _read_at(f, offset=coff_header_offset, size=24)
+    pe_signature = _read_at(f, offset=pe_signature_offset, size=4)
 
     # From the docs:
     #
@@ -204,21 +204,36 @@ def _pe_has_debug_symbols(f: BinaryIO) -> tuple[bool, str]:
     #   file as a PE format image file. This signature is "PE\0\0"
     #   (the letters "P" and "E" followed by two null bytes).
     #
-    if coff_header[:4] != b"PE\0\0":
+    if pe_signature != b"PE\0\0":
         # this must not be a PE file, and therefore not a shared library
         return _NO_DEBUG_SYMBOLS
 
-    # the number of sections is stored as a 16-bit (2-byte) integer, 
-    num_sections, * = _unpack_from(
-        fmt=f"{endian_marker}H",
+    coff_header_offset = pe_signature_offset + 4
+    coff_header = _read_at(f, offset=coff_header_offset, size=20)
+
+    # See https://learn.microsoft.com/en-us/windows/win32/debug/pe-format#coff-file-header-object-and-image for
+    # the structure of the COFF header.
+    #
+    # Paraphrasing:
+    #
+    #   * bytes  0-1: (ignored)
+    #   * bytes  2-3: total number of sections in the section table
+    #   * bytes  4-7: (ignored)
+    #   * bytes  8-11: file offset of the COFF symbol table (or 0 if it isn't present)
+    #   * bytes 12-15: total number of symbols in the symbol table
+    #   * bytes 16-17: size of the "optional" header
+    #   * bytes 18-19: (ignored)
+    #
+    _, num_sections, _, symbol_table_offset, num_symbols, optional_header_size, _, = _unpack_from(
+        fmt=f"{endian_marker}HHIIIHH",
         buffer=coff_header,
-        offset=6,
+        offset=0,
     )
-    symbol_table_offset, num_symbols = _unpack_from(f"{endian_marker}II", coff_header, 12)
-    (optional_header_size,) = _unpack_from(f"{endian_marker}H", coff_header, 20)
+
+    # 
     section_headers = _read_at(
         f,
-        offset=e_lfanew + 24 + optional_header_size,
+        offset=coff_header_offset + 20 + optional_header_size,
         size=num_sections * _COFF_SECTION_HEADER_SIZE,
     )
 
@@ -274,7 +289,7 @@ def _file_has_debug_symbols(file_absolute_path: str) -> tuple[bool, str]:
         if header in _MACH_O_MAGIC_FIRST_4_BYTES:
             return _macho_has_debug_symbols(file_absolute_path)
         if header[:2] in _DOS_MZ_MAGIC_FIRST_2_BYTES:
-            return _pe_has_debug_symbols(file_absolute_path)
+            return _pe_has_debug_symbols(f)
 
         # any file not in a recognizable format should be marked as not having debug symbols
         return False, ""
