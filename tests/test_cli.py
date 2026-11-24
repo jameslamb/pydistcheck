@@ -1112,7 +1112,7 @@ def test_debug_symbols_check_works(distro_file):
     elif NUMPY_WIN_DEBUG_WHL in distro_file:
         # windows wheels
         lib_file = r"\"numpy\.libs/libopenblas64__v0\.3\.23-293-gc2f4bdbb-gcc_10_3_0-2bde3a66a51006b2b53eb373ff767a3f\.dll\"'"
-        debug_cmd = r"'objdump \-\-all\-headers " + lib_file
+        debug_cmd = r"'objdump \-h " + lib_file
     else:
         # linux wheels
         debug_cmd = r"'objdump \-\-all\-headers \"lib/lib_baseballmetrics\.so\"'\."
