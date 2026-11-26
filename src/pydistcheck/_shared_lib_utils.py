@@ -7,7 +7,7 @@ import os
 import re
 import struct
 import subprocess
-from typing import BinaryIO
+from typing import BinaryIO, NamedTuple
 
 from ._file_utils import (
     _DOS_MZ_MAGIC_FIRST_2_BYTES,
@@ -26,6 +26,22 @@ _TOOL_NOT_AVAILABLE = "__tool_not_available__"
 # section names produced for DWARF debug information
 # ('.zdebug_' is the older compressed-DWARF convention)
 _DEBUG_SECTION_PREFIXES = (b".debug_", b".zdebug_")
+
+# --- ELF ---
+_ELFCLASS32 = 1
+_ELFCLASS64 = 2
+_ELFDATA2LSB = 1
+_ELFDATA2MSB = 2
+_SHN_XINDEX = 0xFFFF
+_SHT_SYMTAB = 2
+_STT_SECTION = 3
+_STT_FILE = 4
+
+# Lookup table for bytes.translate(): 1 where the symbol type (low 4 bits of 'st_info')
+# is one of the "debugger-only" types that 'nm' hides unless passed '-a'.
+_ELF_DEBUGGER_ONLY_SYMBOL_TYPES = bytes(
+    1 if (i & 0xF) in (_STT_SECTION, _STT_FILE) else 0 for i in range(256)
+)
 
 # This specific debug symbol is added by Apple's "strip" on
 # Mach-O files and can safely be ignored for the purpose of detecting debug symbols. See:
@@ -112,41 +128,114 @@ def _nm_reports_debug_symbols(tool_name: str, lib_file: str) -> tuple[bool, str]
     return exported_symbols != all_symbols, f"{tool_name} -a"
 
 
-def _elf_has_debug_symbols(f: str) -> tuple[bool, str]:
+class _ElfSectionHeader(NamedTuple):
+    sh_name: int
+    sh_type: int
+    sh_flags: int
+    sh_addr: int
+    sh_offset: int
+    sh_size: int
+    sh_link: int
+    sh_info: int
+    sh_addralign: int
+    sh_entsize: int
+
+
+class _ElfLayout(NamedTuple):
+    section_headers: list[_ElfSectionHeader]
+    # contents of the section that holds section names ('.shstrtab')
+    section_names: bytes
+    # byte offset of 'st_info' within each symbol table entry
+    st_info_offset: int
+
+
+def _read_elf_layout(f: BinaryIO) -> _ElfLayout:
+    ident = _read_at(f, offset=0, size=16)
+    ei_class, ei_data = ident[4], ident[5]
+    if ei_data == _ELFDATA2LSB:
+        endian = "<"
+    elif ei_data == _ELFDATA2MSB:
+        endian = ">"
+    else:
+        raise _MalformedBinaryError
+
+    if ei_class == _ELFCLASS64:
+        header = _read_at(f, offset=0, size=64)
+        (shoff,) = _unpack_from(endian + "Q", header, 0x28)
+        shentsize, shnum, shstrndx = _unpack_from(endian + "HHH", header, 0x3A)
+        shdr_fmt = endian + "IIQQQQIIQQ"
+        st_info_offset = 4
+    elif ei_class == _ELFCLASS32:
+        header = _read_at(f, offset=0, size=52)
+        (shoff,) = _unpack_from(endian + "I", header, 0x20)
+        shentsize, shnum, shstrndx = _unpack_from(endian + "HHH", header, 0x2E)
+        shdr_fmt = endian + "IIIIIIIIII"
+        st_info_offset = 12
+    else:
+        raise _MalformedBinaryError
+
+    # no section header table (e.g. fully-stripped with 'sstrip')
+    if shoff == 0:
+        return _ElfLayout(
+            section_headers=[],
+            section_names=b"",
+            st_info_offset=st_info_offset,
+        )
+
+    if shentsize < struct.calcsize(shdr_fmt):
+        raise _MalformedBinaryError
+
+    # for files with >= 0xff00 sections, the real values live in section header 0
+    first = _ElfSectionHeader(
+        *_unpack_from(shdr_fmt, _read_at(f, offset=shoff, size=shentsize), 0),
+    )
+    if shnum == 0:
+        shnum = first.sh_size
+    if shstrndx == _SHN_XINDEX:
+        shstrndx = first.sh_link
+    if shstrndx >= shnum:
+        raise _MalformedBinaryError
+
+    raw = _read_at(f, offset=shoff, size=shentsize * shnum)
+    section_headers = [
+        _ElfSectionHeader(*_unpack_from(shdr_fmt, raw, i * shentsize))
+        for i in range(shnum)
+    ]
+    shstrtab = section_headers[shstrndx]
+    return _ElfLayout(
+        section_headers=section_headers,
+        section_names=_read_at(f, offset=shstrtab.sh_offset, size=shstrtab.sh_size),
+        st_info_offset=st_info_offset,
+    )
+
+
+def _elf_has_debug_symbols(f: BinaryIO) -> tuple[bool, str]:
     """
     Report whether an ELF ("Executable and Linkable Format") file
     contains debug symbols.
     """
-    # test with tools that produce debug symbols that can be matched with a regex
-    # fmt: off
-    has_debug_symbols, cmd_str = _look_for_debug_symbols(
-        lib_file=f,
-        commands_to_patterns=[
-            (["objdump", "--all-headers"],      r"[\t ]+\.debug_line[\t ]+"),
-            (["objdump", "-W"],                 r"^Contents of the \.debug"),
-            (["objdump", "-g"],                 r"^Contents of the \.debug"),
-            (["llvm-objdump", "--all-headers"], r"[\t ]+\.debug_line[\t ]+"),
-            (["llvm-objdump", "-W"],            r"^Contents of the \.debug"),
-            (["llvm-objdump", "-g"],            r"^Contents of the \.debug"),
-            (["readelf", "-S"],                 r"[\t ]+\.debug_[a-z]+[\t ]+"),
-        ],
-    )
-    # fmt: on
-    if has_debug_symbols:
-        return True, cmd_str
+    section_headers, section_names, st_info_offset = _read_elf_layout(f)
+    symtabs = []
+    for shdr in section_headers:
+        if _c_string_at(section_names, shdr.sh_name).startswith(
+            _DEBUG_SECTION_PREFIXES,
+        ):
+            return True, _SECTIONS_CMD
+        if shdr.sh_type == _SHT_SYMTAB:
+            symtabs.append(shdr)
 
-    # "nm"'s test is like "check if the output is different when a flag is supplied",
-    # instead of "test if this tool produces output matching this regex",
-    # so it runs separately here
-    for nm_tool in ["nm", "llvm-nm"]:
-        has_debug_symbols, cmd_str = _nm_reports_debug_symbols(
-            tool_name=nm_tool,
-            lib_file=f,
-        )
-        if has_debug_symbols:  # pragma: no cover
-            return True, cmd_str
+    for symtab in symtabs:
+        entsize = symtab.sh_entsize
+        if entsize <= st_info_offset:
+            continue
+        data = _read_at(f, offset=symtab.sh_offset, size=symtab.sh_size)
+        # every 'st_info' byte, skipping the reserved null symbol at index 0
+        num_symbols = len(data) // entsize
+        st_info = data[entsize + st_info_offset : num_symbols * entsize : entsize]
+        if b"\x01" in st_info.translate(_ELF_DEBUGGER_ONLY_SYMBOL_TYPES):
+            return True, _SYMBOLS_CMD
 
-    return False, cmd_str
+    return _NO_DEBUG_SYMBOLS
 
 
 def _macho_has_debug_symbols(f: str) -> tuple[bool, str]:
@@ -359,7 +448,7 @@ def _file_has_debug_symbols(file_absolute_path: str) -> tuple[bool, str]:
         header = f.read(4)
         try:
             if header == _ELF_MAGIC:
-                return _elf_has_debug_symbols(file_absolute_path)
+                return _elf_has_debug_symbols(f)
             if header in _MACH_O_MAGIC_FIRST_4_BYTES:
                 return _macho_has_debug_symbols(file_absolute_path)
             if header[:2] in _DOS_MZ_MAGIC_FIRST_2_BYTES:
@@ -369,4 +458,4 @@ def _file_has_debug_symbols(file_absolute_path: str) -> tuple[bool, str]:
             return _NO_DEBUG_SYMBOLS
 
         # any file not in a recognizable format should be marked as not having debug symbols
-        return False, ""  # pragma: no cover
+        return _NO_DEBUG_SYMBOLS
