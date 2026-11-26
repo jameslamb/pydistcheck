@@ -48,6 +48,9 @@ NUMPY_WIN_DEBUG_WHL = "numpy-1.26.3-cp310-cp310-win_amd64.whl"
 if os.path.isfile(os.path.join(TEST_DATA_DIR, NUMPY_WIN_DEBUG_WHL)):
     PACKAGES_WITH_DEBUG_SYMBOLS.append(NUMPY_WIN_DEBUG_WHL)
 
+# DLLs built with MinGW, without '-g', and not stripped
+GMPY2_WIN_COFF_SYMBOLS_WHL = "gmpy2-2.3.2-cp310-cp310-win_amd64.whl"
+
 
 def _assert_log_matches_pattern(
     result: Result,
@@ -1112,7 +1115,7 @@ def test_debug_symbols_check_works(distro_file):
     elif NUMPY_WIN_DEBUG_WHL in distro_file:
         # windows wheels
         lib_file = r"\"numpy\.libs/libopenblas64__v0\.3\.23-293-gc2f4bdbb-gcc_10_3_0-2bde3a66a51006b2b53eb373ff767a3f\.dll\"'"
-        debug_cmd = r"'objdump \-\-all\-headers " + lib_file
+        debug_cmd = r"'objdump \-h " + lib_file
     else:
         # linux wheels
         debug_cmd = r"'objdump \-\-all\-headers \"lib/lib_baseballmetrics\.so\"'\."
@@ -1124,6 +1127,34 @@ def test_debug_symbols_check_works(distro_file):
     )
     expected_msg += debug_cmd
     _assert_log_matches_pattern(result=result, pattern=expected_msg)
+
+
+# MinGW-built DLLs which were not compiled with '-g' and not stripped have no
+# '.debug_*' sections, but still have a COFF symbol table with '.file' symbols
+@pytest.mark.skipif(
+    not os.path.isfile(os.path.join(TEST_DATA_DIR, GMPY2_WIN_COFF_SYMBOLS_WHL)),
+    reason=f"{GMPY2_WIN_COFF_SYMBOLS_WHL} not found (run 'make test' to download it)",
+)
+def test_debug_symbols_check_finds_coff_file_symbols():
+    result = CliRunner().invoke(
+        check,
+        [os.path.join(TEST_DATA_DIR, GMPY2_WIN_COFF_SYMBOLS_WHL)],
+    )
+    assert result.exit_code == 1, result.output
+    for lib_file in ["libgmp-10.dll", "libmpc-3.dll", "libmpfr-6.dll"]:
+        _assert_log_matches_pattern(
+            result=result,
+            pattern=(
+                r"^[0-9]+\. \[compiled\-objects\-have\-debug\-symbols\] "
+                r"Found compiled object containing debug symbols\. "
+                r"For details, extract the distribution contents and run "
+                r"'nm \-a \"gmpy2\.libs/" + re.escape(lib_file) + r"\"'\.$"
+            ),
+        )
+    # these have COFF symbol tables, but no '.file' symbols
+    for lib_file in ["libgcc_s_seh-1.dll", "libwinpthread-1.dll"]:
+        assert lib_file not in result.output
+    _assert_log_matches_pattern(result, "errors found while checking\\: 3")
 
 
 # --------------------- #

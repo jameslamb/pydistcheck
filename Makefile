@@ -1,6 +1,7 @@
 SHELL := /bin/bash --login
 
 NUMPY_WIN_DEBUG_WHL=tests/data/numpy-1.26.3-cp310-cp310-win_amd64.whl
+GMPY2_WIN_COFF_SYMBOLS_WHL=tests/data/gmpy2-2.3.2-cp310-cp310-win_amd64.whl
 
 .PHONY: build
 build:
@@ -83,14 +84,19 @@ $(NUMPY_WIN_DEBUG_WHL):
 		https://files.pythonhosted.org/packages/be/b0/611101990ddac767e54e2d27d1f4576ae1662cca64e2d55ef0e62558ec26/numpy-1.26.3-cp310-cp310-win_amd64.whl \
 		-o $(NUMPY_WIN_DEBUG_WHL)
 
+$(GMPY2_WIN_COFF_SYMBOLS_WHL):
+	curl \
+		https://files.pythonhosted.org/packages/64/7d/702b77ea024f78cebcecbfd086721222f464b8533e36f1001796295eddd1/gmpy2-2.3.2-cp310-cp310-win_amd64.whl \
+		-o $(GMPY2_WIN_COFF_SYMBOLS_WHL)
+
 .PHONY: test
-test: $(NUMPY_WIN_DEBUG_WHL)
+test: $(NUMPY_WIN_DEBUG_WHL) $(GMPY2_WIN_COFF_SYMBOLS_WHL)
 	pytest \
 		--cov pydistcheck \
 		./tests
 
 .PHONY: test-local
-test-local: $(NUMPY_WIN_DEBUG_WHL)
+test-local: $(NUMPY_WIN_DEBUG_WHL) $(GMPY2_WIN_COFF_SYMBOLS_WHL)
 	PYTHONPATH=src \
 	pytest \
 		--cov=src/pydistcheck \
