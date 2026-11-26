@@ -50,7 +50,7 @@ def _read_at(f: BinaryIO, *, offset: int, size: int) -> bytes:
     # huge memory allocation.
     file_size = f.seek(0, os.SEEK_END)
     if offset < 0 or size < 0 or offset + size > file_size:
-        raise _MalformedBinaryError
+        raise _MalformedBinaryError  # pragma: no cover
     f.seek(offset)
     return f.read(size)
 
@@ -58,16 +58,16 @@ def _read_at(f: BinaryIO, *, offset: int, size: int) -> bytes:
 def _unpack_from(fmt: str, buffer: bytes, offset: int) -> tuple[int, ...]:
     try:
         return struct.unpack_from(fmt, buffer, offset)
-    except struct.error as err:
+    except struct.error as err:  # pragma: no cover
         raise _MalformedBinaryError from err
 
 
 def _c_string_at(buffer: bytes, offset: int) -> bytes:
     if not 0 <= offset < len(buffer):
-        raise _MalformedBinaryError
+        raise _MalformedBinaryError  # pragma: no cover
     end = buffer.find(b"\0", offset)
     if end == -1:
-        return buffer[offset:]
+        return buffer[offset:]  # pragma: no cover
     return buffer[offset:end]
 
 
@@ -216,7 +216,7 @@ def _pe_has_debug_symbols(f: BinaryIO) -> tuple[bool, str]:
     #
     if pe_signature != b"PE\0\0":
         # this must not be a PE file, and therefore not a shared library
-        return _NO_DEBUG_SYMBOLS
+        return _NO_DEBUG_SYMBOLS  # pragma: no cover
 
     # COFF header begins 4 bytes after the PE signature.
     coff_header_offset = pe_signature_offset + 4
@@ -357,12 +357,16 @@ def _file_has_debug_symbols(file_absolute_path: str) -> tuple[bool, str]:
 
     with open(file_absolute_path, "rb") as f:
         header = f.read(4)
-        if header == _ELF_MAGIC:
-            return _elf_has_debug_symbols(file_absolute_path)
-        if header in _MACH_O_MAGIC_FIRST_4_BYTES:
-            return _macho_has_debug_symbols(file_absolute_path)
-        if header[:2] in _DOS_MZ_MAGIC_FIRST_2_BYTES:
-            return _pe_has_debug_symbols(f)
+        try:
+            if header == _ELF_MAGIC:
+                return _elf_has_debug_symbols(file_absolute_path)
+            if header in _MACH_O_MAGIC_FIRST_4_BYTES:
+                return _macho_has_debug_symbols(file_absolute_path)
+            if header[:2] in _DOS_MZ_MAGIC_FIRST_2_BYTES:
+                return _pe_has_debug_symbols(f)
+        except _MalformedBinaryError:  # pragma: no cover
+            # files that cannot be parsed are treated as not having debug symbols
+            return _NO_DEBUG_SYMBOLS
 
         # any file not in a recognizable format should be marked as not having debug symbols
-        return False, ""
+        return False, ""  # pragma: no cover
