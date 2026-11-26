@@ -72,24 +72,25 @@ _MACHO_STAB_TYPES = bytes(1 if i & _N_STAB else 0 for i in range(256))
 # https://github.com/jameslamb/pydistcheck/issues/235
 _MACHO_STRIP_SYMBOL = b"radr://5614542"
 
-# --- PE / COFF ---
-_PE_SIGNATURE = b"PE\0\0"
-_COFF_SECTION_HEADER_SIZE = 40
-_COFF_SYMBOL_SIZE = 18
-_IMAGE_SYM_CLASS_FILE = 0x67
-
 
 class _MalformedBinaryError(Exception):
-    pass
+    """
+    Placeholder exception for any parsing issues.
+
+    Not intended to be raised directly to users.
+    """
 
 
 def _read_at(f: BinaryIO, *, offset: int, size: int) -> bytes:
-    # Offsets and sizes come from the file itself, so check them against the file's
-    # size before reading. Otherwise, a corrupt value could lead to an attempt to
-    # allocate a huge buffer (MemoryError or OverflowError).
+    """
+    Read ``size`` bytes in a ``BinaryIO`` object, starting at ``offset``.
+    """
+    # Offsets and sizes come from the file itself. Check them against the file's size,
+    # to prevent a corrupted file from causing an inappropriate read or
+    # huge memory allocation.
     file_size = f.seek(0, os.SEEK_END)
     if offset < 0 or size < 0 or offset + size > file_size:
-        raise _MalformedBinaryError
+        raise _MalformedBinaryError  # pragma: no cover
     f.seek(offset)
     return f.read(size)
 
@@ -97,15 +98,17 @@ def _read_at(f: BinaryIO, *, offset: int, size: int) -> bytes:
 def _unpack_from(fmt: str, buffer: bytes, offset: int) -> tuple[int, ...]:
     try:
         return struct.unpack_from(fmt, buffer, offset)
-    except struct.error as err:
+    except struct.error as err:  # pragma: no cover
         raise _MalformedBinaryError from err
 
 
 def _c_string_at(buffer: bytes, offset: int) -> bytes:
     if not 0 <= offset < len(buffer):
-        raise _MalformedBinaryError
+        raise _MalformedBinaryError  # pragma: no cover
     end = buffer.find(b"\0", offset)
-    return buffer[offset:] if end == -1 else buffer[offset:end]
+    if end == -1:
+        return buffer[offset:]  # pragma: no cover
+    return buffer[offset:end]
 
 
 class _ElfSectionHeader(NamedTuple):
