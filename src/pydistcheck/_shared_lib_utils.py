@@ -22,7 +22,7 @@ from typing import BinaryIO, NamedTuple
 
 from ._file_utils import (
     _DOS_MZ_MAGIC_FIRST_2_BYTES,
-    _ELF_MAGIC_FIRST_4_BYTES,
+    _ELF_MAGIC,
     _MACH_O_MAGIC_FIRST_4_BYTES,
 )
 
@@ -497,7 +497,7 @@ def _file_has_debug_symbols(file_absolute_path: str) -> tuple[bool, str]:
     with open(file_absolute_path, "rb") as f:
         header = f.read(4)
         try:
-            if header in _ELF_MAGIC_FIRST_4_BYTES:
+            if header == _ELF_MAGIC:
                 return _elf_has_debug_symbols(f)
             if header in _MACH_O_MAGIC_FIRST_4_BYTES:
                 return _macho_has_debug_symbols(f)
