@@ -1118,7 +1118,7 @@ def test_debug_symbols_check_works(distro_file):
         debug_cmd = r"'objdump \-h " + lib_file
     else:
         # linux wheels
-        debug_cmd = r"'objdump \-\-all\-headers \"lib/lib_baseballmetrics\.so\"'\."
+        debug_cmd = r"'objdump \-h \"lib/lib_baseballmetrics\.so\"'\."
 
     expected_msg = (
         r"^1\. \[compiled\-objects\-have\-debug\-symbols\] "
