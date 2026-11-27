@@ -213,6 +213,12 @@ def _elf_has_debug_symbols(f: BinaryIO) -> tuple[bool, str]:
     """
     Report whether an ELF ("Executable and Linkable Format") file
     contains debug symbols.
+
+    References:
+
+        * https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html
+        * https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html
+
     """
     section_headers, section_names, st_info_offset = _read_elf_layout(f)
     symtabs = []
